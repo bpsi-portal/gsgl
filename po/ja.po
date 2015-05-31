@@ -1,0 +1,1113 @@
+# Japanese translations for GNU gsgl package
+# GNU gsgl パッケージに対する英訳.
+# Copyright (C) 2002 Free Software Foundation, Inc.
+# This file is distributed under the same license as the GNU gsgl package.
+# AKUTSU Taku <akutsu@p-grp.nucleng.kyoto-u.ac.jp>, 2002.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GSAF/OpenGL 0.4.10\n"
+"Report-Msgid-Bugs-To: akutsu@p-grp.nucleng.kyoto-u.ac.jp\n"
+"POT-Creation-Date: 2006-01-20 01:23+0900\n"
+"PO-Revision-Date: 2005-09-27 09:40+0900\n"
+"Last-Translator: AKUTSU Taku <akutsu@p-grp.nucleng.kyoto-u.ac.jp>\n"
+"Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: src/gtk/gtk_base.c:164 src/gtk/gtk_config.cpp:403
+#: src/gtk/gtk_config.cpp:523 src/gtk/gtk_config.cpp:660
+#: src/gtk/gtk_config.cpp:882 src/gtk/gtk_menu2d.cpp:131
+#: src/gtk/gtk_menu2d.cpp:195 src/gtk/gtk_menu3d.cpp:139
+#: src/gtk/gtk_menu3d.cpp:226 src/gtk/gtk_menupro.cpp:128
+#: src/gtk/gtk_menupro.cpp:193 src/gtk/gtk_guiitems.cpp:745
+#: src/gtk/gtk_guiitems.cpp:848 src/gtk/gtk_guiitems.cpp:950
+#: src/qt/qt_gsglwindow.cpp:354 src/qt/qt_gsglwindow.cpp:523
+#: src/qt/qt_gsglwindow.cpp:616 src/qt/qt_dialog.cpp:41
+#: src/qt/qt_dialog.cpp:562
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: src/gtk/gtk_base.c:190 src/gtk/gtk_gsglwindow.cpp:696
+#, c-format
+msgid "Can not open file \"%s\""
+msgstr "ファイル \"%s\" が開けません"
+
+#: src/gtk/gtk_base.c:191 src/gtk/gtk_gsglwindow.cpp:658
+#: src/gtk/gtk_gsglwindow.cpp:697 src/gtk/gtk_gsglwindow.cpp:745
+#: src/qt/qt_gsglwindow.cpp:320
+msgid "Can not open a file"
+msgstr "ファイルが開けません"
+
+#: src/gtk/gtk_base.c:204 src/gtk/gtk_gsglwindow.cpp:714
+#: src/qt/qt_gsglwindow.cpp:351 src/qt/qt_gsglwindow.cpp:520
+msgid "Overwrite?"
+msgstr "上書きしますか?"
+
+#: src/gtk/gtk_base.c:207 src/qt/qt_gsglwindow.cpp:352
+#: src/qt/qt_gsglwindow.cpp:521
+msgid ""
+"Old file is going to be overwritten.\n"
+"Are you sure ?"
+msgstr ""
+"既にあるファイルが上書きされます．\n"
+"よろしいですか?"
+
+#: src/gtk/gtk_base.c:213 src/gtk/gtk_gsglwindow.cpp:633
+#: src/gtk/gtk_gsglwindow.cpp:721 src/gtk/gtk_gsglwindow.cpp:930
+#: src/gtk/gtk_gsglwindow.cpp:968 src/gtk/gtk_gsglwindow.cpp:1079
+#: src/gtk/gtk_gsglwindow.cpp:1121 src/gtk/gtk_gsglwindow.cpp:1200
+#: src/gtk/gtk_config.cpp:401 src/gtk/gtk_config.cpp:521
+#: src/gtk/gtk_config.cpp:658 src/gtk/gtk_config.cpp:881
+#: src/gtk/gtk_menu2d.cpp:128 src/gtk/gtk_menu2d.cpp:192
+#: src/gtk/gtk_menu3d.cpp:136 src/gtk/gtk_menu3d.cpp:223
+#: src/gtk/gtk_menupro.cpp:125 src/gtk/gtk_menupro.cpp:190
+#: src/gtk/gtk_guiitems.cpp:734 src/gtk/gtk_guiitems.cpp:834
+#: src/gtk/gtk_guiitems.cpp:937 src/qt/qt_gsglwindow.cpp:354
+#: src/qt/qt_gsglwindow.cpp:523 src/qt/qt_gsglwindow.cpp:616
+#: src/qt/qt_dialog.cpp:38
+msgid "OK"
+msgstr "OK"
+
+#: src/gtk/gtk_base.c:282
+msgid "/_File"
+msgstr "/ファイル(_F)"
+
+#: src/gtk/gtk_base.c:283
+msgid "/File/tear"
+msgstr "/ファイル/tear"
+
+#: src/gtk/gtk_base.c:284
+msgid "/File/Save As ..."
+msgstr "/ファイル/名前をつけて保存"
+
+#: src/gtk/gtk_base.c:285
+msgid "/File/Save"
+msgstr "/ファイル/保存"
+
+#: src/gtk/gtk_base.c:286
+msgid "/File/Save and Close"
+msgstr "/ファイル/保存して閉じる"
+
+#: src/gtk/gtk_base.c:287 src/gtk/gtk_anime.cpp:19
+msgid "/File/Save This Frame"
+msgstr "/ファイル/このフレームを保存"
+
+#: src/gtk/gtk_base.c:288
+msgid "/File/Export"
+msgstr "/ファイル/エクスポート"
+
+#: src/gtk/gtk_base.c:289
+msgid "/File/Export/_EPS (Vector)"
+msgstr "/ファイル/エクスポート/EPS (ベクター形式)"
+
+#: src/gtk/gtk_base.c:290
+msgid "/File/Export/_EPS (Raster)"
+msgstr "/ファイル/エクスポート/EPS (ラスター形式)"
+
+#: src/gtk/gtk_base.c:291
+msgid "/File/Export/_PNG"
+msgstr "/ファイル/エクスポート/PNG"
+
+#: src/gtk/gtk_base.c:292
+msgid "/File/Export/_JPEG"
+msgstr "/ファイル/エクスポート/JPEG"
+
+#: src/gtk/gtk_base.c:294
+msgid "/File/Print ..."
+msgstr "/ファイル/印刷"
+
+#: src/gtk/gtk_base.c:296
+msgid "/File/Dump Dot Image"
+msgstr "/ファイル/イメージのダンプ"
+
+#: src/gtk/gtk_base.c:298
+msgid "/File/Close"
+msgstr "/ファイル/閉じる"
+
+#: src/gtk/gtk_base.c:299
+msgid "/File/Quit"
+msgstr "/ファイル/終了"
+
+#: src/gtk/gtk_base.c:301
+msgid "/_Edit"
+msgstr "/編集(_E)"
+
+#: src/gtk/gtk_base.c:302
+msgid "/Edit/tear"
+msgstr "/編集/tear"
+
+#: src/gtk/gtk_base.c:303
+msgid "/Edit/_Pointer"
+msgstr "/編集/ポインター"
+
+#: src/gtk/gtk_base.c:304
+msgid "/Edit/Select All _2D Objects"
+msgstr "/編集/すべての2次元オブジェクトを選択"
+
+#: src/gtk/gtk_base.c:305
+msgid "/Edit/Select All _3D Objects"
+msgstr "/編集/すべての3次元オブジェクトを選択"
+
+#: src/gtk/gtk_base.c:310
+msgid "/_Objects"
+msgstr "/オブジェクト(_O)"
+
+#: src/gtk/gtk_base.c:311
+msgid "/Objects/tear"
+msgstr "/オブジェクト/tear"
+
+#: src/gtk/gtk_base.c:312
+msgid "/Objects/_Rotate"
+msgstr "/オブジェクト/回転"
+
+#: src/gtk/gtk_base.c:313
+msgid "/Objects/_Scale"
+msgstr "/オブジェクト/拡大縮小"
+
+#: src/gtk/gtk_base.c:314
+msgid "/Objects/_Translate (x,y)"
+msgstr "/オブジェクト/平行移動 (x-y方向)"
+
+#: src/gtk/gtk_base.c:315
+msgid "/Objects/_Translate (z)"
+msgstr "/オブジェクト/平行移動 (z方向)"
+
+#: src/gtk/gtk_base.c:316
+msgid "/Objects/_Toggle Lighting"
+msgstr "/オブジェクト/照光処理のオン・オフ"
+
+#: src/gtk/gtk_base.c:318
+msgid "/Objects/_Restore 2D"
+msgstr "/オブジェクト/2次元オジェクトを元に戻す"
+
+#: src/gtk/gtk_base.c:319
+msgid "/Objects/_Restore 3D"
+msgstr "/オブジェクト/3次元オブジェクトを元に戻す"
+
+#: src/gtk/gtk_base.c:321
+msgid "/_Projected Image"
+msgstr "/射影されたイメージ(_P)"
+
+#: src/gtk/gtk_base.c:322
+msgid "/Projected Image/tear"
+msgstr "/射影されたイメージ/tear"
+
+#: src/gtk/gtk_base.c:323
+msgid "/Projected Image/_Rotate"
+msgstr "/射影されたイメージ/回転"
+
+#: src/gtk/gtk_base.c:324
+msgid "/Projected Image/_Scale"
+msgstr "/射影されたイメージ/拡大縮小"
+
+#: src/gtk/gtk_base.c:325
+msgid "/Projected Image/_Translate"
+msgstr "/射影されたイメージ/平行移動"
+
+#: src/gtk/gtk_base.c:327
+msgid "/Projected Image/_Restore"
+msgstr "/射影されたイメージ/元に戻す"
+
+#: src/gtk/gtk_base.c:329
+msgid "/_Animation"
+msgstr "/アニメーション(_A)"
+
+#: src/gtk/gtk_base.c:330
+msgid "/Animation/tear"
+msgstr "/アニメーション/tear"
+
+#: src/gtk/gtk_base.c:331
+msgid "/Animation/_Replay"
+msgstr "/アニメーション/再再生"
+
+#: src/gtk/gtk_base.c:332
+msgid "/Animation/_Replay (Slow)"
+msgstr "/アニメーション/再再生 (ゆっくり)"
+
+#: src/gtk/gtk_base.c:333
+msgid "/Animation/_Replay (Very Slow)"
+msgstr "/アニメーション/再再生 (非常にゆっくり)"
+
+#: src/gtk/gtk_base.c:334
+msgid "/Animation/_Single Frame Forward"
+msgstr "/アニメーション/１フレーム進める"
+
+#: src/gtk/gtk_base.c:335
+msgid "/Animation/_Reverse Play"
+msgstr "/アニメーション/逆再生"
+
+#: src/gtk/gtk_base.c:336
+msgid "/Animation/_Reverse Play (Slow)"
+msgstr "/アニメーション/逆再生 (ゆっくり)"
+
+#: src/gtk/gtk_base.c:337
+msgid "/Animation/_Reverse Play (Very Slow)"
+msgstr "/アニメーション/逆再生 (非常にゆっくり)"
+
+#: src/gtk/gtk_base.c:338
+msgid "/Animation/_Single Frame Reverse"
+msgstr "/アニメーション/１フレーム戻る"
+
+#: src/gtk/gtk_base.c:339
+msgid "/Animation/_Pause"
+msgstr "/アニメーション/休止"
+
+#: src/gtk/gtk_base.c:341
+msgid "/_Config"
+msgstr "/設定(_C)"
+
+#: src/gtk/gtk_base.c:342
+msgid "/Config/tear"
+msgstr "/設定/tear"
+
+#: src/gtk/gtk_base.c:343
+msgid "/Config/_Color"
+msgstr "/設定/色"
+
+#: src/gtk/gtk_base.c:344
+msgid "/Config/_Command Line"
+msgstr "/設定/コマンド"
+
+#: src/gtk/gtk_base.c:345
+msgid "/Config/_TrueType Font"
+msgstr "/設定/TrueTypeフォント"
+
+#: src/gtk/gtk_base.c:346
+msgid "/Config/_Window Size"
+msgstr "/設定/Windowの大きさ"
+
+#: src/gtk/gtk_base.c:348
+msgid "/_Help"
+msgstr "/ヘルプ(_H)"
+
+#: src/gtk/gtk_base.c:349
+msgid "/Help/tear"
+msgstr "/ヘルプ/tear"
+
+#: src/gtk/gtk_base.c:350
+msgid "/Help/_Key Bindings"
+msgstr "/ヘルプ/キーバインド"
+
+#: src/gtk/gtk_base.c:351
+msgid "/Help/_Manual"
+msgstr "/ヘルプ/マニュアル"
+
+#: src/gtk/gtk_base.c:353
+msgid "/Help/_About"
+msgstr "/ヘルプ/GSAF-OpenGLについて"
+
+#: src/gtk/gtk_base.c:356 src/gtk/gtk_gsglwindow.cpp:478
+msgid "/Pointer"
+msgstr "/ポインター"
+
+#: src/gtk/gtk_base.c:357 src/gtk/gtk_gsglwindow.cpp:479
+msgid "/Select All 2D Objects"
+msgstr "/すべての2次元オブジェクトを選択"
+
+#: src/gtk/gtk_base.c:358 src/gtk/gtk_gsglwindow.cpp:472
+#: src/gtk/gtk_gsglwindow.cpp:480
+msgid "/Select All 3D Objects"
+msgstr "/すべての3次元オブジェクトを選択"
+
+#: src/gtk/gtk_base.c:361 src/gtk/gtk_gsglwindow.cpp:481
+msgid "/Rotate"
+msgstr "/回転"
+
+#: src/gtk/gtk_base.c:362 src/gtk/gtk_gsglwindow.cpp:482
+msgid "/Scale"
+msgstr "/拡大縮小"
+
+#: src/gtk/gtk_base.c:363 src/gtk/gtk_gsglwindow.cpp:483
+msgid "/Translate (x-y)"
+msgstr "/平行移動 (x-y方向)"
+
+#: src/gtk/gtk_base.c:364 src/gtk/gtk_gsglwindow.cpp:484
+#: src/gtk/gtk_menu3d.cpp:255
+msgid "/Translate (z)"
+msgstr "/平行移動 (z方向)"
+
+#: src/gtk/gtk_base.c:365 src/gtk/gtk_gsglwindow.cpp:485
+#: src/gtk/gtk_menu3d.cpp:257
+msgid "/Toggle Lighting"
+msgstr "/照光処理のオン・オフ"
+
+#: src/gtk/gtk_base.c:366 src/gtk/gtk_gsglwindow.cpp:408
+#: src/gtk/gtk_gsglwindow.cpp:486 src/gtk/gtk_menu2d.cpp:22
+msgid "/Restore 2D"
+msgstr "/2次元オブジェクトを元に戻す"
+
+#: src/gtk/gtk_base.c:367 src/gtk/gtk_gsglwindow.cpp:409
+#: src/gtk/gtk_gsglwindow.cpp:487 src/gtk/gtk_menu3d.cpp:24
+msgid "/Restore 3D"
+msgstr "/3次元オブジェクトを元に戻す"
+
+#: src/gtk/gtk_base.c:370 src/gtk/gtk_gsglwindow.cpp:488
+#: src/gtk/gtk_menupro.cpp:230
+msgid "/Rotate Projected Image"
+msgstr "/射影されたイメージを回転"
+
+#: src/gtk/gtk_base.c:371 src/gtk/gtk_gsglwindow.cpp:489
+#: src/gtk/gtk_menupro.cpp:232
+msgid "/Scale Projected Image"
+msgstr "/射影されたイメージを拡大縮小"
+
+#: src/gtk/gtk_base.c:372 src/gtk/gtk_gsglwindow.cpp:490
+#: src/gtk/gtk_menupro.cpp:234
+msgid "/Translate Projected Image"
+msgstr "/射影されたイメージを平行移動"
+
+#: src/gtk/gtk_base.c:373 src/gtk/gtk_gsglwindow.cpp:410
+#: src/gtk/gtk_gsglwindow.cpp:491 src/gtk/gtk_menupro.cpp:23
+msgid "/Restore Projected Image"
+msgstr "/射影されたイメージを元に戻す"
+
+#: src/gtk/gtk_gsglwindow.cpp:289 src/gtk/gtk_menu3d.cpp:22
+msgid "/Objects/Restore 3D"
+msgstr "/オブジェクト/3次元オブジェクトを元に戻す"
+
+#: src/gtk/gtk_gsglwindow.cpp:290 src/gtk/gtk_menu2d.cpp:20
+msgid "/Objects/Restore 2D"
+msgstr "/オブジェクト/2次元オジェクトを元に戻す"
+
+#: src/gtk/gtk_gsglwindow.cpp:291 src/gtk/gtk_menupro.cpp:21
+msgid "/Projected Image/Restore"
+msgstr "/射影されたイメージ/元に戻す"
+
+#: src/gtk/gtk_gsglwindow.cpp:473
+msgid "/Edit/Select All 3D Objects"
+msgstr "/編集/すべての3次元オブジェクトを選択"
+
+#: src/gtk/gtk_gsglwindow.cpp:492
+msgid "/Edit"
+msgstr "/編集"
+
+#: src/gtk/gtk_gsglwindow.cpp:493
+msgid "/Objects"
+msgstr "/オブジェクト"
+
+#: src/gtk/gtk_gsglwindow.cpp:494
+msgid "/Projected Image"
+msgstr "/射影されたイメージ"
+
+#: src/gtk/gtk_gsglwindow.cpp:525 src/qt/qt_gsglwindow.cpp:106
+msgid "Save"
+msgstr "保存"
+
+#: src/gtk/gtk_gsglwindow.cpp:526 src/qt/qt_gsglwindow.cpp:264
+msgid "Saving now ..."
+msgstr "保存中..."
+
+#: src/gtk/gtk_gsglwindow.cpp:576 src/qt/qt_gsglwindow.cpp:105
+#: src/qt/qt_gsglwindow.cpp:333 src/qt/qt_gsglwindow.cpp:338
+msgid "Save As ..."
+msgstr "名前をつけて保存..."
+
+#: src/gtk/gtk_gsglwindow.cpp:657 src/gtk/gtk_gsglwindow.cpp:744
+#, c-format
+msgid "\"%s\" is not a file name."
+msgstr "\"%s\" はファイルの名前ではありません．"
+
+#: src/gtk/gtk_gsglwindow.cpp:787 src/qt/qt_gsglwindow.cpp:483
+#: src/qt/qt_gsglwindow.cpp:486
+msgid "Export as ..."
+msgstr "エクスポート"
+
+#: src/gtk/gtk_gsglwindow.cpp:830 src/qt/qt_gsglwindow.cpp:109
+msgid "Export"
+msgstr "エクスポート"
+
+#: src/gtk/gtk_gsglwindow.cpp:831 src/qt/qt_gsglwindow.cpp:426
+msgid "Exporting now ..."
+msgstr "エクスポート中..."
+
+#: src/gtk/gtk_gsglwindow.cpp:892 src/qt/qt_gsglwindow.cpp:398
+#: src/qt/qt_gsglwindow.cpp:403
+msgid "Export EPS"
+msgstr "EPSファイルをエクスポート"
+
+#: src/gtk/gtk_gsglwindow.cpp:893 src/gtk/gtk_gsglwindow.cpp:899
+#: src/qt/qt_gsglwindow.cpp:399 src/qt/qt_gsglwindow.cpp:404
+#, c-format
+msgid ""
+"Enter the command line generates eps.\n"
+"('%s' will be replaced by a file name)"
+msgstr ""
+"EPSファイルを生成するコマンドを入力してください．\n"
+"('%s' がファイル名で置き換えられます)"
+
+#: src/gtk/gtk_gsglwindow.cpp:898
+msgid "Export Raster EPS"
+msgstr "EPS(ラスター形式)をエクスポート"
+
+#: src/gtk/gtk_gsglwindow.cpp:904 src/qt/qt_gsglwindow.cpp:408
+msgid "Export PNG"
+msgstr "PNGファイルをエクスポート"
+
+#: src/gtk/gtk_gsglwindow.cpp:905 src/qt/qt_gsglwindow.cpp:409
+#, c-format
+msgid ""
+"Enter the command line generates png.\n"
+"('%s' will be replaced by a file name)"
+msgstr ""
+"PNGファイルを生成するコマンドを入力してください．\n"
+"('%s' がファイル名で置き換えられます)"
+
+#: src/gtk/gtk_gsglwindow.cpp:910 src/qt/qt_gsglwindow.cpp:413
+msgid "Export JPEG"
+msgstr "JPEGファイルをエクスポート"
+
+#: src/gtk/gtk_gsglwindow.cpp:911 src/qt/qt_gsglwindow.cpp:414
+#, c-format
+msgid ""
+"Enter the command line generates jpeg.\n"
+"('%s' will be replaced by a file name)"
+msgstr ""
+"JPEGファイルを生成するコマンドを入力してください．\n"
+"('%s' がファイル名で置き換えられます)"
+
+#: src/gtk/gtk_gsglwindow.cpp:954 src/qt/qt_gsglwindow.cpp:111
+#: src/qt/qt_gsglwindow.cpp:566
+msgid "Print ..."
+msgstr "印刷..."
+
+#: src/gtk/gtk_gsglwindow.cpp:955 src/qt/qt_gsglwindow.cpp:567
+#, c-format
+msgid ""
+"Enter the command line print a gsgl file.\n"
+"('%s' will be replaced by a file name)"
+msgstr ""
+"印刷コマンドを入力してください．\n"
+"('%s' がファイル名で置き換えられます)"
+
+#: src/gtk/gtk_gsglwindow.cpp:1076 src/qt/qt_gsglwindow.cpp:615
+msgid "Quit?"
+msgstr "終了しますか?"
+
+#: src/gtk/gtk_gsglwindow.cpp:1077 src/qt/qt_gsglwindow.cpp:615
+msgid "Are you sure to quit?"
+msgstr "本当に終了しますか?"
+
+#: src/gtk/gtk_gsglwindow.cpp:1105 src/qt/qt_gsglwindow.cpp:833
+msgid "Key bindings"
+msgstr "キーバインド"
+
+#: src/gtk/gtk_gsglwindow.cpp:1159 src/qt/qt_gsglwindow.cpp:194
+#: src/qt/qt_gsglwindow.cpp:853
+msgid "About"
+msgstr "GSAF/OpenGLについて"
+
+#: src/gtk/gtk_config.cpp:291 src/gtk/gtk_config.cpp:327
+#: src/qt/qt_dialog.cpp:249
+msgid "black"
+msgstr "黒"
+
+#: src/gtk/gtk_config.cpp:314
+msgid "Configure color"
+msgstr "色の設定"
+
+#: src/gtk/gtk_config.cpp:318 src/qt/qt_dialog.cpp:246
+msgid "background color:"
+msgstr "背景の色"
+
+#: src/gtk/gtk_config.cpp:326 src/qt/qt_dialog.cpp:250
+msgid "white"
+msgstr "白"
+
+#: src/gtk/gtk_config.cpp:348 src/qt/qt_dialog.cpp:262
+msgid "selecting box color:"
+msgstr "選択ボックスの色"
+
+#: src/gtk/gtk_config.cpp:374 src/qt/qt_dialog.cpp:271
+msgid "selected object's color:"
+msgstr "選択されたオブジェクトの色"
+
+#: src/gtk/gtk_config.cpp:402 src/gtk/gtk_config.cpp:522
+#: src/gtk/gtk_config.cpp:659 src/gtk/gtk_menu2d.cpp:130
+#: src/gtk/gtk_menu2d.cpp:194 src/gtk/gtk_menu3d.cpp:138
+#: src/gtk/gtk_menu3d.cpp:225 src/gtk/gtk_menupro.cpp:127
+#: src/gtk/gtk_menupro.cpp:192 src/qt/qt_dialog.cpp:43
+msgid "Default"
+msgstr "デフォルト"
+
+#: src/gtk/gtk_config.cpp:507
+msgid "Configure command line"
+msgstr "コマンドの設定"
+
+#: src/gtk/gtk_config.cpp:512
+msgid "Print:"
+msgstr "印刷:"
+
+#: src/gtk/gtk_config.cpp:513
+msgid "Browse manuals:"
+msgstr "マニュアルを見る:"
+
+#: src/gtk/gtk_config.cpp:514
+msgid "Export vector eps:"
+msgstr "eps (ベクター形式)をエクスポート"
+
+#: src/gtk/gtk_config.cpp:515
+msgid "Export raster eps:"
+msgstr "eps (ラスター形式)をエクスポート"
+
+#: src/gtk/gtk_config.cpp:516
+msgid "Export jpeg:"
+msgstr "jpeg をエクスポート"
+
+#: src/gtk/gtk_config.cpp:517
+msgid "Export png:"
+msgstr "png をエクスポート"
+
+#: src/gtk/gtk_config.cpp:610
+msgid "Configure window size"
+msgstr "Windowの大きさの設定"
+
+#: src/gtk/gtk_config.cpp:618
+msgid "window width : "
+msgstr "ウィンドウの幅:"
+
+#: src/gtk/gtk_config.cpp:618 src/gtk/gtk_config.cpp:628
+#: src/gtk/gtk_config.cpp:638 src/gtk/gtk_config.cpp:648
+msgid "pixel"
+msgstr "ピクセル"
+
+#: src/gtk/gtk_config.cpp:628
+msgid "window height : "
+msgstr "ウィンドウの高さ:"
+
+#: src/gtk/gtk_config.cpp:638
+msgid "left-upper corner (x) : "
+msgstr "ウィンドウの左上 (x座標):"
+
+#: src/gtk/gtk_config.cpp:648
+msgid "left-upper corner (y) : "
+msgstr "ウィンドウの左上 (y座標):"
+
+#: src/gtk/gtk_config.cpp:824
+msgid "Alphabet"
+msgstr "アルファベット"
+
+#: src/gtk/gtk_config.cpp:825
+msgid "Greek"
+msgstr "ギリシャ語"
+
+#: src/gtk/gtk_config.cpp:826
+msgid "Japanese"
+msgstr "日本語"
+
+#: src/gtk/gtk_config.cpp:827
+msgid "Bakoma"
+msgstr "Bakomaフォント"
+
+#: src/gtk/gtk_config.cpp:828
+msgid "Type1"
+msgstr "Type1"
+
+#: src/gtk/gtk_config.cpp:837
+msgid "Configure truetype fonts path"
+msgstr "TrueTypeフォントの設定"
+
+#: src/gtk/gtk_menu2d.cpp:102
+msgid "Scale 2D Objects"
+msgstr "2次元オブジェクトを拡大縮小"
+
+#: src/gtk/gtk_menu2d.cpp:105 src/gtk/gtk_menu3d.cpp:106
+#: src/gtk/gtk_menupro.cpp:102 src/qt/qt_dialog.cpp:121
+msgid "Center of Scaling : "
+msgstr "拡大縮小の中心"
+
+#: src/gtk/gtk_menu2d.cpp:166
+msgid "Rotate 2D objects"
+msgstr "2次元オブジェクトを回転"
+
+#: src/gtk/gtk_menu2d.cpp:169 src/gtk/gtk_menu3d.cpp:193
+#: src/gtk/gtk_menupro.cpp:167
+msgid "Center of Rotation : "
+msgstr "回転の中心"
+
+#: src/gtk/gtk_menu3d.cpp:103
+msgid "Scale 3D Objects"
+msgstr "3次元オブジェクトを拡大縮小"
+
+#: src/gtk/gtk_menu3d.cpp:190
+msgid "Rotate 3D Objects"
+msgstr "3次元オブジェクトを回転"
+
+#: src/gtk/gtk_menu3d.cpp:251
+msgid "/Objects/Translate (z)"
+msgstr "/オブジェクト/平行移動 (z方向)"
+
+#: src/gtk/gtk_menu3d.cpp:253
+msgid "/Objects/Toggle Lighting"
+msgstr "/オブジェクト/照光処理のオン・オフ"
+
+#: src/gtk/gtk_menupro.cpp:99 src/qt/qt_gsglwindow.cpp:227
+msgid "Scale Projected Image"
+msgstr "射影されたイメージを拡大縮小"
+
+#: src/gtk/gtk_menupro.cpp:164 src/qt/qt_gsglwindow.cpp:226
+msgid "Rotate Projected Image"
+msgstr "射影されたイメージを回転"
+
+#: src/gtk/gtk_menupro.cpp:224
+msgid "/Projectied Image/Rotate"
+msgstr "/射影されたイメージ/回転"
+
+#: src/gtk/gtk_menupro.cpp:226
+msgid "/Projectied Image/Scale"
+msgstr "/射影されたイメージ/拡大縮小"
+
+#: src/gtk/gtk_menupro.cpp:228
+msgid "/Projectied Image/Translate"
+msgstr "/射影されたイメージ/平行移動"
+
+#: src/gtk/gtk_guiitems.cpp:820 src/gtk/gtk_guiitems.cpp:923
+msgid "SpinButton"
+msgstr "スピンボタン"
+
+#: src/gtk/gtk_anime.cpp:12
+msgid "/Animation/Pause"
+msgstr "/アニメーション/休止"
+
+#: src/gtk/gtk_anime.cpp:31
+msgid "/Animation/Replay"
+msgstr "/アニメーション/再再生"
+
+#: src/gtk/gtk_anime.cpp:32
+msgid "/Animation/Replay (Slow)"
+msgstr "/アニメーション/再再生 (ゆっくり)"
+
+#: src/gtk/gtk_anime.cpp:33
+msgid "/Animation/Replay (Very Slow)"
+msgstr "/アニメーション/再再生 (非常にゆっくり)"
+
+#: src/gtk/gtk_anime.cpp:34
+msgid "/Animation/Single Frame Forward"
+msgstr "/アニメーション/１フレーム進める"
+
+#: src/gtk/gtk_anime.cpp:35
+msgid "/Animation/Reverse Play"
+msgstr "/アニメーション/逆再生"
+
+#: src/gtk/gtk_anime.cpp:36
+msgid "/Animation/Reverse Play (Slow)"
+msgstr "/アニメーション/逆再生 (ゆっくり)"
+
+#: src/gtk/gtk_anime.cpp:37
+msgid "/Animation/Reverse Play (Very Slow)"
+msgstr "/アニメーション/逆再生 (非常にゆっくり)"
+
+#: src/gtk/gtk_anime.cpp:38
+msgid "/Animation/Single Frame Reverse"
+msgstr "/アニメーション/１フレーム戻る"
+
+#: src/gtk/gtk_menuedit.cpp:53
+msgid "0 Left"
+msgstr "0 左揃え"
+
+#: src/gtk/gtk_menuedit.cpp:54
+msgid "1 Right"
+msgstr "1 右揃え"
+
+#: src/gtk/gtk_menuedit.cpp:55
+msgid "2 Center"
+msgstr "2 中心揃え"
+
+#: src/gtk/gtk_menuedit.cpp:56
+msgid "3 Point Arithmetic"
+msgstr "3 小数点揃え"
+
+#: src/gtk/gtk_menuedit.cpp:88 src/qt/qt_gsglwindow.cpp:128
+msgid "Add Texts"
+msgstr "テキストの追加"
+
+#: src/gtk/gtk_menuedit.cpp:107 src/qt/qt_dialog.cpp:671
+msgid "Font"
+msgstr "フォント"
+
+#: src/gtk/gtk_menuedit.cpp:134 src/qt/qt_dialog.cpp:681
+msgid "Size"
+msgstr "サイズ"
+
+#: src/gtk/gtk_menuedit.cpp:152 src/qt/qt_dialog.cpp:689
+msgid "Angle"
+msgstr "角度"
+
+#: src/gtk/gtk_menuedit.cpp:170 src/qt/qt_dialog.cpp:697
+msgid "Justification"
+msgstr "位置揃え"
+
+#: src/gtk/gtk_menuedit.cpp:196 src/gtk/gtk_menuedit.cpp:455
+#: src/qt/qt_gsglwindow.cpp:115 src/qt/qt_dialog.cpp:59
+msgid "Close"
+msgstr "閉じる"
+
+#: src/gtk/gtk_menuedit.cpp:278 src/qt/qt_gsglwindow.cpp:127
+msgid "Add Lines"
+msgstr "線分の追加"
+
+#: src/gtk/gtk_menuedit.cpp:297
+#, fuzzy
+msgid "Line Width"
+msgstr "一行エディタ"
+
+#: src/gtk/gtk_menuedit.cpp:300
+#, fuzzy
+msgid "point"
+msgstr "ポインター"
+
+#: src/gtk/gtk_menuedit.cpp:301 src/qt/qt_dialog.cpp:132
+#: src/qt/qt_dialog.cpp:140 src/qt/qt_dialog.cpp:149
+msgid "cm"
+msgstr "cm"
+
+#: src/gtk/gtk_menuedit.cpp:336
+#, fuzzy
+msgid "Line Color"
+msgstr "色"
+
+#: src/gtk/gtk_menuedit.cpp:339
+msgid "Index"
+msgstr ""
+
+#: src/gtk/gtk_menuedit.cpp:340
+msgid "RGB"
+msgstr ""
+
+#: src/gtk/gtk_menuedit.cpp:391
+msgid "Line Type"
+msgstr ""
+
+#: src/gtk/gtk_menuedit.cpp:441
+msgid "Arrows"
+msgstr ""
+
+#: src/gtk/gtk_menuedit.cpp:445
+msgid "Origin"
+msgstr ""
+
+#: src/gtk/gtk_menuedit.cpp:449
+#, fuzzy
+msgid "End Point"
+msgstr "ポインター"
+
+#: src/gtk/gtk_menuedit.cpp:479 src/qt/qt_menuedit.cpp:90
+msgid "Text"
+msgstr "テキスト"
+
+#: src/qt/qt_gsglwindow.cpp:94
+msgid "EPS (Vector)"
+msgstr "EPS (ベクター形式)"
+
+#: src/qt/qt_gsglwindow.cpp:95
+msgid "EPS (Raster)"
+msgstr "EPS (ラスター形式)"
+
+#: src/qt/qt_gsglwindow.cpp:96
+msgid "PNG"
+msgstr "PNG"
+
+#: src/qt/qt_gsglwindow.cpp:97
+msgid "JPEG"
+msgstr "JPEG"
+
+#: src/qt/qt_gsglwindow.cpp:107
+msgid "Save and Close"
+msgstr "保存して閉じる"
+
+#: src/qt/qt_gsglwindow.cpp:108
+msgid "Save This Frame"
+msgstr "このフレームを保存"
+
+#: src/qt/qt_gsglwindow.cpp:113
+msgid "Dump Dot Image"
+msgstr "イメージのダンプ"
+
+#: src/qt/qt_gsglwindow.cpp:116
+msgid "Quit"
+msgstr "終了"
+
+#: src/qt/qt_gsglwindow.cpp:124 src/qt/qt_gsglwindow.cpp:214
+msgid "Pointer"
+msgstr "ポインター"
+
+#: src/qt/qt_gsglwindow.cpp:125 src/qt/qt_gsglwindow.cpp:215
+msgid "Select All 2D Objects"
+msgstr "すべての2次元オブジェクトを選択"
+
+#: src/qt/qt_gsglwindow.cpp:126 src/qt/qt_gsglwindow.cpp:216
+msgid "Select All 3D Objects"
+msgstr "すべての3次元オブジェクトを選択"
+
+#: src/qt/qt_gsglwindow.cpp:136 src/qt/qt_gsglwindow.cpp:152
+#: src/qt/qt_gsglwindow.cpp:218
+msgid "Rotate"
+msgstr "回転"
+
+#: src/qt/qt_gsglwindow.cpp:137 src/qt/qt_gsglwindow.cpp:153
+#: src/qt/qt_gsglwindow.cpp:219
+msgid "Scale"
+msgstr "拡大縮小"
+
+#: src/qt/qt_gsglwindow.cpp:138 src/qt/qt_gsglwindow.cpp:220
+msgid "Translate (x,y)"
+msgstr "平行移動 (x-y方向)"
+
+#: src/qt/qt_gsglwindow.cpp:139 src/qt/qt_gsglwindow.cpp:221
+msgid "Translate (z)"
+msgstr "平行移動 (z方向)"
+
+#: src/qt/qt_gsglwindow.cpp:141 src/qt/qt_gsglwindow.cpp:222
+msgid "Toggle Lighting"
+msgstr "照光処理のオン・オフ"
+
+#: src/qt/qt_gsglwindow.cpp:143 src/qt/qt_gsglwindow.cpp:223
+msgid "Restore 2D"
+msgstr "2次元オブジェクトを元に戻す"
+
+#: src/qt/qt_gsglwindow.cpp:144 src/qt/qt_gsglwindow.cpp:224
+msgid "Restore 3D"
+msgstr "3次元オブジェクトを元に戻す"
+
+#: src/qt/qt_gsglwindow.cpp:154
+msgid "Translate"
+msgstr "平行移動"
+
+#: src/qt/qt_gsglwindow.cpp:156
+msgid "Restore"
+msgstr "元に戻す"
+
+#: src/qt/qt_gsglwindow.cpp:164
+msgid "Replay"
+msgstr "再再生"
+
+#: src/qt/qt_gsglwindow.cpp:165
+msgid "Replay (Slow)"
+msgstr "再再生 (ゆっくり)"
+
+#: src/qt/qt_gsglwindow.cpp:166
+msgid "Replay (Very Slow)"
+msgstr "再再生 (非常にゆっくり)"
+
+#: src/qt/qt_gsglwindow.cpp:167
+msgid "Single Frame Forward"
+msgstr "１フレーム進める"
+
+#: src/qt/qt_gsglwindow.cpp:168
+msgid "Reverse Play"
+msgstr "逆再生"
+
+#: src/qt/qt_gsglwindow.cpp:169
+msgid "Reverse Play (Slow)"
+msgstr "逆再生 (ゆっくり)"
+
+#: src/qt/qt_gsglwindow.cpp:170
+msgid "Reverse Play (Very Slow)"
+msgstr "逆再生 (非常にゆっくり)"
+
+#: src/qt/qt_gsglwindow.cpp:171
+msgid "Single Frame Reverse"
+msgstr "１フレーム戻る"
+
+#: src/qt/qt_gsglwindow.cpp:172
+msgid "Pause"
+msgstr "休止"
+
+#: src/qt/qt_gsglwindow.cpp:180
+msgid "Color"
+msgstr "色"
+
+#: src/qt/qt_gsglwindow.cpp:181
+msgid "Command Line"
+msgstr "コマンド"
+
+#: src/qt/qt_gsglwindow.cpp:182
+msgid "TrueType Font"
+msgstr "TrueTypeフォント"
+
+#: src/qt/qt_gsglwindow.cpp:183
+msgid "Window Size"
+msgstr "Windowの大きさ"
+
+#: src/qt/qt_gsglwindow.cpp:191
+msgid "Key Bindings"
+msgstr "キーバインド"
+
+#: src/qt/qt_gsglwindow.cpp:192
+msgid "Manual"
+msgstr "マニュアル"
+
+#: src/qt/qt_gsglwindow.cpp:197
+msgid "&File"
+msgstr "ファイル(&F)"
+
+#: src/qt/qt_gsglwindow.cpp:198
+msgid "&Edit"
+msgstr "編集(&E)"
+
+#: src/qt/qt_gsglwindow.cpp:199
+msgid "&Objects"
+msgstr "オブジェクト(&O)"
+
+#: src/qt/qt_gsglwindow.cpp:200
+msgid "&Projectied Image"
+msgstr "射影されたイメージ(&P)"
+
+#: src/qt/qt_gsglwindow.cpp:201
+msgid "&Animation"
+msgstr "アニメーション(&A)"
+
+#: src/qt/qt_gsglwindow.cpp:202
+msgid "&Config"
+msgstr "設定(&C)"
+
+#: src/qt/qt_gsglwindow.cpp:204
+msgid "&Help"
+msgstr "ヘルプ(&H)"
+
+#: src/qt/qt_gsglwindow.cpp:228
+msgid "Translate Projected Image"
+msgstr "射影されたイメージを平行移動"
+
+#: src/qt/qt_gsglwindow.cpp:229
+msgid "Restore Projected Image"
+msgstr "射影されたイメージを元に戻す"
+
+#: src/qt/qt_dialog.cpp:126
+msgid "x : "
+msgstr "x : "
+
+#: src/qt/qt_dialog.cpp:136
+msgid "y : "
+msgstr "y : "
+
+#: src/qt/qt_dialog.cpp:145
+msgid "depth : "
+msgstr "depth : "
+
+#~ msgid "/Edit/sepe1"
+#~ msgstr "/編集/sepe1"
+
+#~ msgid "/Edit/Add Lines"
+#~ msgstr "/編集/線分の追加"
+
+#~ msgid "/Edit/Add Texts"
+#~ msgstr "/編集/テキストの追加"
+
+#~ msgid "mm"
+#~ msgstr "mm"
+
+#, fuzzy
+#~ msgid ""
+#~ "Enter the command line print a gsgl file.\n"
+#~ "('%s' will be replaced by file name)"
+#~ msgstr ""
+#~ "印刷コマンドを入力してください．\n"
+#~ "('%s' がファイル名で置き換えられます)"
+
+#, fuzzy
+#~ msgid ""
+#~ "Enter the command line generates eps.\n"
+#~ "('%s' will be replaced by a file name.)"
+#~ msgstr ""
+#~ "印刷コマンドを入力してください．\n"
+#~ "('%s' がファイル名で置き換えられます)"
+
+#, fuzzy
+#~ msgid ""
+#~ "Enter the command line generates png.\n"
+#~ "('%s' will be replaced by a file name.)"
+#~ msgstr ""
+#~ "印刷コマンドを入力してください．\n"
+#~ "('%s' がファイル名で置き換えられます)"
+
+#, fuzzy
+#~ msgid ""
+#~ "Enter the command line generates jpeg.\n"
+#~ "('%s' will be replaced by a file name.)"
+#~ msgstr ""
+#~ "印刷コマンドを入力してください．\n"
+#~ "('%s' がファイル名で置き換えられます)"
+
+#~ msgid ""
+#~ "Enter the command line generates eps .\n"
+#~ "(`%s' will be replaced by a file name.)"
+#~ msgstr ""
+#~ "EPSファイルを生成するコマンドを入力してください．\n"
+#~ "('%s' がファイル名で置き換えられます)"
+
+#~ msgid ""
+#~ "Enter the command line generates png .\n"
+#~ "(`%s' will be replaced by a file name.)"
+#~ msgstr ""
+#~ "PNGファイルを生成するコマンドを入力してください．\n"
+#~ "('%s' がファイル名で置き換えられます)"
+
+#~ msgid ""
+#~ "Enter the command line generates jpeg.\n"
+#~ "(`%s' will be replaced by a file name.)"
+#~ msgstr ""
+#~ "JPEGファイルを生成するコマンドを入力してください．\n"
+#~ "('%s' がファイル名で置き換えられます)"
+
+#, fuzzy
+#~ msgid ""
+#~ "Old file is going to be overwritten.\n"
+#~ "Are you sure?"
+#~ msgstr ""
+#~ "既にあるファイルが上書きされます．\n"
+#~ "よろしいですか?"
+
+#, fuzzy
+#~ msgid "Save As"
+#~ msgstr "名前をつけて保存..."
+
+#~ msgid "Can not open file"
+#~ msgstr "ファイルが開けません"
+
+#~ msgid "Save as ..."
+#~ msgstr "名前をつけて保存..."
+
+#~ msgid ""
+#~ "Enter the generate eps command line.\n"
+#~ "(`%s' will be replaced by file name.)"
+#~ msgstr ""
+#~ "epsファイルを生成するコマンドを入力してください．\n"
+#~ "('%s' はファイル名で置き換えられます)"
+
+#~ msgid ""
+#~ "Enter the generate png command line.\n"
+#~ "(`%s' will be replaced by file name.)"
+#~ msgstr ""
+#~ "png ファイルを生成するコマンドを入力してください．\n"
+#~ "('%s' はファイル名で置き換えられます)"
+
+#~ msgid ""
+#~ "Enter the generate jpeg command line.\n"
+#~ "(`%s' will be replaced by file name.)"
+#~ msgstr ""
+#~ "jpeg ファイルを生成するコマンドを入力してください．\n"
+#~ "('%s' はファイル名で置き換えられます)"
+
+#~ msgid "rotation angle : "
+#~ msgstr "回転角度"
+
+#~ msgid "center of rotation : "
+#~ msgstr "回転の中心"
+
+#~ msgid "Export eps"
+#~ msgstr "eps をエクスポート"
+
+#~ msgid "Export png"
+#~ msgstr "png をエクスポート"
+
+#~ msgid "Export jpeg"
+#~ msgstr "jpeg をエクスポート"
+
+#~ msgid "/File/Export/_png"
+#~ msgstr "/ファイル/エクスポート/png"
+
+#~ msgid "/File/Export/_jpeg"
+#~ msgstr "/ファイル/エクスポート/jpeg"

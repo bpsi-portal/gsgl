@@ -1,0 +1,12 @@
+src/gtk/gtk_base.c
+src/gtk/gtk_gsglwindow.cpp
+src/gtk/gtk_config.cpp
+src/gtk/gtk_menu2d.cpp
+src/gtk/gtk_menu3d.cpp
+src/gtk/gtk_menupro.cpp
+src/gtk/gtk_guiitems.cpp
+src/gtk/gtk_anime.cpp
+src/gtk/gtk_menuedit.cpp
+src/qt/qt_gsglwindow.cpp
+src/qt/qt_dialog.cpp
+src/qt/qt_menuedit.cpp

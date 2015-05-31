@@ -1,0 +1,9 @@
+#!/bin/sh
+if [ $# -eq 0 ]
+then
+	echo 'usage: gsglprint [options] file'
+	exit
+fi
+
+#BINPATH/gsfile -a $* | LP
+BINPATH/gsgl2ps -a $* | LP

@@ -1,0 +1,258 @@
+// -*- c++ -*-
+#ifndef __qt_dialog_h
+#define __qt_dialog_h
+#include "qt_compat.h"
+#include <qcolor.h>
+#include <qlineedit.h>
+#include <qdialog.h>
+#include <qpushbutton.h>
+#include <qlayout.h>
+#include <qlabel.h>
+#include <qspinbox.h>
+#include <qcombobox.h>
+#ifdef USE_QT3
+#    include <qtabdialog.h>
+#    include <qvbox.h>
+#    include <qgrid.h>
+#elif defined USE_QT4
+#    include <q3tabdialog.h>
+#    include <q3vbox.h>
+#    include <q3grid.h>
+#    include <QPixmap>
+#    include <QHBoxLayout>
+#    include <QVBoxLayout>
+#endif
+#include <qvalidator.h>
+#include "gsgltype.h"
+
+class MySpinBox : public QSpinBox
+{
+	Q_OBJECT
+public:
+	MySpinBox(int digits, int minValue, int maxValue, int step=1, QWidget *parent=0, const char *name=0);
+	~MySpinBox () {if (val) delete val;};
+	QDoubleValidator *val;
+	QString mapValueToText( int value );
+	int mapTextToValue( bool *ok );
+
+private:
+	double factor;
+	int digits;
+};
+
+class gsglDialog : public QDialog
+{
+	Q_OBJECT
+
+public:
+	gsglDialog (gsglPage *p, bool, QWidget *parent=0, const char *name=0, bool modal=FALSE, WFLAGS fl=0);
+	~gsglDialog () {};
+
+	QHBoxLayout *buttonbox;
+	QVBoxLayout *vbox;
+	QPushButton *okPushButton;
+	QPushButton *cancelPushButton;
+	QPushButton *defaultPushButton;
+	bool with_default;
+	gsglPage *p;
+
+protected:
+	void addbuttons ();
+	void addbuttons_close ();
+
+public slots:  
+        virtual void setdefault ();
+        virtual void my_accept ();
+        virtual void my_reject ();
+};
+
+class gsglScaleDialog : public gsglDialog
+{
+	Q_OBJECT
+
+public:
+	gsglScaleDialog (gsglPage *p, int dim, QWidget *parent=0, const char *name=0, bool modal=FALSE, WFLAGS fl=0);
+	~gsglScaleDialog () {};
+	void get_result (int *, int *, int *);
+
+	QHBoxLayout *xbox;
+	QHBoxLayout *ybox;
+	QHBoxLayout *zbox;
+	QLabel *caption;
+	QLabel *x;
+	QLabel *y;
+	QLabel *z;
+	QLabel *mm1;
+	QLabel *mm2;
+	QLabel *mm3;
+	MySpinBox *spinx;
+	MySpinBox *spiny;
+	MySpinBox *spinz;
+
+public slots:  
+	void setdefault ();
+        void cross_x (int i);
+        void cross_y (int i);
+        void cross_z (int i);
+        void my_accept ();
+        void my_reject ();
+
+private:
+	int dim;
+};
+
+class ColorButton : public QPushButton
+{
+	Q_OBJECT
+
+public:
+	ColorButton (QWidget *parent, int r, int g, int b, const char *name=0);
+        ~ColorButton () {};
+	void setcolor (QColor);
+	QColor inqcolor () {return c;};
+
+public slots:
+        void select_color ();
+
+private:
+        QPixmap p;
+        QColor c;
+};
+
+class gsglColorDialog : public gsglDialog
+{
+	Q_OBJECT
+
+public:
+	gsglColorDialog (gsglPage *, QWidget *parent=0, const char *name=0, bool modal=FALSE, WFLAGS fl=0);
+	~gsglColorDialog () {};
+	void get_result (int *, double a[3], double b[3]);
+
+	QHBoxLayout *layout1;
+	QHBoxLayout *layout2;
+	QLabel *back;
+	QLabel *boxlabel;
+	ColorButton *box;
+	QLabel *objectslabel;
+	ColorButton *objects;
+	QComboBox *combobox;
+
+public slots:  
+	void setdefault ();
+};
+
+class gsglCommandDialog : public gsglDialog
+{
+	Q_OBJECT
+
+public:
+	gsglCommandDialog (gsglPage *, QWidget *parent=0, const char *name=0, bool modal=FALSE, WFLAGS fl=0);
+	~gsglCommandDialog () {};
+	void get_result ();
+
+	QLabel *label[6];
+	QLineEdit *textedit[6];
+
+public slots:  
+        void setdefault ();
+};
+
+class gsglWindowSizeDialog : public gsglDialog
+{
+	Q_OBJECT
+
+public:
+	gsglWindowSizeDialog (gsglPage *, QWidget *parent=0, const char *name=0, bool modal=FALSE, WFLAGS fl=0);
+	~gsglWindowSizeDialog () {};
+	void get_result ();
+
+	QHBoxLayout *layout[4];
+	QLabel *label1[4];
+	QLabel *label2[4];
+	MySpinBox *spin[4];
+
+public slots:  
+        void setdefault ();
+};
+
+class gsglFontsDialog : public @QTABDIALOG@
+{
+	Q_OBJECT
+
+public:
+	gsglFontsDialog (gsglPage *, QWidget *parent=0, const char *name=0, bool modal=FALSE, WFLAGS f=0);
+	~gsglFontsDialog () {};
+	void get_result ();
+
+#ifdef USE_QT3
+	QVBox *box[5];
+	QGrid *grid[5];
+#else
+	Q3VBox *box[5];
+	Q3Grid *grid[5];
+#endif
+	QLabel *label11[14];
+	QLabel *label12[14];
+	QLabel *label21[5];
+	QLabel *label22[5];
+	QLabel *label31[3];
+	QLabel *label32[3];
+	QLabel *label41[6];
+	QLabel *label42[6];
+	QLabel *label51[13];
+	QLabel *label52[13];
+	QLineEdit *edit1[14];
+	QLineEdit *edit2[5];
+	QLineEdit *edit3[3];
+	QLineEdit *edit4[6];
+	QLineEdit *edit5[13];
+	gsglPage *p;
+};
+
+class gsglSpinDialogf : public gsglDialog
+{
+	Q_OBJECT
+
+public:
+	gsglSpinDialogf (gsglPage *, int digits, float init, float lower, float upper, QWidget* parent=0, const char* name=0, bool modal=FALSE, WFLAGS fl=0);
+	~gsglSpinDialogf () {};
+	void get_result ();
+
+	MySpinBox *spin;
+};
+
+
+class gsglSpinDialogi : public gsglDialog
+{
+	Q_OBJECT
+
+public:
+	gsglSpinDialogi (gsglPage *, int init, int lower, int upper, QWidget* parent=0, const char* name=0, bool modal=FALSE, WFLAGS fl=0);
+	~gsglSpinDialogi () {};
+	void get_result ();
+
+	MySpinBox *spin;
+};
+
+class gsglAddTexts : public gsglDialog
+{
+	Q_OBJECT
+
+public:
+	gsglAddTexts (gsglPage *, char *fonts[], int , char *just[], int, QWidget *parent=0, const char *name=0, bool modal=FALSE, WFLAGS fl=0);	
+	~gsglAddTexts () {my_reject();};
+
+	QComboBox * combo_font;
+	MySpinBox * spin_size;
+	MySpinBox * spin_angle;
+	QComboBox * combo_just;
+   public slots:  
+   void my_reject ();
+};
+
+
+char * gui_popup_edit (char *, char *);
+float gui_popup_spinf (int digits, float init, float lower, float upper, gsglPage *);
+int gui_popup_spini (int init, int lower, int upper, gsglPage *);
+
+#endif

@@ -1,0 +1,173 @@
+// -*- c++ -*-
+#ifndef __qt_gsglwindow_h
+#define __qt_gsglwindow_h
+#include "qt_compat.h"
+#include "qt_drawarea.h"
+#include "gsgltype.h"
+class QMenuBar;
+#ifdef USE_QT4
+#    include <QMenu>
+#    include <Q3PopupMenu>
+#    include <q3mainwindow.h>
+class Q3VBox;
+#else
+#    include <qmainwindow.h>
+class QVBox;
+#endif
+
+class gsglMainWindow : public @QMAINWINDOW@
+{
+	Q_OBJECT
+
+public:
+	gsglMainWindow (gsglWindow *, QWidget* parent = 0, const char* name = 0, WFLAGS fl = TOPWINDOW);
+	~gsglMainWindow ();
+	void set_up_gui (gsglboolean b);
+	void set_page (gsglPage *);
+
+	GLDrawArea *gl;
+#ifdef USE_QT3
+	QVBox *vbox;
+#else
+	Q3VBox *vbox;
+#endif
+	QMenuBar *menubar;
+#ifdef USE_QT3
+	QPopupMenu *fileMenu;
+	QPopupMenu *exportMenu;
+	QPopupMenu *editMenu;
+	QPopupMenu *objectsMenu;
+	QPopupMenu *projectionMenu;
+	QPopupMenu *animeMenu;
+	QPopupMenu *configMenu;
+	QPopupMenu *helpMenu;
+	QPopupMenu *contextMenu;
+#else
+	Q3PopupMenu *fileMenu;
+	Q3PopupMenu *exportMenu;
+	Q3PopupMenu *editMenu;
+	Q3PopupMenu *objectsMenu;
+	Q3PopupMenu *projectionMenu;
+	Q3PopupMenu *animeMenu;
+	Q3PopupMenu *configMenu;
+	Q3PopupMenu *helpMenu;
+	Q3PopupMenu *contextMenu;
+#endif
+	static int save_this_frame;
+	gsglLibrary *Library;
+	gsglWindow *Win;
+	gsglPage *Page;
+	QTimer *timer;
+	gsglboolean Add_text;
+        gsgllist *Add_text_dialog;
+
+public slots:		
+	void save_as();
+	void save();
+	void save_close();
+	void save_frame();
+	void export_eps_vec();
+	void export_eps_ras();
+	void export_png();
+	void export_jpeg();
+	void print();
+	void dump();
+	void quit_app();
+	void quit_immediately ();
+	//
+	void select_obj();
+	void select_all_2d_obj();
+	void select_all_3d_obj();
+        //
+	void obj_rotate();
+	void obj_scale();
+	void obj_scale_question();
+	void obj_translate_xy();
+	void obj_translate_z();
+	void lighting();
+	void qt_2d_restore ();
+	void qt_3d_restore ();
+	//
+	void proj_rotate();
+	void proj_scale();
+	void proj_scale_question ();
+	void proj_translate();
+	void qt_proj_restore ();
+	//
+	void replay1 ();
+	void replay2 ();
+	void replay3 ();
+	void replay_frame ();
+	void reverse_replay1 ();
+	void reverse_replay2 ();
+	void reverse_replay3 ();
+	void reverse_replay_frame ();
+	void anime_pause ();
+	void anime_forward ();
+	void anime_backward ();
+	//
+	void color ();
+	void command ();
+	void font ();
+	void windowsize ();
+	//
+	void keybindings (); 
+	void manual (); 
+	void about ();
+	//
+	void gui_2d_sensitive (bool);
+	void gui_3d_sensitive (bool);
+	//
+	void anime_replay (int);
+	void anime_reverse_replay (int);
+	void gui_anime_sensitive (bool);
+	void gui_anime_sensitive_replay (bool);
+	void gui_anime_sensitive_pause (bool);
+	//
+	void qt_selection_sensitive (bool);
+	//
+        void add_lines (void);
+        void add_texts (void);
+private:
+	void contextMenuEvent (QContextMenuEvent *);
+	void obj_scale_common (bool);
+	void saving_message ();
+	void open_and_save (const QString & fileName);
+	enum export_type {EPS_VEC,EPS_RAS,PNG,JPEG};
+	void export_common (enum export_type type);
+	void export_command (enum export_type type, QString fileName);
+	int id_menu[3];
+	int id_file[9];
+	int id_edit[5];
+	int id_pop_edit[3];
+	int id_obj[7];
+	int id_pop_obj[7];
+	int id_pro[4]; 
+	int id_pop_pro[4]; 
+	int id_anime[9]; 
+	//
+	void qt_2d_restore_enabled (bool);
+	void gui_2d_init_every_page ();
+	void qt_2d_trans ();
+	void qt_2d_scale (bool);
+	void qt_2d_rotate (bool);
+	void qt_2d_select_obj ();
+	//
+	void qt_3d_restore_enabled (bool);
+	void gui_3d_init_every_page ();
+	void qt_3d_trans_z ();
+	void qt_3d_trans_xy ();
+	void qt_3d_scale (bool);
+	void qt_3d_rotate (bool);
+	void gui_sensitive_have_3d (bool);
+	void qt_3d_select_obj ();
+	//
+	void qt_projection_restore_enabled (bool);
+	void gui_projection_init_every_page ();
+	void qt_proj_translate ();
+	void qt_proj_scale (bool with_question);
+	void qt_proj_rotate (bool with_question);
+	void qt_proj_sensitive (bool b);
+	//
+};
+#endif

@@ -1,0 +1,11 @@
+#!/bin/sh
+source=$1
+shift
+
+if [ -r "${source}.f" ]
+then
+	echo "FC ${source}.f -o ${source} $* [graphic libs]"
+	FC ${source}.f -o ${source} $* GSLIBS
+else
+	echo "FCg : source file ${source}.f cannot be found."
+fi

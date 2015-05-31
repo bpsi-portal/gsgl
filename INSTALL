@@ -1,0 +1,147 @@
+1. はじめに
+
+  GSAF/OpenGL をインストールするには，OpenGL (libGL, libGLU >= version 1.2)，
+  libpng，libjpeg, freetype2, zlib, そして，GUI Tool Kit として
+　GTK+(1.2 or 2.x) または Qt 3.x がインストールされている必要があります．
+  GUI Tool Kit はデフォルトで GTK+ 1.2 が使われます．
+  GTK+2を使用する場合には configure に --enable-gtk2 オプションを渡してください．
+  Qt3.xを使用する場合には configure に --enable-qt オプションを渡してください．
+  詳しくは ./configure --help の出力内容を参照してください．
+ 
+2. Install 手順
+
+  $ ./configure
+  $ make
+  # make install
+
+  とターミナルで実行することによりインストールできます．
+  最適化をしたい場合には
+
+  $ ./configure CFLAGS='-O2 -ffast-math' FFLAGS='-O2 -ffast-math'
+
+  のようにオプションを指定します． 
+  Cコンパイラに icc，Fortranコンパイラに ifc を指定したい場合は
+
+  $ ./configure CC=icc F77=ifc CXX=icc
+
+  と実行してください．ただし，libgc は icc ではコンパイルできない?ようなので，
+
+  $ cd gc/
+  $ ./configure
+
+  としてください．
+
+  ・最近のLinuxなら
+
+	$ ./configure
+	$ make
+ 	$ make install
+
+    で問題ないでしょう．
+
+  ・ただし，./configure で libGLU が無いというエラーが出た場合，
+    libGLUのバージョンが古いので，新しいMesaをインス−ルしたうえで
+
+        $ ./configure --with-GL-prefix=/usr/local --with-GLU-prefix=/usr/local
+
+    などとしてください．
+
+2.1 FreeBSD 5.x の場合
+
+	$ ./configure --with-libiconv --with-iconv-prefix=/usr/local \
+		--with-jpeg-prefix=/usr/local --with-png-prefix=/usr/local \
+		--with-GL-prefix=/usr/X11R6
+	$ make
+        # make install
+ 
+2.2 Darwinでg77を使う場合
+
+  　GTK+2.xを使うと，初めのWindowが現れる際に画面に何も表示されないという
+    問題が起きる場合があります．マウスで画面をクリックすることにより正しく
+　　表示されますが．この問題は Qt 3.x を使用することで回避できるようです．
+
+    また，fink の g77 を使用すると shared library が作れないようです．
+
+2.2.1 Qt 3.x を使用する場合
+    
+    g77,qt3,libjpeg,libpng3,freetype2,pkgconfig,gettext,libiconv
+    をfinkを用いてインストールします．finkのバージョンによっては，さらに
+    gettext-dev,libiconv-dev をインストールする必要があるでしょう．
+
+        $ ./configure --with-libiconv-prefix=/sw FLIBS="-L/sw/lib -lg2c" \
+            --with-libiconv --with-jpeg-prefix=/sw --with-png-prefix=/sw \
+            --with-iconv-prefix=/sw --with-GL-prefix=/usr/X11R6 \
+            --disable-shared --enable-qt \
+            --with-Qt-include-dir=/sw/include/qt \
+            --with-Qt-lib-dir=/sw/lib \
+            --with-Qt-bin-dir=/sw/bin \
+            LDFLAGS="-L/usr/lib -lcc_dynamic -lstdc++ -lsupc++"
+	$ make
+  	$ sudo make install
+
+2.2.2 GTK+ 2.x を使用する場合
+   
+    g77,gtk+2,atk1,libjpeg,libpng3,freetype2,pkgconfig,gettext,libiconv を
+    finkを用いてインストールします．finkのバージョンによっては，さらに
+    gettext-dev,libiconv-dev をインストールする必要があるでしょう．
+
+        $ ./configure --with-libiconv-prefix=/sw FLIBS="-L/sw/lib -lg2c" \
+		--with-libiconv --with-jpeg-prefix=/sw --with-png-prefix=/sw \
+		--with-iconv-prefix=/sw --with-GL-prefix=/usr/X11R6 \
+		--disable-shared --enable-gtk2 LDFLAGS="-L/usr/lib -lcc_dynamic"
+	$ make
+  	$ sudo make install
+
+2.3 Darwinでxlfを使う場合
+	
+	$ ./configure --enable-gtk2 --with-jpeg-prefix=/sw --with-png-prefix=/sw \
+		--with-libiconv --with-libiconv-prefix=/sw F77=xlf
+	$ make
+  	$ sudo make install
+
+    でOKです．
+
+3. TrueType Font, Type1 Fontの使用について
+
+　GSAF/OpenGLでは，フォント番号0〜19までがストロークフォント
+　(直線を組み合わせたフォント)，フォント番号32〜44では画面表示にはストローク
+　フォント，postscript内ではType1フォントを使うようになっています．
+　さらに，フォント番号502〜514,1000〜1027ではそれぞれポリゴン化したType1,
+  TrueTypeフォントを使用するようになっています．ここでのポリゴン化とは，
+　各字体を細かく三角形に分割してその集合として字体を表現することを意味します．
+
+　ポリゴン化処理には計算時間がかかり，さらに表示するにも時間がかかり，
+　postscriptファイルのサイズも大きくなるため，フォント番号32〜44の使用
+　を推奨します．
+
+　それはさておき，ポリゴン化したTryeType,Type1フォントを使うには，
+　適当なディレクトリにフォントを置き，GUIの"Config/TrueType font"でその位置を
+  指定する必要があります．または，~/.gsglrcファイルをエディタで編集しても
+　かまいません．
+  
+  times, arial, courier フォントは Microsoft のページから無償でダウン 
+  ロードできます．日本語フォントは東風フォントが使えるでしょう．
+  ギリシャフォントは，例えば http://mnytud.arts.klte.hu/mnyj/phonfont.htm 
+  から greek.exe がダウンロードできます．
+
+  Type1フォントは，RedHat Linuxならば/usr/share/fonts/default/Type1 以下，
+　Debian GNU/Linuxでは/usr/share/fonts/type1/gsfonts 以下にあります．
+
+4. 問題のある環境
+
+  ・Darwin
+	1. shared library を作れない．
+        2. C言語から使用した場合に不安定？
+
+5. Added by AF 2015.05.31
+
+Compiling GSGL on Vanilla> 2015/05/31
+
+libX11.so is installed in /usr/X11R6/lib64, whose location is unusual.
+Hence, we have to compile GSGL in the following way.
+
+$ export LDFLAGS="-L/usr/X11R6/lib64"
+$ CC=icc CXX=icpc F77=ifort ./configure --enable-gtk2 --prefix=$HOME
+$ make
+$ make install
+

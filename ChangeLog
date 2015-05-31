@@ -1,0 +1,1385 @@
+2012-11-13  AKUTSU Taku
+
+	* release 0.4.17
+	
+	* Added GDRWBK subroutine for compatibility with GSAF.
+
+	* Added following dummy subroutines just for binary compatibility with GSAF.
+
+	CONTQ3D1
+	CONTQ3D0
+	CONTS3D1
+	GDATA3D2
+	GDATA3D3
+
+2007-04-25  AKUTSU Taku
+
+	* Added six rgb-functions in rgbfunc.c
+
+2006-10-11  AKUTSU Taku
+
+	* 環境によっては，保存した中間ファイルのファイルサイズが4GB近くまで
+	増えてしまう問題の修正
+
+2006-09-25  AKUTSU Taku
+
+	* libfreetype および libglu のバージョンが古い環境においても，
+	ある種の機能を無効にして configure が通るように変更．
+
+2006-01-20  AKUTSU Taku
+
+	* release 0.4.16
+
+2006-01-19  AKUTSU Taku
+
+	* サブルーチンcontpfが正しく動作しない問題の修正
+
+	* GSAFのcont3.fに適用されたパッチ(V3.92->V3.93)をcont1.cに適用．
+
+	* サブルーチンcontpfがfortranプログラムから
+	呼べない状態だった不具合の修正(Thanks Honda)
+
+2005-12-14  AKUTSU Taku
+
+	* gsglserverを使用しているときにguiexitloopが呼ばれると
+	正しく動作しない問題の修正．
+
+2005-12-03  AKUTSU Taku
+
+	* 環境変数GSGDPの値が大文字のアルファベットである場合に
+	正しく動作しない問題の修正．
+
+	* GSAFのcont2.fに適用されたパッチ(V3.93->V3.94)をcont2.cに適用．
+
+2005-11-12  AKUTSU Taku
+
+	* GSAFのcont2.fに適用されたパッチをcont2.cに適用．
+
+2005-10-23  AKUTSU Taku
+
+	* サブルーチンINQPAGEが正しい値を返さなかったバグの修正
+
+2005-10-05  AKUTSU Taku
+
+	* サブルーチンGPLOTPの引数IMRKに負の値を与えた場合に正しくマークが描画されない
+	問題の修正
+
+2005-09-16  AKUTSU Taku
+
+	* release 0.4.15
+
+	* サブルーチン drawpt に不正なデータが与えられたときに
+	無限ループに陥る問題の修正．
+
+2005-09-05  AKUTSU Taku
+
+	* release 0.4.14
+
+	* 32番から44番のフォント(postscript font)を画面表示する際に
+	segmentation fault を起こすバグの修正．
+
+2005-09-03  AKUTSU Taku
+
+	* release 0.4.13
+
+2005-09-02  AKUTSU Taku
+
+	* 32番から44番のフォント(postscript font)の画面表示にテクスチャを
+	用いる機能の追加しました．
+
+	これは，いままでストロークフォントで代用していたpostscriptフォントの
+	画面表示をテクスチャを用いるようにしたものです．テクスチャデータは，
+	Freetypeを用いてgsに付属しているType1フォントから生成します．よって
+	~/.gsglrc の type1_hogehoge= の行を正しく設定する必要があります．
+	また，このテクスチャデータの生成処理は比較的時間を要するので，
+	初回にビットマップデータを ~/.gsgl/ 以下に保存し，それ以降はその保存された
+	データを用いるようにしています．データの生成はこの機能をオンにしてから
+	初めてpostscriptフォントを表示するときに行われます．
+
+	この機能をオンにするには環境変数 GSGL_BITMAPFONT になにか値を入れてください．
+	アルファベットでもなんでも良いです．ただし数字を入れる場合は下記の説明に
+	注意してください．
+	
+	生成されたビットマップデータが大きすぎて表示に時間がかかりすぎる場合などには，
+	GSGL_BITMAPFONT に整数値を入れることにより，生成されるビットマップの
+	大きさを変更できます(もちろん画面に表示される字体の大きさは変化しません)．
+	デフォルト値は GSGL_BITMAPFONT = 70 となっているので，ビットマップを小さくしたい
+	場合には 70 よりも小さい整数値を GSGL_BITMAPFONT に代入してください．
+
+	サーバープログラム(gsglserver)を使用している場合，テクスチャを用いて
+	表示するかどうかはクライアント側の環境変数 GSGL_BITMAPFONT で決定されます．
+	ただしビットマップデータの生成および ~/.gsgl/ ディレクトリへの保存は
+	サーバー側で行われます．このため，ビットマップサイズをデフォルト値(70)以外に
+	設定したい場合，その値はサーバー側の GSGL_BITMAPFONT から取得されます．
+	このややこしい仕様は ver0.4.50 までに変更し，サーバー側の環境変数のみで
+	指定できるようにする予定です．
+	
+2005-08-28  AKUTSU Taku
+
+	* テキストの描画において，$0から$9でフォントを変更した後の
+	$#の解釈が間違っていた問題の修正．
+
+	* テキストの描画において，angleが0以外の時の添え字の表示が
+	おかしかった問題の修正．
+
+2005-08-27  AKUTSU Taku
+
+	* 1MByte以上の大きさのgsglファイルをgzipで圧縮したファイルを
+	gsglviewなどで読めなくなっていたバグの修正．
+
+2005-08-12  AKUTSU Taku
+
+	* release 0.4.12
+
+	* C言語用のヘッダーファイル include/gsgl.h を $prefix/include に
+	インストールするように変更．
+
+2005-08-01  AKUTSU Taku
+
+	* GSOPEN を呼んだ後 PAGES, PAGEEを呼ばずに GSCLOS を呼んだ場合に
+	segmentation faultを起こす問題の修正
+
+2005-07-23  AKUTSU Taku
+
+	* release 0.4.11
+
+	* コンパイルに必要なファイルが tar ball に含まれていませんでした．
+
+2005-07-01  AKUTSU Taku
+
+	* release 0.4.10
+
+2005-06-29  AKUTSU Taku
+
+	* 描画window内にボタンやラインエディタなどのGUI部品を表示する機能を実装．
+	サンプルプログラムが gsgl-x.y.z/src/demo/f77/guiitems.f にあります．
+
+	GUI部品の描画を自前でするか，GTK+またはQtで描画するかを選択できます(GUIEXTERNAL)．
+	自前で描画した場合，見た目は貧相ですが描画は高速です．GTK+またはQtに部品を描画させた
+	場合，かなり描画が遅くなります．また，環境によってはプログラムが不安定になるようです．
+	
+	以下，この機能のために追加されたサブルーチンの説明です．
+
+	------------------------------------------------------------
+
+	GUIEXTERNAL(IEXT)
+	外部(GTK+またはQt)の部品を使用するか内部のTool Kitを使用するかを決定する．
+
+	入力
+	IEXT	[I]	このサブルーチンの引数として0を与えると内部のTool Kit，
+	                1を与えると外部のTool Kitを使用するようになる．
+	                デフォルトでは内部のTool Kitを使用する．
+
+	----------------------------------------------------------------
+	
+	GUILABEL (x, y, w, h, text, ijust)
+	ラベルを配置する
+
+	入力
+	X	[R]	ラベルの左端のx座標
+	Y	[R]	ラベルの下端のy座標
+	W	[R]	ラベルの幅
+	H	[R]	ラベルの高さ
+	TEXT	[A*]	ラベルの文字列(引用型文字列)
+	IJUST	[I]	文字の揃え方の指定　0:左揃え　1:右揃え　2:中央揃え
+
+	----------------------------------------------------------------
+	
+	INQLABELSIZE (text, w, h)
+	ラベルの大きさを問い合わせる
+
+	入力
+	TEXT	[A*]	ラベルの文字列(引用型文字列)
+
+	出力
+	W	[R]	ラベルの幅
+	H	[R]	ラベルの高さ
+
+	外部Tool Kitを使用しているときには外部Tool Kitのフォントの大きさからラベルの大きさを計算するが，Xサーバーに接続していないときや，gsglserverを用いているときには内部Tool Kitのフォントの大きさからラベルの大きさが計算される．
+
+	----------------------------------------------------------------
+
+	GUIBUTTON (x, y, w, h, text, callback)
+	ボタンを配置する
+
+	入力
+	X	[R]	ボタンの左端のx座標
+	Y	[R]	ボタンの下端のy座標
+	W	[R]	ボタンの幅
+	H	[R]	ボタンの高さ
+	TEXT	[A*]	ボタンのラベル(引用型文字列)
+	CALLBACK	[Subroutine()]	ボタンが押されたときに呼ばれるサブルーチン
+
+	----------------------------------------------------------------
+
+	GUICOMBOBOX (x, y, w, h, nitem, char *text, int *init, void (*callback)(int *))
+	コンボボックスを配置する
+
+	入力
+	X	[R]	ボタンの左端のx座標
+	Y	[R]	ボタンの下端のy座標
+	W	[R]	ボタンの幅
+	H	[R]	ボタンの高さ
+	NITEM	[I]	アイテムの数
+	TEXT 	[A*256(*)]	アイテムのテキストの配列(引用型文字列)
+	INIT 	[I]	はじめに有効にするアイテムの番号
+	CALLBACK	[Subroutine(INTEGER)]	アイテムが選択されたときに呼ばれるサブルーチン
+	                                        (選択されたアイテムの番号(1以上)を引数にとる)
+
+	----------------------------------------------------------------
+
+	GUISPINBUTTONF (x, y, w, h, init, lower, upper, digits, callback)
+	スピンボタンを配置する (実数用)
+
+	入力
+	X	[R]	ボタンの左端のx座標
+	Y	[R]	ボタンの下端のy座標
+	W	[R]	ボタンの幅
+	H	[R]	ボタンの高さ
+	INIT	[R]	スピンボタンの初期値
+	LOWER	[R]	スピンボタンの下限値
+	UPPER	[R]	スピンボタンの上限値
+	DIGITS	[I]	表示する数値の小数点以下の桁数
+	CALLBACK	[Subroutine(REAL)]	数値が変更されたときに呼ばれるサブルーチン
+	                                        (その数値を引数にとる)
+
+	---------------------------------------------------------------
+
+	GUISPINBUTTONI (x, y,  w, h, init, lower, upper, callback)
+	スピンボタンを配置する (整数用)
+
+	入力
+	X	[R]	ボタンの左端のx座標
+	Y	[R]	ボタンの下端のy座標
+	W	[R]	ボタンの幅
+	H	[R]	ボタンの高さ
+	INIT	[I]	スピンボタンの初期値
+	LOWER	[I]	スピンボタンの下限値
+	UPPER	[I]	スピンボタンの上限値
+	CALLBACK	[Subroutine(INTEGER)]	数値が変更されたときに呼ばれるサブルーチン
+	                                        (その数値を引数にとる)
+
+	--------------------------------------------------------------
+
+	GUICHECKBUTTON　(x, y, w, h, text, init, callback)
+	チェックボタンを配置する
+
+	入力
+	X	[R]	ボタンの左端のx座標
+	Y	[R]	ボタンの下端のy座標
+	W	[R]	ボタンの幅
+	H	[R]	ボタンの高さ
+	TEXT	[A*]	チェックボタンのラベル(引用型文字列)
+	INIT	[I]	チェックボタンの初期状態 (チェックされている場合は1, されていない場合は0)
+	CALLBACK	[SUBROUTINE(INTEGER)]	チェックボタンの状態が変更された場合に呼ばれるサブルーチン(チェックされている場合は1, されていない場合は0)
+
+	-------------------------------------------------------------
+
+	GUILINEEDIT (x, y, w, h, max, text, ntext, callback)
+	一行エディタを配置する
+
+	入力
+	X	[R]	エディタの左端のx座標
+	Y	[R]	エディタの下端のy座標
+	W	[R]	エディタの幅
+	H	[R]	エディタの高さ
+	MAX	[I]	エディタに表示する最大文字数
+	TEXT	[A*]	はじめにエディタに表示するテキスト(引用型文字列ではない!!)
+	NTEXT	[I]	はじめに表示するテキストの文字数
+	CALLBACK	[SUBROUTINE(CHARACTER*,INTEGER)]	エディタの文字列が変更された際に呼ばれるサブルーチン(文字列とその文字数を引数にとる)
+
+	-----------------------------------------------------------
+
+	GUIEXITLOOP()
+	PAGEEのイベントループから出る．
+
+	-----------------------------------------------------------
+
+2005-06-21  AKUTSU Taku
+
+	* release 0.4.3
+
+	* サブルーチン CHRASC, ASCCHRの追加．
+
+2005-04-27  AKUTSU Taku
+
+	* 数値を作図するとき，サブルーチンgnumbdの引数indに-100を
+	与えた場合に正しく作図できないバグの修正(Thanks Honda)．
+
+2005-02-05  AKUTSU Taku
+
+	* release 0.4.2
+
+	* Qtを使ったgsglserverにおいて，印刷をするとクライアント側ではなく
+	サーバー側で印刷をしてしまうバグの修正．
+
+2005-02-03  AKUTSU Taku
+
+	* release 0.4.1
+
+	* Qtを使ったGUIにおいて，アニメーションを表示していないときでも
+	"このフレームを保存"のメニューが選択できるようになったいたバグの修正．
+
+2005-01-31  AKUTSU Taku
+
+	* 0から1までの実数を2byte整数に変換する際に
+	四捨五入ではなく切り捨てにしてしまったいたバグの修正．
+
+2005-01-13  AKUTSU Taku
+
+	* release 0.4.0
+
+2005-01-08  AKUTSU Taku
+
+	* アニメーションの再再生時のメモリ使用量を低減．
+
+2005-01-06  AKUTSU Taku
+
+	* release 0.3.99
+
+	* PAGESを呼んでいない状態でSPLN1D, SPLN2Dを呼んだときに
+	すぐにreturnするようにしていたバグの修正(Thanks HONDA)．
+
+2005-01-05  AKUTSU Taku
+
+	* GTK+ のメニューにTearoff機能を追加．
+
+2004-12-27  AKUTSU Taku
+
+	* release 0.3.98
+
+2004-12-26  AKUTSU Taku
+
+	* GUI Tool Kit として GTK+1.2, GTK+2.x に加えて Qt 3.x が
+	使えるようになりました．./configure に --enable-qt オプション
+	を与えてコンパイルすることで使用が可能になります．
+
+	* 一部の環境で二次元オブジェクトが表示されない問題の修正．
+	視線手前側のクリッピング面と二次元オブジェクトが同一面上に
+	あったのを，二次元オブジェクトをごくわずかに深い位置に配置
+	するようにしました．詳しくは src/matrix.c を参照してください．
+
+2004-12-24  AKUTSU Taku
+
+	* release 0.3.97
+
+2004-12-22  AKUTSU Taku
+
+	* gsglserver を使用しているときも window のダンプができるように変更．
+
+2004-12-19  AKUTSU Taku
+
+	* 環境変数 GSGL_DISABLE_LINESTIPPLE に値が入っている場合，
+	glEnable(GL_LINE_STIPPLE) を呼ばないようにしました．一部の
+	環境では，この環境変数を設定することにより描画パフォーマンスが
+	大幅に向上します．
+
+2004-12-18  Taku AKUTSU
+
+	* 環境変数 WINDOWID からターミナルの WINDOW ID を取得するように
+	変更．WINDOWID が設定されていない場合は，今まで通りフォーカスを
+	持っている WINDOW をターミナル WINDOW とします．
+
+	これに伴い，gsglserver と client プログラム間の通信内容に
+	変更があるので，サーバーとクライアントの両方をアップデートしてください．
+	
+2004-12-13  Taku AKUTSU
+
+	* サブルーチン GSOPENRANK(INTEGER) を追加．
+	GSOPEN の変わりにこのサブルーチンを使えます．
+	引数の整数が0のときは通常の動作をし，それ以外のときは
+	gsgl のほぼすべての関数はなにもせずに return するだけです．
+	これは MPI とともに使用することを想定している機能です．
+
+	* サブルーチン SETQUITCALLBACK および RESETQUITCALLBACK
+	を追加．
+
+2004-12-13  AKUTSU Taku
+
+	* GUIでのいくつかの操作のキーバインディングを設定．
+	例えば，Rを押したあと矢印キーで，オブジェクトの回転が
+	できます．
+
+2004-12-12  AKUTSU Taku
+
+	* サブルーチン GDRAWBACK3D で描画した平面を含む画像を
+	postscriptへ変換した場合，その平面の深さを正しく評価
+	できない場合がある問題の修正．
+
+	これに伴い，gsglserver と client プログラム間の通信内容に
+	変更があるので，サーバーとクライアントの両方をアップデートしてください．
+
+2004-12-10  AKUTSU Taku
+
+	* release 0.3.96
+
+2004-12-05  AKUTSU Taku
+
+	* gsgl2mpeg に，fps をある程度コントロールするための
+	オプションを追加．
+
+	* gsgl2ps, gsgl2eps のデフォルトの色を gray scale から
+	color へ変更．
+
+	* サブルーチン LINE1, INQPAGE を追加．
+
+2004-11-04  AKUTSU Taku
+
+	* アニメーションの再再生中のオブジェクトの編集を禁止
+
+	* GTK+2を使っている場合のcolormapの初期化方法を変更
+
+	* serverを使っている場合に，アニメーションの再再生で
+	segvが起こるバグの修正．
+
+2004-11-03  AKUTSU Taku
+
+	* release 0.3.95
+
+	* アンチエイリアシングの挙動の修正
+
+2004-11-02  AKUTSU Taku
+
+	* gtk+1.2を使った場合にツールバーの文字が表示できなく
+	なっていたバグの修正
+
+2004-10-31  AKUTSU Taku
+
+	* gsgl2psが生成するpsファイルのヘッダに含まれていた
+	"EPSF-1.2" を削除
+
+2004-10-30  AKUTSU Taku
+
+	* release 0.3.94
+
+	* 関数fabsを呼ぶべきところを関数absを呼んでいたポカの修正
+
+2004-10-28  AKUTSU Taku
+
+	* release 0.3.93
+
+	* OpenGLの関数を呼ぶべきでないところでglEnableを呼んでいたバグの
+	修正(ogl.cのgsgl_enable_antialiasing,gsgl_disable_antialiasing)
+
+	* ja.poをEUC-JPからUTF-8へ変換
+
+	* WARNING **: Invalid UTF8 string passed to pango_layout_set_text()
+	というメッセージと共に，windowの日本語が表示されないバグの修正．
+	
+2004-10-27  AKUTSU Taku
+
+	* moveとmove2dで使用される，現在位置を保持する変数を
+	同期させるように変更．
+
+2004-10-25  AKUTSU Taku
+
+	* C言語から呼ばれる関数のうち，gtta, gttb, contv1, contv2, ctonfx
+	の名前の前にgsaf_を追加．
+
+2004-10-15  AKUTSU Taku
+
+	* 一部の環境でwindowからterminalへフォーカスが移ったあと
+	terminalへキーボードで入力できない問題の修正．
+
+2004-10-09  AKUTSU Taku
+
+	* 3次元オブジェクトに対してはアンチエイリアシングを
+	適用しないように変更．	
+
+2004-09-16  AKUTSU Taku
+
+	* gzipで圧縮した中間ファイル(拡張子gsgl.gz)を読めるように
+	しました．
+
+	ex.) % gsglview foo.gsgl.gz
+
+2004-09-12  AKUTSU Taku
+
+	* gsglview, gsgl2ps などで複数の中間ファイル(拡張子gsgl)を
+	引数にとれるように変更しました．
+
+	ex.) % gsglview foo.gsgl bar.gsgl
+
+	また，gsgl2ps等で複数のファイルが引数として与えられた場合，
+	出力ファイル名は一つめのファイル名によって決定されます．つまり，
+
+	% gsgl2ps foo.gsgl bar.gsgl
+
+	と実行した場合，出力ファイル名は foo.ps となります．
+
+2004-09-10  AKUTSU Taku
+
+	* gcを6.3へversion up
+
+2004-08-21  AKUTSU Taku
+
+	* release 0.3.92
+
+	* エラーバーを表示するサブルーチン gplotpe を追加
+
+2004-08-06  AKUTSU Taku
+
+	* gsaf_header*.psをgsgl_header*.psにリネーム．
+
+2004-07-18  AKUTSU Taku
+
+	* gsgl2epsでepsファイルを作成する際に，二つめ以降の
+	ファイルがgsで表示できないファイルになる問題の修正．
+
+2004-06-18  AKUTSU Taku
+
+	* release 0.3.91
+
+2004-06-17  AKUTSU Taku
+
+	* コンパイラにg77を使った場合に
+	サブルーチン gu_srand. gu_sleep を使えなくなっていた
+	バグの修正 (Thanks Honda).
+
+2004-04-01  AKUTSU Taku
+
+	* release 0.3.90
+
+2004-03-05  AKUTSU Taku
+
+	* マウスでオブジェクトを回転などしているときにダブルクリックを
+	すると挙動不審になるバグの修正．
+
+2004-03-04  AKUTSU Taku
+
+	* マウスで右クリックをするとポップアップメニューが表示されますが，
+	右クリックできない環境のために，shift+左クリックでもポップアップ
+	メニューを表示するように修正．
+
+2004-03-01  AKUTSU Taku
+
+	* Fortranで書かれていたソースの大部分をCで書き直しました．
+	それに伴ってライブラリ内のcommon blockを参照することはできなく
+	なりました．今のところ common block "GSGFX" のみ参照できるように
+	残してありますが，今後は　common block "GSGFX" の値を参照するには
+	サブルーチン INQGDEFIN を呼んでください．引数はGDEFINと同じです．
+
+	* 試験的にC言語用のインターフェイスを提供します．ただし
+	仕様が大きく変更される場合もあります．関数名は Fortran
+	から呼ぶサブルーチン名の前に gsaf_ を加えたものとなります．
+	たとえば　subroutine gsopen => function gsaf_gsopen ()
+	となります．ただし，一部 gsaf_ ではなく gsgl_ となるものも
+	あります．詳しくは include/gsgl.h を参照してください．
+	
+	* サブルーチン setfreetypenodenum を　gsglsetfreetypenode
+	に改名しました．
+
+2004-02-14  AKUTSU Taku
+
+	* gcを初期化する関数 GC_init() を呼ぶように修正．
+	これでDarwin上でのBug errorが起きなくなるはずです．
+
+2004-01-23  AKUTSU Taku
+
+	* テキスト描画ルーチンの大きく変更．
+
+	$frac{A}{B}で分数を描画できます．
+	$sqrt{A}で平方根を描画できます．
+	$delでpartialdiffを描画できます．
+	
+2004-01-20  AKUTSU Taku
+
+	* テキストの添え字の配置ルールを改善．
+
+	* 直線に対してアンチエイリアス処理をするようにしました．
+	これによって，表示やgsgl2psなどの処理が非常に遅く
+	なった場合，環境変数 GSGL_DISABLE_ANTIALIASING に
+	なにか値を入れることによってアンチエイリアス処理を
+	オフにできます．
+
+	ex.1) $ export GSGL_DISABLE_ANTIALIASING=t
+	ex.2) $ GSGL_DISABLE_ANTIALIASING=t gsgl2ps ...
+
+	* gcを6.2alphaから6.3alpha4へversion up.
+
+2004-01-05  AKUTSU Taku
+
+	* Postscript File での postscript font の使用を実装．
+	GSAF同様，フォント番号32〜44が割り当てられます．
+	そして，Xへの表示には，GSAF同様，0,2〜6,11番が割り当てられます．
+
+	ただし，Xへの表示に 502〜514番を割り当てたい場合，
+	subroutine PAGES のあとに subroutine GSGL_USE_TYPE1 を call
+	してください．
+
+2004-01-04  AKUTSU Taku
+
+	* Freetype で Type1 Font の表示を実装．
+
+	* フォント番号502〜514にType1フォントを割り当て．
+
+	* Warning!!
+	subroutine SETCHS,SETCHR で同じフォントの大きさを指定しても，
+	ストロークフォント(フォント番号0,2〜19)とTrueType,Type1フォント
+	の大きさは大きく異なるため，TrueType,Type1フォントの大きさを
+	今までより1.46667倍大きくすることにしました．
+
+2003-12-31  AKUTSU Taku
+
+	* release 0.3.67
+
+	* TrueType Font の傾き，回転を実装．
+	 (SETCHRの引数 ANGL,TILT が機能するようになった)
+
+2003-12-27  AKUTSU Taku
+
+	* TEXT2D, GTEXT2D のバグを修正．
+
+2003-12-24  AKUTSU Taku
+
+	* release 0.3.66
+
+	* アニメーションの一フレームだけの保存を実装
+		(GUIの"ファイル/このフレームを保存")
+
+2003-12-23  AKUTSU Taku
+
+	* release 0.3.65
+
+	* src/Makefile.body, arch/* を削除．
+
+	* アニメーションのリプレイ，休止を実装．
+
+2003-11-08  AKUTSU Taku
+
+	* gsgl2ps に --a4 オプションを追加．
+	a4紙いっぱいのサイズで印刷できます．
+
+2003-10-02  AKUTSU Taku
+
+	* TrueType Font をレンダリングする際のメモリリークを
+	修正．
+
+2003-09-24  AKUTSU Taku
+
+	* gsglserver に複数のクライアントが接続できるように変更．
+
+2003-07-13  AKUTSU Taku
+
+	* gsgl2mpeg で一コマ目だけ画像がずれる問題の修正．
+	  このずれは pstoppm の変換時に起こるので，gsglanime2pages に
+	  -x オプションを追加し，一ページ目に空のページを加えるようにしました．
+	  そして pstoppm で変換した後，一つめの ppm ファイル(真っ白のページ)
+	  は含まずに mpeg に変換するようにしました．
+
+2003-07-07  AKUTSU Taku
+
+	* release 0.3.64
+
+	* 安直なアニメーション機能を実装.
+	  DO I=1, 100
+	     CALL ANIMES
+	       ...
+	     CALL ANIMEE
+	  ENDDO
+	  とするとANIMESとANIMEEに囲まれた部分がアニメーションに
+	  なります．詳しくは src/demo/animetest.f を参照．
+
+	  ただし，アニメーションを表示後，GUIで回転，移動などは
+	  できません．
+	
+	* プログラム gsglanime2pages を追加.
+	  アニメーションを含む1ページをアニメーションの各フレームをページとする
+	  複数ページに変換します．アニメーションを含む gsgl ファイルを gsgl2ps
+	  などで画像ファイルに変換するにはこのプログラムを使って複数ページに分割
+	  する必要があります．
+
+	* スクリプト gsgl2mpeg を追加.
+	  アニメーションを含むgsglファイルをmpeg1ファイルに変換します．
+	  内部では gsglanime2pages, pstopnm, ppmtompeg を用いています．
+
+	* サブルーチン gsglEnableLighting の追加.
+	  今まで照光処理は，一度表示して終わってからGUIでOnにする必要が
+	  ありましたが，このサブルーチンを呼べば，はじめから照光処理がされます．
+
+2003-06-27  AKUTSU Taku
+
+	* GPLOTPの引数IMARKに正の整数を与えた場合の挙動が
+	おかしいバグの修正. (Thanks Honda)
+
+2003-06-26  AKUTSU Taku
+
+	* GSCLOSを呼んだ際に表示されるUSED CPU TIMEの
+	値が間違っていたバグの修正.
+
+2003-06-20  AKUTSU Taku
+
+	* gcを6.1から6.2alpha6へversion up.
+
+2003-06-20  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (SUBDIRS): Add m4.
+	(SUBDIRS): Remove intl.
+	(ACLOCAL_AMFLAGS): New variable.
+	* configure.in (AC_CONFIG_FILES): Add m4/Makefile.
+	(AC_CONFIG_FILES): Remove intl/Makefile.
+
+2003-05-22  AKUTSU Taku
+
+	* automake化．
+
+2003-03-17  AKUTSU Taku
+
+	* release version 0.3.63
+
+2003-03-13  AKUTSU Taku
+
+	* GUIの"設定/色/背景の色"で黒を選んでも反映されないバグの修正．
+
+	* gsgl2psで, SETLINで指定した線の色が正しく表示できないバグの修正．
+
+2003-02-22  AKUTSU Taku
+
+	* Bakomaフォントをフォント番号1022から1027に割り当てました．
+	Bakomaフォントは例えば
+	http://www.ctan.org/tex-archive/fonts/cm/ps-type1/bakoma/ttf/
+	からダウンロードできます．
+
+2002-11-18  AKUTSU Taku
+
+	* gsgl2ps で線の太さを変えられなくなっていたバグの修正．
+
+2002-11-17  AKUTSU Taku
+
+	* TEXT2D, GTEXT2D等，2次元座標系用のテキスト描画ルーチンの追加．
+
+2002-11-12  AKUTSU Taku
+
+	* gettext化
+
+2002-11-11  AKUTSU Taku
+
+	* release version 0.3.62
+
+	* GUIの"Config/TrueType"でfontが設定できなくなっていたバグの修正．
+
+2002-11-10  AKUTSU Taku
+
+	* gsgl.so ファイルのバージョニングを gsgl.so.0.0.3 から 
+	gsgl.so.0.3.62 等へ変更．
+
+2002-11-06  AKUTSU Taku
+
+	* GTK+2.0 に対応しました．
+	./configure --enable-gtk2 とすれば GTK+2.0 を使います．
+
+2002-10-24  AKUTSU Taku
+
+	* システムに Boehm's GC (libgc) が無い場合に
+	  gc/ 以下の Boehm's GC をインストールするようにしました．
+
+2002-10-16  AKUTSU Taku
+
+	* release version 0.3.61
+
+	* gsglファイルをps, epsファイルに変換する際，GSCALE3D{X,Y,Z}や
+	GDRAWBACK3D で描いた直線やポリゴンが正しく変換されなかったバグの
+	修正．
+
+	* server-client mode で回転等をしたあとに export eps を行ったり，
+	save しようとして cancel したときにプログラムが止まってしまうバグ
+	の修正．
+
+	* Mesa について
+
+	gsgl2rastereps, jpeg, png を使う場合，-H オプションや -W オプションに
+	2048以上を指定すると画像の右上部分が空いてしまう．どうしてももっと大きな
+	画像を作りたい場合は Mesa の config.h の MAX_WIDTH, MAX_HEIGHT あたりを
+	修正してコンパイルすることになるでしょう．
+
+	照光処理をした画像をps, epsファイルに変換すると全体的に暗くなったり
+	一部分だけやたら明るくなるのは Mesa のバグだと思います．
+
+	Mesa 3.4.2, 3.5, 4.0, 4.0.1, 4.0.2, 4.0.3, 4.0.4 のうち正しく動作する
+	のは Mesa 3.5 のみ．よって gsgl2ps には Mesa 3.5 を static にリンクす
+	る等の対処をする必要があります．
+	--- 2003/07/07追記 ---
+	Mesa 3.5 でもダメっぽい?
+	----------------------
+	
+	ちなみに，この問題は GDEFIN3D の引数で，
+	XL/(GXMAX-GXMIN), YL/(GYMAX-GYMIN), ZL/(GZMAX-GZMIN)
+	の値が大きく異なるときに起こるようです．
+
+2002-10-09  AKUTSU Taku
+
+	* release version 0.3.60
+	
+	* サブルーチン PERS3D5,Fの追加 (2002-10-03,2002-10-05)
+
+	* サーバークライアント化 (2002-09-25)
+
+	* Boehm's GC のソース を gc ディレクトリ以下に置きました．
+	
+2002-10-05  AKUTSU Taku
+
+	* サブルーチン PERS3DF の追加
+
+	PERS3DF (Z3, X3, Y3, NNODE, IELM, NELM, 3, R2G2B)
+	PERS3DF (Z, X, Y, NXM, NX, NY, IND, RGBFUNC)
+
+	三角形有限要素上の2次元データの透視図を描く．
+	src/demo/pers3dtest.f 参照．
+
+	Z	[R(*)]	      節点上のデータからなる1次元配列（引数は節点番号）
+	X	[R(*)]	      節点のx座標データからなる1次元配列（引数は節点番号）
+	Y       [R(*)]	      節点のy座標データからなる1次元配列（引数は節点番号）
+	NNOD	[I]	      全節点数
+	IELM	[I(3,*)]      要素に属する節点番号（引数は要素番号）
+	NELM	[I]	      全要素数
+	IND	[I]	      表示内容を決めるパラメータ
+
+	        IND<0 グローシェーディング．(-IND+2)本の等高線を描く
+	        IND=0 グローシェーディング．ポリゴンのみを描く
+	        IND=1 IND=0とおなじ
+	        IND=2 IND=0とおなじ
+	        IND=3 グローシェーディング．ポリゴンと格子を描く
+	        IND=4 フラットシェーディング．ポリゴンのみを描く
+	        IND=5 IND=4とおなじ
+	        IND=6 IND=4とおなじ
+	        IND=7 フラットシェーディング．ポリゴンと格子を描く
+	        IND=8 フラットシェーディング．ポリゴンと等高線を描く
+
+	RGBFUNC [Subroutine] 配色を決めるサブルーチン
+	
+2002-10-03  AKUTSU Taku
+
+	* サブルーチン PERS3D5 の追加
+
+	PERS3D5 (Z, X, Y, NXM, NX, NY, IND, RGBFUNC)
+
+	Z, X, Y がともに二つの指数に依存するデータの透視図を描く．
+	src/demo/pers3dtest.f 参照．
+	
+	引数    Z       [R(NXM,*)]   z座標データの2次元配列
+	        X       [R(NXM,*)]   x座標データの2次元配列
+	        Y       [R(NXM,*)]   y座標データの2次元配列
+	        NMX     [I]          2次元データの第1添字の上限
+	        NX      [I]          一つめの指数のデータ数
+	        NY      [I]          二つめの指数のデータ数
+	        IND     [I]          表示内容を決めるパラメータ
+
+		        IND<0 グローシェーディング．(-IND+2)本の等高線を描く
+		        IND=0 グローシェーディング．ポリゴンのみを描く
+		        IND=1 グローシェーディング．ポリゴンとx方向の線を描く
+		        IND=2 グローシェーディング．ポリゴンとy方向の線を描く
+		        IND=3 グローシェーディング．ポリゴンと格子を描く
+		        IND=4 フラットシェーディング．ポリゴンのみを描く
+		        IND=5 フラットシェーディング．ポリゴンとx方向の線を描く
+		        IND=6 フラットシェーディング．ポリゴンとy方向の線を描く
+		        IND=7 フラットシェーディング．ポリゴンと格子を描く
+		        IND=8 フラットシェーディング．ポリゴンと等高線を描く
+
+		RGBFUNC [Subroutine] 配色を決めるサブルーチン
+	
+	* サブルーチン PERS3Dn (n=1,..,5) で nx * ny * 3 > 65535,
+	nx > 65535, ny > 65535 の場合に正しく表示できないバグの修正．
+
+2002-10-02  AKUTSU Taku
+
+	* arch/Makefile.* の更新
+
+2002-09-29  AKUTSU Taku
+
+	* libgsgl.so をつくるためのリンカーを $(FC) から $(LD) へ変更.
+
+	* libm の関数 pow のチェックをしないように configure.in を修正.
+
+	* Boehm's GC のソース を gc ディレクトリ以下に置きました.
+
+	* CC=icc F77=ifc で configure したときにも shared library
+	が作れるように configure.in を修正.
+
+2002-09-25  AKUTSU Taku
+
+	* Server-Client mode の実装．
+
+	client側の描画内容をserver側にTCP/IPを用いて転送します．
+
+	端末側のマシンではOpenGLのハードウェアアクセラレーション
+	が利くが，計算は他のマシンで行いたい場合，端末側で gsglserver
+	を実行しておき，計算する側で環境変数 GSGL_SERVER の値を
+	serverの動いているマシンのホスト名に設定すれば端末側でwindowの
+	作成，描画を行うようになります．
+
+	例えば，server は .xsession や .xinit で
+	    
+	        gsglserver &
+
+	のように起動し，client側では
+
+		$ export GSGL_SERVER=debye
+		$ ./program
+
+	とします．デフォルトではポート番号は9291を使いますが，
+
+		gsglsever -p 9999 &
+
+	のようにすれば使用するポート番号を変更できます．
+	その場合client側は
+
+		$ export GSGL_SERVER=debye:9999
+
+	のようにホスト名のあとにコロンをはさんでポート番号を指定してください．
+
+2002-09-14  AKUTSU Taku
+
+	* GUIでexportやprintをした場合 segmentation fault を
+	  起こすバグの修正
+
+2002-09-12  AKUTSU Taku
+
+	* 大きな容量のメモリを動的に確保するときは
+	  GC_malloc ではなく GC_malloc_ignore_off_page
+	  を使うようにしました．これで
+
+	  Needed to allocate blacklisted block at 0x818f000
+	
+	  のようなエラーは出なくなるはずです．
+	
+2002-09-08  AKUTSU Taku
+
+	* サブルーチンGPLOTPのSETCLPをコメントアウト．
+
+	* configure.in の修正．
+	
+2002-09-05  AKUTSU Taku
+
+	* release version 0.3.50
+
+	* 内部構造の大幅な変更．
+
+	* Mesa固有の機能(OSMesa)に依存した部分を削除．
+	  よってMesa以外のOpenGLでも使えるはずです．
+	  代わりに gsgl2ps, gsgl2png, gsgl2jpeg, gsgl2rastereps
+	  はX serverに接続できないと使用できなくなりました．
+
+	* Boehm's GC (libgc) を使うようにしました．
+	
+	* GUIでオブジェクトを選択した場合その周りにフレームを
+	  表示していました，代わりにオブジェクトの色を変えるようにしました．
+
+	* PERS3Dnでフラットシェーディングした場合の印刷結果が美しくない
+	  問題の解決，
+
+	* gsgl{Solid,Wire}{Sphere, Torus}の軸の指定がおかしかった
+	  問題の修正．
+
+	* GDRAWBACK3Dで描いたPolygonに対してなぜかLightingが正しく行われないです．
+	
+2002-08-10  AKUTSU Taku
+
+	* release version 0.3.7
+
+	* 3次元のグラフをほぼ真上からみる場合の目盛りの数値の
+	付け方を改善．
+
+	* 射影方法を指定する SETPROJECTIONTYPE を追加．
+
+	* サブルーチン GVIEW3D の代わりに使う
+	SETCOORD_{POLAR1,POLAR2,CAUT1,CAUT2}を追加．
+
+	* サブルーチン gsglProjImg{Translate,Scale,Rotate,Identity}
+	を追加．
+	
+2002-08-03  AKUTSU Taku
+
+	* GUIのポップアップメニューから図形の回転，拡大をする際に
+	回転，拡大の中心を聞かないようにしました．ただしツールバーから
+	操作を行った場合は今まで通り聞かれます．
+
+2002-08-02  AKUTSU Taku
+
+	* GUIの"Projection"を"Projected image"に変更．
+
+	* ドキュメントを別パッケージに分離．
+
+2002-07-26  AKUTSU Taku
+
+	* release version 0.3.6
+
+	* 注意点:
+	以前のバージョンをインストールしていた場合，そのライブラリ群を
+	一度削除しないと新しくインストールしたライブラリではなく古い
+	ライブラリを今後も使ってしまう可能性があります．
+
+	--with-*-prefix のオプションの付け方が変わりました．
+	2002-04-12 の二つ目を参照してください．
+	
+2002-07-10  AKUTSU Taku
+
+	* TrueType fontをポリゴン化したものをPSファイルに変換した場合表示が
+	  おかしくなる問題をとりあえず修正．
+
+2002-07-03  AKUTSU Taku
+
+	* サブルーチン GSTITL の引数の文字列の大きさが最大42であるのを242に変更．
+
+2002-06-10  AKUTSU Taku
+
+	* TrueType font を使用時に，ギリシャ語のあとに添え字を使ったときに正しく
+	  表示されないバグの修正．
+
+2002-05-16  AKUTSU Taku
+
+	* サブルーチンGVALUE,GVALUE3Dで数値をつける際，TrueType Fontを使っていると
+	  x軸との間隔が空きすぎてしまう問題の修正．
+
+2002-05-05  AKUTSU Taku
+
+	* シェルスクリプト $(FC)gl が使えなくなっていたバグの修正．
+
+2002-04-15  AKUTSU Taku
+
+	* TrueType Font を使っている状態で SETCHR を使ったとき，とりあえず
+	  CHH のみ適用させるようにしました．
+
+	* TrueType Font の symbol.ttf が使えなくなっていたバグの修正．
+
+2002-04-14  AKUTSU Taku
+
+	* src/quadric.c の glut に依存している部分を依存しないように変更．
+	  これで GSGL は glut に依存しなくなりました．
+
+2002-04-13  AKUTSU Taku
+
+	* libtldlに対応．これでfreebsdやその他のシステムでも
+	コンパイルできるはずです．
+
+	* ./configureに --with-jpeg-prefixおよび--with-png-prefixオプションを追加．
+
+2002-04-12  AKUTSU Taku
+
+	* ./configure に --with-libiconv を追加．libc で iconv を実装していない
+	システムでは GNU の libiconv をインストールして --with-libiconv オプションを
+	つけてください．
+
+	* ./configure の --with-GL-prrefix=XYZ に対して -LXYZ としていたのを
+	-IXYZ/include -LXYZ/lib とするようにしました．--with-OSMesa-prefix も同様．
+
+	* GNU Libtool に対応．
+
+2002-04-08  AKUTSU Taku
+
+	* release version 0.3.5
+
+	* マニュアルの修正．
+
+	* TrueType Font をサポート．(まだ実験的?)
+	Font 番号 1000 番から 1021 番までを使います．
+
+	1000 ... alphabet default
+	1001 ... math default
+	1002 ... times roman
+	1003 ... times italic
+	1004 ... times bold
+	1005 ... times bold italic
+	1006 ... arial roman
+	1007 ... arial italic
+	1008 ... arial bold
+	1009 ... arial bold italic
+	1010 ... courier roman
+	1011 ... courier italic
+	1012 ... courier bold
+	1013 ... courier bold italic
+	1014 ... greek default
+	1015 ... greek roman
+	1016 ... greek italic
+	1017 ... greek bold
+	1018 ... greek bold italic
+	1019 ... japanese default
+	1020 ... japanese mincho
+	1021 ... japanese gothic
+
+	サブルーチン SETCHS (CHH, ANGLE) の CHH でフォントサイズを指定できますが，
+	ANGLE および サブルーチン SETCHR には対応していません．
+	INQTSZ でテキストのサイズを求めることもできます．
+
+	それぞれのフォント番号にどの TrueType フォントを割り当てるかは
+	GUI の "Config/TrueType font" で指定できます．
+
+	日本語は今のところ EUC-JP での入力のみに対応しています．
+
+	サブルーチン GSGLPOLYGONTEXT で Polygonize されたフォントを表示します．
+	サブルーチン GSGLVECTORTEXT で vectorize されたフォントを表示します．
+	デフォルトは Polygonize されたフォントを表示します．
+
+	サブルーチン SETFREETYPENODENUM (INTEGER)でベジェ曲線を何本の直線で
+	近似するかを指定します．数字が大きいほど美しいフォントになるが処理は
+	重くなります．デフォルト値は5です．
+	
+2002-03-21  AKUTSU Taku
+
+	* ユーザー定義の window size を設定できるようにしました．
+	GSAF に渡すはじめのオプションを 'U' または 'u' にすれば良いです．
+	GUI の "Config/Window size" で値を変更できます．
+
+2002-03-20  AKUTSU Taku
+
+	* Fullscreen にするための番号を '9' から 'F' または 'f' に変更．
+
+	* ./configure を使わない方法でコンパイルできなくなっていたバグの修正．
+
+2002-03-18  AKUTSU Taku
+
+	* GDEFIN (apl2.f) で変数 matrix が integer になっているバグの修正．
+	
+	* header のフォントを0番から2番に変更．
+		
+2002-03-16  AKUTSU Taku
+
+	* postscript Lv.3 を用いた gouraud shading の実装．gsgl2ps に
+	おいて -3 オプションをつけることで使用できる．-g と同じ効果
+	を得るが，postscript Lv.3 に対応したデバイスでは，より高速な
+	表示，印刷が期待できます．
+	
+ver0.3.4  2002/03/14
+
+	* GUI の変更．
+
+	* オブジェクトを選択していなくても回転，拡大，平行移動をできる
+	ようにしました．
+
+	* t オプションをつけて gsglview, gsgl2ps 等を呼んだ場合のペイジ
+	のタイトルに関するバグの修正．
+
+	* メニューの Config/Command line から raster eps, jpeg, png ファイルへの
+	変換コマンドを編集できるようにしました．
+
+	* gsglprint が使えなくなっていたのを修正．
+
+	* その他バグ修正．
+
+ver0.3.3  2002/03/02
+
+	* FreeBSD 用の Makefile を追加．(Thanks 菅野さん)
+
+	* GSAF 3.73 と 3.74 の差分の適用．
+
+	* デフォルトでは plot.f を使わないよう変更．
+
+	* GVALUE で 1.0x10^4 のような表現ができなくなっていた問題の修正．
+
+	* GSCALE3DX,Y,Z, GVALUE3DX,Y,Z で目盛のつけかたがおかしい問題の修正．
+
+	* GTEXTX3D のバグを修正．(Thanks 内田さん)
+
+	* ifc, icc 用 Makefile の作成．
+
+	* autoconf に対応!!
+
+	* ドキュメントの修正．
+
+	* その他バグ修正
+
+ver0.3.2  2001/10/31
+
+	* static library の作成，
+
+	* gsgl2rastareps, gsgl2png, gsgl2jpeg の作成．
+
+	* ソースの整理．
+
+	* その他バグ修正．
+
+ver0.3.1  2001/10/20
+
+	* サブルーチン PRES3D1 が格子を描かない場合があるバグの修正．
+
+	* 非等間隔直交座標系の透視図を描くサブルーチン PERS3D2 の追加．
+
+	* 等間隔円柱座標系の透視図を描くサブルーチン PERS3D3 の追加．
+
+	* 非等間隔円柱座標系の透視図を描くサブルーチン PERS3D4 の追加．
+
+	* gsaf の src/apl2.f との差分を適用．
+
+	* 2次元座標系の基本描画サブルーチンの追加．
+
+	* arch/linux-pgf77/Makefile の修正．
+
+	* doc/gsaf の更新．
+
+	* ドキュメントの修正．
+
+	* その他バグ修正．
+
+ver0.3.0  2001/10/12
+
+	* ウィンドウのサイズを変更した際の不具合の修正．
+
+	* フルスクリーンモードのデバッグ．
+
+	* ドキュメントの更新．
+
+ver0.2.94 2001/10/7
+
+	* メニュー Config/Color, Config/Command line の実装．
+
+	* 色，コマンドの設定を ~/.gsglrc に保存するようにしました．
+
+	* $(PREFIX)/share/doc/gsgl/manual.html/ にマニュアルをインストール．
+
+	* メニュー Help/Manual の実装．
+
+ver0.2.93 2001/8/21
+
+	* テキストを正しく表示できないバグの修正 (igl1.f)．
+
+ver0.2.92 2001/8/19
+
+	* GSAF V3.70 と GSAF V3.73 の差分の適用．
+	- doc/gsaf/gsaf.doc.new の更新．
+	- DATA 文を宣言文の後に．(src/Aapl3d.f)
+	- src/adb_ill_1.1 を gsaf_header1.ps, gsaf_header2.ps に分割
+	- と，それに伴う変更 (arch/*/Makefile, Makefile.body, gdp.c,
+			      gsgl2ps.h fileio_ps.c, gsgl2ps.c)
+	- サブルーチン GVALUE, GVALUL の数値の配置の修正 (apl2.f)．
+	- gsgl2ps, eps にオプション g を追加．
+	- Common block 中の変数の順番を修正．(igl2.f, igl3.f)
+	
+ver0.2.91 2001/8/18
+
+	* オブジェクトを選択した際に表示されるフレームを右ドラッグすると
+	平行移動，中ドラッグすると回転するようにした．またフレームの角を
+	ドラッグすると伸縮する．
+
+ver0.2.90 2001/7/30
+
+	* GTK+ を用いた GUI の構築．
+
+	* オブジェクトの回転，拡大，縮小，平行移動の実装．
+
+	* 印刷機能の実装．
+
+	* オブジェクトの選択機能の実装．
+
+	* その他修正多数．
+
+ver0.2.8 2001/5/2
+
+	* libgsgl2ps を libgsgl に統合．
+
+	* デフォルトの背景色を白に変更．
+	環境変数 GSAF_BGCOLOR=black のときのみ背景色は黒になります．
+
+	* ソースの整理．
+
+	* バグ修正多数．	 
+
+ver0.2.7 2001/4/26
+
+	* OSMesa に依存する部分を libgsglosmesa に分離．
+
+	* デフォルトの背景色を黒に変更．環境変数 GSAF_BGCOLOR の導入．
+	GSAF_BGCOLOR=white のときのみ背景色は白になります．
+
+	* Pers3D1 のメモリ使用量を低減．
+
+	* A3dplot.f を Absc3d.f と Aapl3d.f に分離．
+
+	* ogl.c の一部を displaylist.c，matrix.c に分離．
+
+ver0.2.6 2001/3/6
+
+	* 3次元オブジェクトと2次元オブジェクトが含まれている中間ファイル
+	を正しく ps ファイルに変換できないバグの修正．
+
+	* SETVEW に絡んで図形の座標が正しく中間ファイルに
+	保存されないバグの修正．
+
+	* 上のために中間ファイルフォーマットに VERTEX{2,3}_PRJCTD を追加．
+
+	* Makefile の GSLIBS の修正．
+
+	* GVALUE3DZ のバグ修正．(Thanks 内田さん)
+
+	* マニュアルの誤植修正．
+
+	* その他多数バグ修正．
+
+ver0.2.5 2001/2/23
+
+	* gsglview で2の奇数乗の図形を1つにまとめて表示した場合の振る舞いが
+	おかしくなる問題の修正．
+
+	* gsglview で線の太さが太くなる問題の修正．
+
+ver0.2.4 2001/2/22
+
+	* コンパイルできないバグの修正 _o_
+
+ver0.2.3 2001/2/21
+
+	* GVIEW3Dの引数 Radius を負にもできるよう修正．
+
+	* 中間ファイルフォーマットに GSGLFILE_3D_2 を追加．
+
+	* 見る角度によっては GDrawBack3D の面と GSCALE3D* の線が別の面
+	に描かれる問題の修正．
+
+	* window のリサイズに対応．
+
+ver0.2.2 2001/2/17
+
+	* GVIEW3Dの引数 Radius は元々見つめる点(オブジェクトの中心)の
+	視点からの距離であったが，見つめる点のWorld座標系でのz座標に
+	変更しました．
+
+	* GVIEW3Dの引数 Radius が50.0未満ならば透視法射影，50.0以上ならば
+	正射影としていたが，1000.0以上か未満かで判断するようになりました．
+	(詳しくはマニュアル参照)
+
+	* 視点のWorld座標系でのz座標をデフォルトで 20.0 にしました．
+	さらにgsglSetEyePosで視点のz座標を変更可能にしました，
+
+	* SETVEW で設定される変換 (ビュー変換) を射影変換の前に
+	実行していたのを射影変換の後に実行するように変更．
+	これにより3次元オブジェクトも正しく拡大，縮小されるようになりました．
+
+	* 内部フォーマット，中間ファイルフォーマットに GSGL*_PROJECTION を追加．
+
+	* マニュアルの更新．
+
+	* その他バグ修正．
+
+ver0.2.1 2001/2/9
+ 
+	* 透視法射影をした場合テキスト表示がおかしくなる問題の修正．
+
+	* その他バグ修正．
+
+ver0.2.0 2001/2/8
+
+	* テキストの3次元配置の実装．Atext3d.f の追加．
+
+	* それに伴いサブルーチン Set3DTextBaseLine, text3d, textx3d, 
+	gtext3d, gtextx3d, numbi3d, numbd3d, numbr3d, gnumbi3d, 
+	gnumbd3d, gnumbr3d, gnumbp3d  の追加．
+
+	* サブルーチン GVALUE3DX,Y,Z での数字の3次元配置の実装．
+
+	* demo/text3dtest.f の追加．
+
+ver0.1.2 2001/2/7
+
+	* psファイルで線の太さが正しく表示されない問題の修正．
+	  
+ver0.1.1 2001/2/6
+	 
+	* サブルーチン INQPOS3D の追加．
+
+	* フォントの3次元配置の一部実装．
+
+	* サブルーチン GVALUE3DX,Y,Z の bug を多数修正．
+
+	* demo/gvalue3dtest.f の追加．
+
+ver0.1.0 2001/2/2
+
+	* Initial release.

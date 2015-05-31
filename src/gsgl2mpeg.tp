@@ -1,0 +1,97 @@
+#! /bin/sh
+function message
+{
+    echo 'usage: gsgl2anime [-b] [-d num] [-t] [-x xpixel] [-y ypixel] file'
+    echo '           -d num : duplicate images to control fps'
+    echo '           -t     : with page title'
+    echo '           -b     : no page title'
+    echo '           -x     : image width in pixel'
+    echo '           -y     : image height in pixel'
+    exit 
+}
+if [ $# -eq 0 ] ; then
+    message
+fi
+PSTOPPM_OPT=""
+PS_OPT="-b"
+FRAMES=1
+while  getopts  "bd:htx:y:" opt
+do
+      case  $opt  in
+         d) FRAMES=$OPTARG ;;
+	 b) PS_OPT="-b" ;;
+	 h) message ;;
+	 t) PS_OPT="-t" ;;
+         x) PSTOPPM_OPT="$PSTOPPM_OPT -xsize $OPTARG" ;;
+         y) PSTOPPM_OPT="$PSTOPPM_OPT -ysize $OPTARG" ;;
+      esac
+done
+shift $(($OPTIND - 1))
+#
+if ! test -f $1.gsgl; then
+    echo "$1.gsgl doesn't exist."
+    exit
+fi
+#
+TMPDIR=/tmp/gsgltemp$$
+mkdir -m 700 $TMPDIR
+BINDIR/gsglanime2pages -a $1.gsgl > $TMPDIR/temp.gsgl
+BINDIR/gsgl2eps -car3 $PS_OPT $TMPDIR/temp.gsgl
+rm $TMPDIR/temp.gsgl
+COUNT=0
+for file in `ls $TMPDIR/*.eps`; do
+    /usr/bin/pstopnm -xborder 0 -yborder 0 -portrait $PSTOPPM_OPT $file
+    COUNT=$((COUNT+1))
+    NUM=`echo $file | sed -e s/temp-// -e s/.eps//`
+    mv ${file}001.ppm $NUM.ppm
+done
+rm $TMPDIR/*.eps
+if test $FRAMES != "1" ; then
+    for file in `ls $TMPDIR/*.ppm | sort -n`; do
+	NEWNAME=`echo $file | sed s/ppm/image/`
+	mv $file $NEWNAME
+    done
+    COUNT=0
+    for file in `cd $TMPDIR && ls *.image | sort -n`; do
+	num=1
+	while [ $num -le $FRAMES ]; do
+	    COUNT=$((COUNT+1))
+	    cp $TMPDIR/$file $TMPDIR/$COUNT.ppm
+	    num=$((num+1))
+	done
+    done
+    rm $TMPDIR/*.image
+fi
+FIRST=1
+LAST=$COUNT
+num=1
+while [ $num -le $FRAMES ]; do
+    if test $num = "1"; then
+	PATTERN="I"
+    else
+	PATTERN=$PATTERN"P"    
+    fi
+    num=$((num+1))
+done
+echo "PATTERN $PATTERN
+OUTPUT $1.mpg
+INPUT_DIR $TMPDIR
+INPUT
+*.ppm [$FIRST-$LAST]
+END_INPUT
+BASE_FILE_FORMAT PPM
+INPUT_CONVERT *
+GOP_SIZE $FRAMES
+SLICES_PER_FRAME 1
+PIXEL HALF
+RANGE 1
+PSEARCH_ALG LOGARITHMIC
+BSEARCH_ALG CROSS2
+IQSCALE 8
+PQSCALE 10
+BQSCALE 25
+REFERENCE_FRAME ORIGINAL
+" > $TMPDIR/parameter-file
+/usr/bin/ppmtompeg $TMPDIR/parameter-file
+rm -f $TMPDIR/*.ppm $TMPDIR/parameter-file
+rmdir $TMPDIR

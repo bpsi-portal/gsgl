@@ -1,0 +1,104 @@
+% dificulty 1 -- easy
+% dificulty 2 -- medium
+% dificulty 3 -- difficult
+% dificulty 4 -- very difficult
+% dificulty 5 -- impossible?
+
+note PY=PYS-0.5*(POS+2)*CHHM => PY=PYS-0.4*(POS+2)*CHHM (apl2.f)
+================================================================
+
+2 -- compatibility with original GSAF
+1 -- "based on" -> "compatible with" ??
+========================================
+
+2 -- clipping が変 <= gplotp, gplotpe は自前でclipping
+
+release 0.4.17
+
+2 -- 実数を 16-16 から 1-8-23 へ
+     -- fileformat は GSAF/OpenGL1 へ --
+2 -- 3次元データを内部で規格化
+1 -- 内部バージョン情報をサーバークライアント間でやりとり(Major,Minor)
+1 -- bitmap表示のON/OFFはサーバー側で決定する．
+1 -- windowのタイトルの設定 (GSGL_TITLE)
+
+release 0.5.0
+
+2 -- GUIにexternal GUIを用いたときにseg faultを起こさないように．
+2 -- GUIボタンをテクスチャ表示に変更?
+3 -- GUIインターフェイスの完成
+2 -- 2次元グラフを3次元空間にマッピングする関数
+3 -- illustrator でポリゴンが変に解釈される．
+
+release 0.5.1
+
+2 -- add lines
+     add texts (angle, justification, tcpip)
+     [modifing is forbiden]
+
+release 0.5.10
+
+3 -- meta-lines
+	"解析"は，データからグラフを再構築するタイプではなく，
+	"一般的な"直線を登録する形式．
+	t --- change color <= lines, text
+           |- change line type <= meta-lines
+
+4 -- analyse
+	menu-data --- gplotp --- view values <= meta-lines+alpha
+		   |          |- min, max (total, for each data) <= meta-lines+alpha
+                   |          |- change color <= meta-lines
+		   |          |- change line type <= meta-lines
+		   |
+	           |- pers3dx --- surface
+                               |- change color
+
+3 -- new pers (2d)
+1 -- gsglpoints
+2 -- gsglf77
+
+release 0.6.0
+
+============== ここまで ================
+
+5 -- volume rendering using texture, ray casting, isosurface
+4 -- isosurface from volume data
+3 -- povray output
+
+release 0.6.0
+
+(3 -- pers3dx の normalize)
+(4 -- 複数のプロセスを同時に起動 gsglview a.gsgl b.gsgl <= UIが難しい)
+(2 -- remove mouse pointer scaler and add degital pointer positioner)
+(3 -- gui undo)
+(2 -- gui button へ default focus を渡す機構)
+(2 -- gsgl-config)
+(1 -- pers3d5 arguments)
+(3 -- animation - memory treatment when playing by gsglview)
+(3 -- print polygons with their own thickness)
+(3 -- optimize pers3dn's contour)
+(2 -- general surfaces)
+(3 -- redraw with pixmap)
+(3 -- dolaune-trianglization)
+(2 -- truetype, japanese
+	5 - performance
+	1 - config input japanese code (GUI)
+        2 - outline.flags)
+(2 -- customize gsgldisplaylist & check cont2.f)
+(3 -- 文字幅の計算)
+(1 -- terminal上にgraphの表示 ... 見づらい,表示されない縦線が現れる,redrawできない)
+(5 -- mpi)
+
+questions
+
++ truetypeの法線はなぜか(0,0,-1)
++ z=10^20ぐらいで clipping ... nvidia,mesaでは異常
++ mesa can't calc normal vector properly?
+
+fixed
+
++ GTK+2 ... cursor when save. [.gsgl<=here]
++ ifc, iccで最適化すると clientstate.c で ** Adress Error ** 
++ animationのreplayで休止ができない <= gtkの問題
++ Honda's animation program causes GC Error.
++ windowが出た瞬間に矢印キーを押すと落ちる <= サーバーに限る

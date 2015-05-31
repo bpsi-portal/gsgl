@@ -1,0 +1,91 @@
+C
+C
+C
+      SUBROUTINE READ_2_FLOAT (SIZEX, SIZEY, IERROR)
+      REAL*4 SIZEX, SIZEY
+      INTEGER IERROR
+C
+      IERROR=0
+      READ(5,*,END=2,ERR=1) SIZEX,SIZEY
+      RETURN
+ 2    CONTINUE
+      IERROR=2
+      RETURN
+ 1    CONTINUE
+      IERROR=1
+      RETURN
+      END
+C
+C
+C
+      SUBROUTINE READ_256_CHAR (C, IERROR)
+      CHARACTER*256 C
+      INTEGER IERROR
+C
+      IERROR=0
+      READ(5,'(A256)',END=2,ERR=1) C
+      RETURN
+ 2    CONTINUE
+      IERROR=2
+      RETURN
+ 1    CONTINUE
+      IERROR=1
+      RETURN
+      END
+C
+C
+C
+      SUBROUTINE READ_1_CHAR (C, IERROR)
+      CHARACTER*1 C
+      INTEGER IERROR
+C
+      IERROR=0
+      READ(5,'(A1)',END=2,ERR=1) C
+      RETURN
+ 2    CONTINUE
+      IERROR=2
+      RETURN
+ 1    CONTINUE
+      IERROR=1
+      RETURN
+      END
+C
+C
+C
+      SUBROUTINE READ_LOGICAL (I, IERROR)
+      INTEGER I
+      LOGICAL L
+      INTEGER IERROR
+C
+      IERROR=0
+      IF (I.EQ.0) THEN
+         L = .FALSE.
+      ELSE
+         L = .TRUE.
+      ENDIF
+      READ(5,'(L1)',END=2,ERR=1) L
+      IF (L) THEN
+         I=1
+      ELSE
+         I=0
+      ENDIF
+      RETURN
+ 2    CONTINUE
+      IERROR=2
+      RETURN
+ 1    CONTINUE
+      IERROR=1
+      RETURN
+      END
+C
+C
+C
+      subroutine gsglReadPageNumber(NPAGE)
+C
+ 200  CONTINUE
+      WRITE(6,*) '## INPUT : PAGE NUMBER (0:ALL CR/^D:END)'
+      READ(5,*,ERR=200,END=9000) NPAGE
+      RETURN
+ 9000 NPAGE = -1
+      RETURN
+      END

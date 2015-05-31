@@ -1,0 +1,3 @@
+#AUTOMAKE_OPTIONS = foreign
+
+SUBDIRS = f77 c

@@ -1,0 +1,164 @@
+GUILABEL (x, y, w, h, text, ijust)
+ラベルを配置する
+
+X & [R] & ラベルの左端のx座標
+Y & [R] & ラベルの下端のy座標
+W & [R] & ラベルの幅
+H & [R] & ラベルの高さ
+TEXT & [A*] & ラベルの文字列(\ref{引用型文字列})
+IJUST & [I] & 文字の揃え方の指定　0:左揃え　1:右揃え　2:中央揃え
+
+#See src/demo/f77/guitest.f
+
+
+
+
+
+INQLABELSIZE (char *text, float *w, float *h)
+ラベルの大きさを問い合わせる
+
+TEXT & [A*] & ラベルの文字列(\ref{引用型文字列})
+W ! [R] ! ラベルの幅
+H ! [R] ! ラベルの高さ
+
+#外部Tool Kitを使用しているときには外部Tool Kitのフォントの大きさからラベルの大きさを計算するが，Xサーバーに接続していないときや，gsglserverを用いているときには内部Tool Kitのフォントの大きさからラベルの大きさが計算される．
+#See also \ref{GUIEXTERNAL}
+#See src/demo/f77/guitest.f
+
+
+
+
+
+GUIBUTTON (x, y, w, h, text, callback)
+ボタンを配置する
+
+X & [R] & ボタンの左端のx座標
+Y & [R] & ボタンの下端のy座標
+W & [R] & ボタンの幅
+H & [R] & ボタンの高さ
+TEXT & [A*] & ボタンのラベル(\ref{引用型文字列})
+CALLBACK & [Subroutine()] & ボタンが押されたときに呼ばれるサブルーチン
+
+#See src/demo/f77/guitest.f
+
+
+
+
+
+
+
+GUICOMBOBOX (x, y, w, h, nitem, char *text, int *init, void (*callback)(int *))
+コンボボックスを配置する
+
+X & [R] & ボタンの左端のx座標
+Y & [R] & ボタンの下端のy座標
+W & [R] & ボタンの幅
+H & [R] & ボタンの高さ
+NITEM & [I] & アイテムの数
+TEXT  & [A*256(*)] & アイテムのテキスト(\ref{引用型文字列})
+INIT  & [I] & はじめに有効にするアイテムの番号
+CALLBACK & [Subroutine(INTEGER)] & アイテムが選択されたときに呼ばれるサブルーチン(選択されたアイテムの番号(1以上)を引数にとる)
+
+#See src/demo/f77/guitest.f
+
+
+
+
+
+
+GUISPINBUTTONF (x, y,  w, h, init, lower, upper, digits, callback)
+スピンボタンを配置する (実数用)
+
+X & [R] & ボタンの左端のx座標
+Y & [R] & ボタンの下端のy座標
+W & [R] & ボタンの幅
+H & [R] & ボタンの高さ
+INIT & [R] & スピンボタンの初期値
+LOWER & [R] & スピンボタンの下限値
+UPPER & [R] & スピンボタンの上限値
+DIGITS & [I] & 表示する数値の小数点以下の桁数
+CALLBACK & [Subroutine(REAL)] & 数値が変更されたときに呼ばれるサブルーチン(その数値を引数にとる)
+
+#See src/demo/f77/guitest.f
+
+
+
+
+
+
+
+
+GUISPINBUTTONI (x, y,  w, h, init, lower, upper, callback)
+スピンボタンを配置する (整数用)
+
+X & [R] & ボタンの左端のx座標
+Y & [R] & ボタンの下端のy座標
+W & [R] & ボタンの幅
+H & [R] & ボタンの高さ
+INIT & [I] & スピンボタンの初期値
+LOWER & [I] & スピンボタンの下限値
+UPPER & [I] & スピンボタンの上限値
+CALLBACK & [Subroutine(INTEGER)] & 数値が変更されたときに呼ばれるサブルーチン(その数値を引数にとる)
+
+#See src/demo/f77/guitest.f
+
+
+
+
+
+
+
+GUICHECKBUTTON　(x, y, w, h, text, init, callback)
+チェックボタンを配置する
+
+X & [R] & ボタンの左端のx座標
+Y & [R] & ボタンの下端のy座標
+W & [R] & ボタンの幅
+H & [R] & ボタンの高さ
+TEXT & [A*] & チェックボタンのラベル(\ref{引用型文字列})
+INIT & [I] & チェックボタンの初期状態 (チェックされている場合は1, されていない場合は0)
+CALLBACK & [SUBROUTINE(INTEGER)] & チェックボタンの状態が変更された場合に呼ばれるサブルーチン (チェックされている場合は1, されていない場合は0)
+
+#See src/demo/f77/guitest.f
+
+
+
+
+
+
+GUILINEEDIT (x, y, w, h, max, text, ntext, void (*callback)(const char *, int *))
+一行エディタを配置する
+
+X & [R] & エディタの左端のx座標
+Y & [R] & エディタの下端のy座標
+W & [R] & エディタの幅
+H & [R] & エディタの高さ
+MAX & [I] & エディタに表示する最大文字数
+TEXT & [A*] & はじめにエディタに表示するテキスト(\ref{引用型文字列}ではない!!)
+NTEXT & [I] & はじめに表示するテキストの文字数
+CALLBACK & [SUBROUTINE(CHARACTER*,INTEGER)] & エディタの文字列が変更された際に呼ばれるサブルーチン(文字列とその文字数を引数にとる)
+
+#See src/demo/f77/guitest.f
+
+
+
+
+
+
+GUIEXTERNAL(IEXT)
+外部のTool Kit(GTK+ or Qt)の部品を使用するか内部のTool Kitを使用するかを決定する．
+
+IEXT & [I] & このサブルーチンの引数として0を与えると内部のTool Kit，1を与えると外部のTool Kitを使用するようになる．デフォルトでは内部のTool Kitを使用する．
+
+#See src/demo/f77/guitest.f
+
+
+
+
+
+
+
+GUIEXITLOOP()
+\ref{PAGEE}のイベントループから出る．
+
+#See src/demo/f77/guitest.f
