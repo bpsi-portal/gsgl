@@ -5,4 +5,4 @@
 #    gtk2
 # required Xquartz
 
-F77=ifort CC=gcc-mp-5 CXX=g++-mp-5 CFLAGS="-g -O2 -D_XOPEN_SOURCE" AR="libtool" AR_FLAGS="-static -o " CPPFLAGS="-fpermissive -Wwrite-strings" ./configure --enable-gtk2 --with-jpeg-prefix=/opt/local --with-png-prefix=/opt/local --with-iconv-prefix=/opt/local --with-GL-prefix=/opt/X11
+F77=gfortran-mp-devel CC=gcc-mp-devel CXX=g++-mp-devel CPP=cpp-mp-devel CXXCPP=cpp-mp-devel CFLAGS="-g -O2 -D_XOPEN_SOURCE" AR="libtool" AR_FLAGS="-static -o " CPPFLAGS="-fpermissive -Wwrite-strings" ./configure --enable-gtk2 --with-jpeg-prefix=/opt/local --with-png-prefix=/opt/local --with-iconv-prefix=/opt/local --with-GL-prefix=/opt/X11

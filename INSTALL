@@ -1,52 +1,52 @@
-1. �Ϥ����
+1. はじめに
 
-  GSAF/OpenGL �򥤥󥹥ȡ��뤹��ˤϡ�OpenGL (libGL, libGLU >= version 1.2)��
-  libpng��libjpeg, freetype2, zlib, �����ơ�GUI Tool Kit �Ȥ���
-��GTK+(1.2 or 2.x) �ޤ��� Qt 3.x �����󥹥ȡ��뤵��Ƥ���ɬ�פ�����ޤ���
-  GUI Tool Kit �ϥǥե���Ȥ� GTK+ 1.2 ���Ȥ��ޤ���
-  GTK+2����Ѥ�����ˤ� configure �� --enable-gtk2 ���ץ������Ϥ��Ƥ���������
-  Qt3.x����Ѥ�����ˤ� configure �� --enable-qt ���ץ������Ϥ��Ƥ���������
-  �ܤ����� ./configure --help �ν������Ƥ򻲾Ȥ��Ƥ���������
+  GSAF/OpenGL をインストールするには，OpenGL (libGL, libGLU >= version 1.2)，
+  libpng，libjpeg, freetype2, zlib, そして，GUI Tool Kit として
+　GTK+(1.2 or 2.x) または Qt 3.x がインストールされている必要があります．
+  GUI Tool Kit はデフォルトで GTK+ 1.2 が使われます．
+  GTK+2を使用する場合には configure に --enable-gtk2 オプションを渡してください．
+  Qt3.xを使用する場合には configure に --enable-qt オプションを渡してください．
+  詳しくは ./configure --help の出力内容を参照してください．
  
-2. Install ���
+2. Install 手順
 
   $ ./configure
   $ make
   # make install
 
-  �ȥ����ߥʥ�Ǽ¹Ԥ��뤳�Ȥˤ�ꥤ�󥹥ȡ���Ǥ��ޤ���
-  ��Ŭ���򤷤������ˤ�
+  とターミナルで実行することによりインストールできます．
+  最適化をしたい場合には
 
   $ ./configure CFLAGS='-O2 -ffast-math' FFLAGS='-O2 -ffast-math'
 
-  �Τ褦�˥��ץ�������ꤷ�ޤ��� 
-  C����ѥ���� icc��Fortran����ѥ���� ifc ����ꤷ��������
+  のようにオプションを指定します． 
+  Cコンパイラに icc，Fortranコンパイラに ifc を指定したい場合は
 
   $ ./configure CC=icc F77=ifc CXX=icc
 
-  �ȼ¹Ԥ��Ƥ�����������������libgc �� icc �Ǥϥ���ѥ���Ǥ��ʤ�?�褦�ʤΤǡ�
+  と実行してください．ただし，libgc は icc ではコンパイルできない?ようなので，
 
   $ cd gc/
   $ ./configure
 
-  �Ȥ��Ƥ���������
+  としてください．
 
-  ���Ƕ��Linux�ʤ�
+  ・最近のLinuxなら
 
 	$ ./configure
 	$ make
  	$ make install
 
-    ������ʤ��Ǥ��礦��
+    で問題ないでしょう．
 
-  ����������./configure �� libGLU ��̵���Ȥ������顼���Ф���硤
-    libGLU�ΥС�����󤬸Ť��Τǡ�������Mesa�򥤥󥹡ݥ뤷��������
+  ・ただし，./configure で libGLU が無いというエラーが出た場合，
+    libGLUのバージョンが古いので，新しいMesaをインス−ルしたうえで
 
         $ ./configure --with-GL-prefix=/usr/local --with-GLU-prefix=/usr/local
 
-    �ʤɤȤ��Ƥ���������
+    などとしてください．
 
-2.1 FreeBSD 5.x �ξ��
+2.1 FreeBSD 5.x の場合
 
 	$ ./configure --with-libiconv --with-iconv-prefix=/usr/local \
 		--with-jpeg-prefix=/usr/local --with-png-prefix=/usr/local \
@@ -54,19 +54,19 @@
 	$ make
         # make install
  
-2.2 Darwin��g77��Ȥ����
+2.2 Darwinでg77を使う場合
 
-  ��GTK+2.x��Ȥ��ȡ�����Window�������ݤ˲��̤˲���ɽ������ʤ��Ȥ���
-    ���꤬�������礬����ޤ����ޥ����ǲ��̤򥯥�å����뤳�Ȥˤ��������
-����ɽ������ޤ�������������� Qt 3.x ����Ѥ��뤳�Ȥǲ���Ǥ���褦�Ǥ���
+  　GTK+2.xを使うと，初めのWindowが現れる際に画面に何も表示されないという
+    問題が起きる場合があります．マウスで画面をクリックすることにより正しく
+　　表示されますが．この問題は Qt 3.x を使用することで回避できるようです．
 
-    �ޤ���fink �� g77 ����Ѥ���� shared library �����ʤ��褦�Ǥ���
+    また，fink の g77 を使用すると shared library が作れないようです．
 
-2.2.1 Qt 3.x ����Ѥ�����
+2.2.1 Qt 3.x を使用する場合
     
     g77,qt3,libjpeg,libpng3,freetype2,pkgconfig,gettext,libiconv
-    ��fink���Ѥ��ƥ��󥹥ȡ��뤷�ޤ���fink�ΥС������ˤ�äƤϡ������
-    gettext-dev,libiconv-dev �򥤥󥹥ȡ��뤹��ɬ�פ�����Ǥ��礦��
+    をfinkを用いてインストールします．finkのバージョンによっては，さらに
+    gettext-dev,libiconv-dev をインストールする必要があるでしょう．
 
         $ ./configure --with-libiconv-prefix=/sw FLIBS="-L/sw/lib -lg2c" \
             --with-libiconv --with-jpeg-prefix=/sw --with-png-prefix=/sw \
@@ -79,11 +79,11 @@
 	$ make
   	$ sudo make install
 
-2.2.2 GTK+ 2.x ����Ѥ�����
+2.2.2 GTK+ 2.x を使用する場合
    
-    g77,gtk+2,atk1,libjpeg,libpng3,freetype2,pkgconfig,gettext,libiconv ��
-    fink���Ѥ��ƥ��󥹥ȡ��뤷�ޤ���fink�ΥС������ˤ�äƤϡ������
-    gettext-dev,libiconv-dev �򥤥󥹥ȡ��뤹��ɬ�פ�����Ǥ��礦��
+    g77,gtk+2,atk1,libjpeg,libpng3,freetype2,pkgconfig,gettext,libiconv を
+    finkを用いてインストールします．finkのバージョンによっては，さらに
+    gettext-dev,libiconv-dev をインストールする必要があるでしょう．
 
         $ ./configure --with-libiconv-prefix=/sw FLIBS="-L/sw/lib -lg2c" \
 		--with-libiconv --with-jpeg-prefix=/sw --with-png-prefix=/sw \
@@ -92,46 +92,46 @@
 	$ make
   	$ sudo make install
 
-2.3 Darwin��xlf��Ȥ����
+2.3 Darwinでxlfを使う場合
 	
 	$ ./configure --enable-gtk2 --with-jpeg-prefix=/sw --with-png-prefix=/sw \
 		--with-libiconv --with-libiconv-prefix=/sw F77=xlf
 	$ make
   	$ sudo make install
 
-    ��OK�Ǥ���
+    でOKです．
 
-3. TrueType Font, Type1 Font�λ��ѤˤĤ���
+3. TrueType Font, Type1 Fontの使用について
 
-��GSAF/OpenGL�Ǥϡ��ե�����ֹ�0��19�ޤǤ����ȥ������ե����
-��(ľ�����Ȥ߹�碌���ե����)���ե�����ֹ�32��44�Ǥϲ���ɽ���ˤϥ��ȥ�����
-���ե���ȡ�postscript��Ǥ�Type1�ե���Ȥ�Ȥ��褦�ˤʤäƤ��ޤ���
-������ˡ��ե�����ֹ�502��514,1000��1027�ǤϤ��줾��ݥꥴ�󲽤���Type1,
-  TrueType�ե���Ȥ���Ѥ���褦�ˤʤäƤ��ޤ��������ǤΥݥꥴ�󲽤Ȥϡ�
-���ƻ��Τ�٤������ѷ���ʬ�䤷�Ƥ��ν���Ȥ��ƻ��Τ�ɽ�����뤳�Ȥ��̣���ޤ���
+　GSAF/OpenGLでは，フォント番号0〜19までがストロークフォント
+　(直線を組み合わせたフォント)，フォント番号32〜44では画面表示にはストローク
+　フォント，postscript内ではType1フォントを使うようになっています．
+　さらに，フォント番号502〜514,1000〜1027ではそれぞれポリゴン化したType1,
+  TrueTypeフォントを使用するようになっています．ここでのポリゴン化とは，
+　各字体を細かく三角形に分割してその集合として字体を表現することを意味します．
 
-���ݥꥴ�󲽽����ˤϷ׻����֤������ꡤ�����ɽ������ˤ���֤������ꡤ
-��postscript�ե�����Υ��������礭���ʤ뤿�ᡤ�ե�����ֹ�32��44�λ���
-����侩���ޤ���
+　ポリゴン化処理には計算時間がかかり，さらに表示するにも時間がかかり，
+　postscriptファイルのサイズも大きくなるため，フォント番号32〜44の使用
+　を推奨します．
 
-������Ϥ��Ƥ������ݥꥴ�󲽤���TryeType,Type1�ե���Ȥ�Ȥ��ˤϡ�
-��Ŭ���ʥǥ��쥯�ȥ�˥ե���Ȥ��֤���GUI��"Config/TrueType font"�Ǥ��ΰ��֤�
-  ���ꤹ��ɬ�פ�����ޤ����ޤ��ϡ�~/.gsglrc�ե�����򥨥ǥ������Խ����Ƥ�
-�����ޤ��ޤ���
+　それはさておき，ポリゴン化したTryeType,Type1フォントを使うには，
+　適当なディレクトリにフォントを置き，GUIの"Config/TrueType font"でその位置を
+  指定する必要があります．または，~/.gsglrcファイルをエディタで編集しても
+　かまいません．
   
-  times, arial, courier �ե���Ȥ� Microsoft �Υڡ�������̵���ǥ����� 
-  �����ɤǤ��ޤ������ܸ�ե���Ȥ������ե���Ȥ��Ȥ���Ǥ��礦��
-  ���ꥷ��ե���Ȥϡ��㤨�� http://mnytud.arts.klte.hu/mnyj/phonfont.htm 
-  ���� greek.exe ������������ɤǤ��ޤ���
+  times, arial, courier フォントは Microsoft のページから無償でダウン 
+  ロードできます．日本語フォントは東風フォントが使えるでしょう．
+  ギリシャフォントは，例えば http://mnytud.arts.klte.hu/mnyj/phonfont.htm 
+  から greek.exe がダウンロードできます．
 
-  Type1�ե���Ȥϡ�RedHat Linux�ʤ��/usr/share/fonts/default/Type1 �ʲ���
-��Debian GNU/Linux�Ǥ�/usr/share/fonts/type1/gsfonts �ʲ��ˤ���ޤ���
+  Type1フォントは，RedHat Linuxならば/usr/share/fonts/default/Type1 以下，
+　Debian GNU/Linuxでは/usr/share/fonts/type1/gsfonts 以下にあります．
 
-4. ����Τ���Ķ�
+4. 問題のある環境
 
-  ��Darwin
-	1. shared library ����ʤ���
-        2. C���줫����Ѥ��������԰��ꡩ
+  ・Darwin
+	1. shared library を作れない．
+        2. C言語から使用した場合に不安定？
 
 5. Added by AF 2015.05.31
 
