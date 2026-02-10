@@ -994,6 +994,15 @@ void GPLOTP_F77 (float *gx, float *gy, int *nsrt, int *nend, int *nstep,
 	gsaf_gplotp (gx, gy, ns, ne, *nstep, *imark, *istep, *ipat);
 }
 
+#define GPLOTPG_F77 F77_FUNC(gplotpg,GPLOTPG)
+void GPLOTPG_F77 (float *gx, float *gy, int *nsrt, int *nend, int *nstep,
+		  int *imark, int *istep, int *ipat, int *id)
+{
+	int ns = (*nsrt) - 1;
+	int ne = (*nend) - 1;
+	gsaf_gplotpg (gx, gy, ns, ne, *nstep, *imark, *istep, *ipat, *id);
+}
+
 #define GPLOTPE_F77 F77_FUNC(gplotpe,GPLOTPE)
 void GPLOTPE_F77 (float *gx, float *gy1, float *gy2, int *nsrt, int *nend, int *nstep,
 		  float *scal)

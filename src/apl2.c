@@ -728,6 +728,126 @@ void gsaf_gplotp (float *gx, float *gy, int nsrt, int nend, int nstep, int imark
 	gsgl_separate_objects (p);
 }
 
+static void gsaf_setrgbg_internal (float cr0, float cg0, float cb0, float factor, int id)
+{
+	float cr, cg, cb;
+
+	if (factor < 0.0f) factor = 0.0f;
+	if (factor > 1.0f) factor = 1.0f;
+
+	switch (id) {
+	case 1:
+		cr = (1.0f-factor) + cr0*factor;
+		cg = (1.0f-factor) + cg0*factor;
+		cb = (1.0f-factor) + cb0*factor;
+		break;
+	case 2:
+		cr = cr0*factor;
+		cg = cg0*factor;
+		cb = cb0*factor;
+		break;
+	case 3:
+	case 4:
+		cr = 0.5f*(1.0f-factor) + cr0*factor;
+		cg = 0.5f*(1.0f-factor) + cg0*factor;
+		cb = 0.5f*(1.0f-factor) + cb0*factor;
+		break;
+	case 0:
+	default:
+		cr = cr0;
+		cg = cg0;
+		cb = cb0;
+		break;
+	}
+
+	gsaf_setrgb (cr, cg, cb);
+}
+
+/* draw xy graph with gray scale
+ * id = 0: RGB original
+ *      1: white to RGB
+ *      2: black to RGB
+ *      3: gray to RGB
+ *      4: half RGB to RGB
+ */
+void gsaf_gplotpg (float *gx, float *gy, int nsrt, int nend, int nstep, int imark, int istep, int ipat, int id)
+{
+	int imarks;
+	float hmrk,wmrk,angl,tilt;
+	int n;
+	int denom;
+	float factor;
+	float cr, cg, cb;
+	gsglPage *p;
+
+	if (!gsgl_inq_page_is_open ()) return;
+
+	p = gsgl_inq_page ();
+	if (!gsgl_inq_gdefin_is_called (p)) return;
+
+	gsaf_inqrgb (&cr, &cg, &cb);
+	denom = nend - nsrt;
+
+	if (imark == 0) {
+		gsaf_movept2d (gx[nsrt], gy[nsrt], ipat);
+		if (nstep == 0) nstep = 1;
+		for (n=nsrt+nstep; n<=nend; n+=nstep) {
+			if (denom == 0) {
+				factor = 0.0f;
+			} else {
+				factor = (float)(n-nsrt)/(float)denom;
+			}
+			gsaf_setrgbg_internal (cr, cg, cb, factor, id);
+			gsaf_drawpt2d (gx[n], gy[n]);
+		}
+	} else if (imark > 0) {
+		gsaf_inqmrk (&imarks, &hmrk, &wmrk, &angl, &tilt);
+		gsaf_setmrk (imark, hmrk, wmrk, angl, tilt);
+		if (nstep == 0) nstep = 1;
+		for (n=nsrt; n<=nend; n+=nstep) {
+			if (denom == 0) {
+				factor = 0.0f;
+			} else {
+				factor = (float)(n-nsrt)/(float)denom;
+			}
+			gsaf_setrgbg_internal (cr, cg, cb, factor, id);
+			gsaf_mark2d (gx[n], gy[n]);
+		}
+
+		gsaf_setmrk (imarks, hmrk, wmrk, angl, tilt);
+	} else {
+		gsaf_movept2d (gx[nsrt], gy[nsrt], ipat);
+		if (nstep == 0) nstep = 1;
+		for (n=nsrt+nstep; n<=nend; n+=nstep) {
+			if (denom == 0) {
+				factor = 0.0f;
+			} else {
+				factor = (float)(n-nsrt)/(float)denom;
+			}
+			gsaf_setrgbg_internal (cr, cg, cb, factor, id);
+			gsaf_drawpt2d (gx[n], gy[n]);
+		}
+
+		gsaf_inqmrk (&imarks, &hmrk, &wmrk, &angl, &tilt);
+		gsaf_setmrk (abs(imark), hmrk, wmrk, angl, tilt);
+		if (istep == 0) istep = 1;
+		for (n=nsrt; n<=nend; n+=nstep*istep) {
+			if (denom == 0) {
+				factor = 0.0f;
+			} else {
+				factor = (float)(n-nsrt)/(float)denom;
+			}
+			gsaf_setrgbg_internal (cr, cg, cb, factor, id);
+			gsaf_mark2d (gx[n], gy[n]);
+		}
+
+		gsaf_setmrk (imarks, hmrk, wmrk, angl, tilt);
+	}
+
+	gsaf_setrgb (cr, cg, cb);
+	gsgl_separate_objects (p);
+}
+
 
 /* draw xy errorbar graph */
 void gsaf_gplotpe (float *gx, float *gy1, float *gy2, int nsrt, int nend, int nstep, float scal)

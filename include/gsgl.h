@@ -72,6 +72,8 @@ void gsaf_gvalue (float xorg, float xstep, float yorg, float ystep, int ind);
 void gsaf_gscall (float xorg, int nxstep, float yorg, int nystep, float sleng, int ind);
 void gsaf_gvalul (float xorg, int nxstep, float yorg, int nystep, int ind);
 void gsaf_gplotp (float *gx,float *gy,int nsrt,int nend,int nstep,int imark,int istep,int ipat);
+void gsaf_gplotpg (float *gx, float *gy, int nsrt, int nend, int nstep,
+		   int imark, int istep, int ipat, int id);
 void gsaf_gplotpe (float *gx, float *gy1, float *gy2, int nsrt, int nend, int nstep, float scal);
 void gsaf_gvectr (float *vx,float *vy,float *x,float *y,int nxa,int nxs,int nxe,int nxstep,
 		  int nys, int nye, int nystep, float xn, float yn, float al);
