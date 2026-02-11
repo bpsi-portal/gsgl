@@ -9,6 +9,12 @@
 #include "drv_gl.h"
 #include "utils.h"
 #include "configfile.h"
+#ifdef USE_QT6
+#include "qt_xwin.h"
+#define GSGL_QT_ENSURE_CURRENT() do { gsgl_qt_ensure_current(); } while (0)
+#else
+#define GSGL_QT_ENSURE_CURRENT() do { } while (0)
+#endif
 
 #define GSGL_MOTION_3D_NON          0
 #define GSGL_MOTION_3D_ROTATE       1
@@ -75,7 +81,8 @@ static void set_objects_color (gsglDisplaylist *list, gsglPage *p)
 	gsglDisplaylist *list_color;
 	GLuint gllist_old;
 	gsglConfigColor *gsglcolor;
-	
+
+	GSGL_QT_ENSURE_CURRENT();
 	list_color = gsgl_displaylist_inq_gui_color (list);
 	if (list_color == NULL) {
 		gsgl_error ("set_objects_color", "color list is null");
@@ -96,6 +103,7 @@ static void make_stack_identity (gsglDisplaylist *list0)
 	gsglDisplaylist *list_stack;
 	GLuint gllist;
 
+	GSGL_QT_ENSURE_CURRENT();
 	list_stack = gsgl_displaylist_inq_pre_stack (list0);
 	gllist = list_stack->gllist;
 
@@ -111,6 +119,7 @@ static void make_stack_pop_push (gsglDisplaylist *list0)
 	gsglDisplaylist *list_stack;
 	GLuint gllist;
 
+	GSGL_QT_ENSURE_CURRENT();
 	list_stack = gsgl_displaylist_inq_pre_stack (list0);
 	gllist = list_stack->gllist;
 
@@ -137,6 +146,7 @@ void gsgl_unselect_objects (gsglPage *p)
 	selected_obj *obj, *obj_old;
 	gsglCallBack *c = p->callback;
 
+	GSGL_QT_ENSURE_CURRENT();
 	c->Select_2d = GSGL_FALSE;
 	c->Select_3d = GSGL_FALSE;
 
@@ -439,6 +449,8 @@ void gsgl_button_release (gsglPage *p)
 	gsglDisplaylist *d;
 	GLdouble   matrix[16];
 	gsglCallBack *c = p->callback;
+
+	GSGL_QT_ENSURE_CURRENT();
 	
 	c->Button = GSGL_FALSE;
 	if (c->Prev_Event != EVENT_MOVE) {
@@ -827,6 +839,7 @@ static void gsgl_motion_common (int x, int y, gsglboolean key, gsglPage *p)
 	gsgllist *list;
 	gsglCallBack *c = p->callback;
 
+	GSGL_QT_ENSURE_CURRENT();
 	if (!c->Button) return;
 	if (c->Prev_Event == EVENT_PRESS) {
 		button_press (p);
@@ -929,6 +942,7 @@ void gsgl_3d_restore (gsglPage *p)
 	gsglDisplaylist *d;
 	gsglCallBack *c = p->callback;
 
+	GSGL_QT_ENSURE_CURRENT();
 	if (!gsgl_displaylist_inq_remade (p)) return;
 
 	list = gsgl_displaylist_inq_after_header (p);
@@ -1013,6 +1027,7 @@ void gsgl_lighting_toggle (gsglPage *p)
 	gsgllist *list_of_list;
 	gsglDisplaylist *d;
 
+	GSGL_QT_ENSURE_CURRENT();
 	gsgl_displaylist_remake (p);
 
 	list_of_list = gsgl_displaylist_inq_list_of_list_lighting_enable (p);
@@ -1047,6 +1062,7 @@ void gsgl_2d_restore (gsglPage *p)
 	gsglDisplaylist *d;
 	gsglCallBack *c = p->callback;
 
+	GSGL_QT_ENSURE_CURRENT();
 	if (!gsgl_displaylist_inq_remade (p)) return;
 
 	list = gsgl_displaylist_inq_after_header (p);
@@ -1117,6 +1133,7 @@ void gsgl_proj_restore (gsglPage *p)
 	gsglDisplaylist *list_projection;
 	gsglCallBack *c = p->callback;
 
+	GSGL_QT_ENSURE_CURRENT();
 	if (!gsgl_displaylist_inq_remade (p)) return;
 
 	list_projection = gsgl_displaylist_inq_list_of_projection (p);
@@ -1183,6 +1200,7 @@ void gsgl_utility_cross (float x, float y, float z, gsglPage *page)
 	gsglDisplaylist *list_utility;
 	float eyepos, eyepos_x, eyepos_y;
 
+	GSGL_QT_ENSURE_CURRENT();
 	list_utility = gsgl_displaylist_inq_list_of_utility (page);
 	gllist_old = list_utility->gllist;
 	gllist_new = glGenLists(1);
@@ -1242,6 +1260,7 @@ void gsgl_utility_box (int Xstart, int Ystart, int x, int y, gsglPage *p)
 	gsglDisplaylist *list_utility;
 	gsglConfigColor *gsglcolor;
 
+	GSGL_QT_ENSURE_CURRENT();
 	list_utility = gsgl_displaylist_inq_list_of_utility (p);
 	gllist_old = list_utility->gllist;
 	gllist_new = glGenLists(1);
@@ -1307,6 +1326,7 @@ void gsgl_utility_clean (gsglPage *p)
 	GLuint gllist_old, gllist_new;
 	gsglDisplaylist *list_utility;
 
+	GSGL_QT_ENSURE_CURRENT();
 	list_utility = gsgl_displaylist_inq_list_of_utility (p);
 	gllist_old = list_utility->gllist;
 	gllist_new = glGenLists(1);

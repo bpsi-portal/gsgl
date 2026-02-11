@@ -4,6 +4,7 @@
 #include "utils2.h"
 #include "base.h"
 #include "matrix.h"
+#include <fenv.h>
 #include "text.h"
 #include "bsc1.h"
 #include "bsc2.h"
@@ -269,6 +270,10 @@ void gsaf_gsclos ()
 
 	if (Library->OpenSaveFile) gsfcls (Library);
 	gsgl_device_close (&ich, Library);
+    /* Clear floating point exception flags to avoid noisy Fortran warnings on exit. */
+#ifdef FE_ALL_EXCEPT
+    feclearexcept(FE_ALL_EXCEPT);
+#endif
 	
 	OpenGSAF = GSGL_FALSE;
 	if (ich != 0) gsgl_close_message (Library);
@@ -396,6 +401,10 @@ void gsaf_pagee ()
 
 	ich = 1;
 	gsgl_device_pagee (&ich, gsgl_inq_page ());
+    /* Clear floating point exception flags to avoid noisy Fortran warnings on exit. */
+#ifdef FE_ALL_EXCEPT
+    feclearexcept(FE_ALL_EXCEPT);
+#endif
 
 /*
  * ich == 0: non interactive device

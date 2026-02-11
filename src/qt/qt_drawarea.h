@@ -1,21 +1,17 @@
 #ifndef __qt_drawarea_h
 #define __qt_drawarea_h
 #include "qt_compat.h"
-#ifdef USE_QT3
-#    include <qgl.h>
-#elif defined USE_QT4
-#    include <QtOpenGL/QGLWidget>
-#endif
+#include <QOpenGLWidget>
 #include "gsgltype.h"
 class QKeyEvent;
 class QSize;
 
-class GLDrawArea : public QGLWidget
+class GLDrawArea : public QOpenGLWidget
 {
 Q_OBJECT
 
 public:
-        GLDrawArea (gsglWindow *, const QGLFormat &format, QWidget *parent=0, const char *name=0, const QGLWidget *shareWidget=0, WFLAGS f=0);
+        GLDrawArea (gsglWindow *, QWidget *parent=0, WFLAGS f=WFLAGS());
         ~GLDrawArea ();
 	void swapBuffers ();
 	void set_page (gsglPage *);

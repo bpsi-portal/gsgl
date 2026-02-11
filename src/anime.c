@@ -105,7 +105,7 @@ static void gsgl_anime_begin (gsglPage *p)
 		    && (gsgl_inq_mode (LIB(p)) == GSGL_MODE_WINDOW ||
 			gsgl_inq_mode (LIB(p)) == GSGL_MODE_TCPIP)) { /* open temporary file */
 
-			strcpy (ANIME(p)->Tmp, "/tmp/gsglXXXXXX");
+			snprintf (ANIME(p)->Tmp, sizeof(ANIME(p)->Tmp), "/tmp/gsglXXXXXX");
 
 			fd = mkstemp (ANIME(p)->Tmp);
 			ANIME(p)->Fp = fdopen (fd, "w+");

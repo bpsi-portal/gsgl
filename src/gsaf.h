@@ -56,10 +56,19 @@
 #    include <X11/Xlib.h>
 #    include <X11/Xutil.h>
 #endif
-#include <GL/gl.h>
-#include <GL/glu.h>
-#ifndef X_DISPLAY_MISSING
-#    include <GL/glx.h>
+#if defined(__APPLE__) && defined(USE_QT6)
+#    include <OpenGL/gl.h>
+#    include <OpenGL/glu.h>
+#else
+#    include <GL/gl.h>
+#    include <GL/glu.h>
+#    ifndef X_DISPLAY_MISSING
+#        include <GL/glx.h>
+#    endif
+#endif
+
+#if defined(__APPLE__) && defined(USE_QT6)
+typedef void* GLXContext;
 #endif
 
 #ifdef HAVE_FREETYPE2
@@ -160,6 +169,37 @@
 #define COMMAND_PNG "/usr/local/bin/gsgl2png -abc -W 1024 -H 760 -o '%s' '%s'"
 #define COMMAND_JPG "/usr/local/bin/gsgl2jpeg -abc -W 1024 -H 760 -o '%s' '%s'"
 
+#ifdef __APPLE__
+#define GSGL_TTF_DIR "/System/Library/Fonts/Supplemental"
+#define TTF_ALPHABET GSGL_TTF_DIR "/Arial.ttf"
+#define TTF_MATH GSGL_TTF_DIR "/Times New Roman Italic.ttf"
+#define TTF_TIMESROMAN GSGL_TTF_DIR "/Times New Roman.ttf"
+#define TTF_TIMESITALIC GSGL_TTF_DIR "/Times New Roman Italic.ttf"
+#define TTF_TIMESBOLD GSGL_TTF_DIR "/Times New Roman Bold.ttf"
+#define TTF_TIMESBOLDITALIC GSGL_TTF_DIR "/Times New Roman Bold Italic.ttf"
+#define TTF_ARIALROMAN GSGL_TTF_DIR "/Arial.ttf"
+#define TTF_ARIALITALIC GSGL_TTF_DIR "/Arial Italic.ttf"
+#define TTF_ARIALBOLD GSGL_TTF_DIR "/Arial Bold.ttf"
+#define TTF_ARIALBOLDITALIC GSGL_TTF_DIR "/Arial Bold Italic.ttf"
+#define TTF_COURIERROMAN GSGL_TTF_DIR "/Courier New.ttf"
+#define TTF_COURIERITALIC GSGL_TTF_DIR "/Courier New Italic.ttf"
+#define TTF_COURIERBOLD GSGL_TTF_DIR "/Courier New Bold.ttf"
+#define TTF_COURIERBOLDITALIC GSGL_TTF_DIR "/Courier New Bold Italic.ttf"
+#define TTF_GREEK  GSGL_TTF_DIR "/Arial Unicode.ttf"
+#define TTF_GREEKROMAN GSGL_TTF_DIR "/Arial Unicode.ttf"
+#define TTF_GREEKITALIC  GSGL_TTF_DIR "/Arial Unicode.ttf"
+#define TTF_GREEKBOLD GSGL_TTF_DIR "/Arial Unicode.ttf"
+#define TTF_GREEKBOLDITALIC GSGL_TTF_DIR "/Arial Unicode.ttf"
+#define TTF_JAPANESE GSGL_TTF_DIR "/AppleGothic.ttf"
+#define TTF_JAPANESEMINCHO GSGL_TTF_DIR "/AppleMyungjo.ttf"
+#define TTF_JAPANESEGOTHIC GSGL_TTF_DIR "/AppleGothic.ttf"
+#define TTF_CMR10 GSGL_TTF_DIR "/STIXGeneral.otf"
+#define TTF_CMTI10 GSGL_TTF_DIR "/STIXGeneralItalic.otf"
+#define TTF_CMTT10 GSGL_TTF_DIR "/STIXGeneral.otf"
+#define TTF_CMMI10 GSGL_TTF_DIR "/STIXGeneralItalic.otf"
+#define TTF_CMSY10 GSGL_TTF_DIR "/STIXGeneral.otf"
+#define TTF_CMEX10 GSGL_TTF_DIR "/STIXGeneral.otf"
+#else
 #define TTF_ALPHABET "/usr/local/share/fonts/truetype/arial.ttf"
 #define TTF_MATH "/usr/local/share/fonts/truetype/timesi.ttf"
 #define TTF_TIMESROMAN "/usr/local/share/fonts/truetype/times.ttf"
@@ -188,6 +228,23 @@
 #define TTF_CMMI10 "/usr/local/share/fonts/truetype/cmmi10.ttf"
 #define TTF_CMSY10 "/usr/local/share/fonts/truetype/cmsy10.ttf"
 #define TTF_CMEX10 "/usr/local/share/fonts/truetype/cmex10.ttf"
+#endif
+#ifdef __APPLE__
+#define GSGL_TYPE1_DIR "/opt/homebrew/share/ghostscript/Resource/Font"
+#define TYPE1_Times_Roman GSGL_TYPE1_DIR "/NimbusRoman-Regular"
+#define TYPE1_Times_Italic GSGL_TYPE1_DIR "/NimbusRoman-Italic"
+#define TYPE1_Times_Bold GSGL_TYPE1_DIR "/NimbusRoman-Bold"
+#define TYPE1_Times_BoldItalic GSGL_TYPE1_DIR "/NimbusRoman-BoldItalic"
+#define TYPE1_Helvetica GSGL_TYPE1_DIR "/NimbusSans-Regular"
+#define TYPE1_Helvetica_Oblique GSGL_TYPE1_DIR "/NimbusSans-Italic"
+#define TYPE1_Helvetica_Bold GSGL_TYPE1_DIR "/NimbusSans-Bold"
+#define TYPE1_Helvetica_BoldOblique GSGL_TYPE1_DIR "/NimbusSans-BoldItalic"
+#define TYPE1_Courier GSGL_TYPE1_DIR "/NimbusMonoPS-Regular"
+#define TYPE1_Courier_Oblique GSGL_TYPE1_DIR "/NimbusMonoPS-Italic"
+#define TYPE1_Courier_Bold GSGL_TYPE1_DIR "/NimbusMonoPS-Bold"
+#define TYPE1_Courier_BoldOblique GSGL_TYPE1_DIR "/NimbusMonoPS-BoldItalic"
+#define TYPE1_Symbol GSGL_TYPE1_DIR "/StandardSymbolsPS"
+#else
 #define TYPE1_Times_Roman "/usr/share/fonts/default/Type1/n021003l.pfb"
 #define TYPE1_Times_Italic "/usr/share/fonts/default/Type1/n021023l.pfb"
 #define TYPE1_Times_Bold "/usr/share/fonts/default/Type1/n021004l.pfb"
@@ -201,6 +258,7 @@
 #define TYPE1_Courier_Bold "/usr/share/fonts/default/Type1/n022004l.pfb"
 #define TYPE1_Courier_BoldOblique "/usr/share/fonts/default/Type1/n022024l.pfb"
 #define TYPE1_Symbol "/usr/share/fonts/default/Type1/s050000l.pfb"
+#endif
 
 #define GUI_SAVE_UN_CLOSE 51
 #define GUI_SAVE_DO_CLOSE 52

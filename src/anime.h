@@ -5,7 +5,7 @@ struct _gsglAnime
 {
 	gsglboolean Anime;
 	FILE *Fp;
-	char Tmp[15];
+	char Tmp[64];
 	gsgllist *Frames;
 	gsgllist *LastList;
 	gsgllist *ListBackUp;

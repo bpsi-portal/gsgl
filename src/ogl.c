@@ -7,6 +7,9 @@
 #include "drv_gl.h"
 #include "displaylist.h"
 #include "xwin.h"
+#ifdef USE_QT6
+#include "qt_xwin.h"
+#endif
 
 void gsgl_enable_antialiasing (gsglWindow *w)
 {
@@ -43,6 +46,9 @@ void gsgl_init_gl_once_in_program (gsglWindow *w)
         float light_specular[] = {0.15, 0.15, 0.15, 1.0};
 	char *str;
 
+#ifdef USE_QT6
+	gsgl_qt_ensure_current ();
+#endif
 	gsgl_doublebuffer_disable (w);
 	/*gsgl_doublebuffer_enable ();*/
 
@@ -90,6 +96,10 @@ void gsgl_init_gl_once_in_program (gsglWindow *w)
 
 	/* line stipple */
 	str = getenv ("GSGL_DISABLE_LINESTIPPLE");
+#if defined(USE_QT6) && defined(__APPLE__)
+	/* Apple's OpenGL falls back to SW for line stipple; disable by default. */
+	if (!str) str = "1";
+#endif
         if (str && strlen (str) > 0) {
 	} else {
 		glEnable(GL_LINE_STIPPLE);
@@ -100,6 +110,9 @@ void gsgl_init_gl_once_in_program (gsglWindow *w)
 
 void gsgl_init_gl_every_page (gsglPage *p)
 {
+#ifdef USE_QT6
+	gsgl_qt_ensure_current ();
+#endif
 	glDisable(GL_CLIP_PLANE0);
 	glDisable(GL_CLIP_PLANE1);
 	glDisable(GL_CLIP_PLANE2);
@@ -156,24 +169,37 @@ gsglboolean gsgl_doublebuffer_is_enabled (gsglWindow *w)
 void gsgl_doublebuffer_enable (gsglWindow *w)
 {
 	if (w->library->DoubleBuffer_is_available) {
+#ifdef USE_QT6
+		w->DoubleBuffer = GL_TRUE;
+		return;
+#else
 		glDrawBuffer (GL_BACK);
 		glReadBuffer (GL_BACK);
 		w->DoubleBuffer = GL_TRUE;
+#endif
 	}
 }
 
 void gsgl_doublebuffer_disable (gsglWindow *w)
 {
 	if (w->library->DoubleBuffer_is_available) {
+#ifdef USE_QT6
+		w->DoubleBuffer = GL_FALSE;
+		return;
+#else
 		glDrawBuffer (GL_FRONT);
 		glReadBuffer (GL_FRONT);
 		w->DoubleBuffer = GL_FALSE;
+#endif
 	}
 }
 
 void gsgl_redraw (gsglPage *p)
 {
 	/*glXWaitX ();*/
+#ifdef USE_QT6
+	gsgl_qt_ensure_current ();
+#endif
 
 	glMatrixMode (GL_PROJECTION);
 	glPopMatrix ();
@@ -213,6 +239,10 @@ int gsgl_redraw_with_name (int x, int y, int w, int h, gsglPage *p)
 {
 	GLint viewport[4];
 	GLdouble width, height;
+
+#ifdef USE_QT6
+	gsgl_qt_ensure_current ();
+#endif
 	
 	if (w < 7)
 		width = 7.0;

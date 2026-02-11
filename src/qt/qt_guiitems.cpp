@@ -1,5 +1,6 @@
-#include <qapplication.h>
-#include <qvalidator.h>
+#include <QApplication>
+#include <QValidator>
+#include <QPalette>
 #include "qt_gsglwindow.h"
 #include "qt_drawarea.h"
 #include "gui_common.h"
@@ -40,8 +41,18 @@ static void setfontsize (QWidget *widget, float chh, gsglPage *p)
 	float dpi = gsgl_get_screen_resolution (p->library);
 	QFont f = widget->font();	
 	float pointSize = gsgl_inq_window_width (p->win) / GSGL_PAPER_WIDTH / dpi * 72.0;
-	f.setPointSizeFloat (chh * 1.46667 * pointSize);
+	f.setPointSizeF (chh * 1.46667 * pointSize);
 	widget->setFont (f);
+}
+
+static void apply_widget_colors (QWidget *widget, bool black_bg)
+{
+	if (!widget)
+		return;
+	if (black_bg)
+		widget->setStyleSheet("background-color: black; color: white;");
+	else
+		widget->setStyleSheet("background-color: white; color: black;");
 }
 
 void gui_guiitems_configure (gsglPage *p)
@@ -74,10 +85,9 @@ void gui_add_label_user (int x, int y, int w, int h, guialldata *data)
 	label->setGeometry (QRect(x, y, w, h));
 
 	if (gsgl_inq_bg_color (data->common->p->library) == GSGL_BACK_COLOR_BLACK) {
-		label->setEraseColor (QColor(0,0,0));
-		label->setPaletteForegroundColor (QColor(255,255,255));
+		apply_widget_colors (label, true);
         } else {
-		label->setEraseColor (QColor(255,255,255));
+		apply_widget_colors (label, false);
         }
 
 	if (s->ijust == JUST_LEFT)
@@ -91,8 +101,8 @@ void gui_add_label_user (int x, int y, int w, int h, guialldata *data)
 	gsgl_guiitem_append_item (TK_QT, data, label, NULL);
 }
 
-UserLabel::UserLabel (guialldata *data, const QString &text, QWidget *parent, const char *name)
-	: QLabel (text, parent, name)
+UserLabel::UserLabel (guialldata *data, const QString &text, QWidget *parent)
+	: QLabel (text, parent)
 {
 	alldata = data;
 	setfontsize (this, data->common->chh, data->common->p);
@@ -101,11 +111,11 @@ UserLabel::UserLabel (guialldata *data, const QString &text, QWidget *parent, co
 void gui_inq_label_size (const char *text, float *w, float *h, gsglPage *p)
 {
 	float dpi = gsgl_get_screen_resolution (p->library);
-	QFont f = qApp->mainWidget()->font();	
+	QFont f = qApp->font();	
 	float pointSize = gsgl_inq_window_width (p->win) / GSGL_PAPER_WIDTH / dpi * 72.0;
 	float chh, chw, chsp, angl, tilt;
 	gsaf_inqchr (&chh, &chw, &chsp, &angl, &tilt);
-	f.setPointSizeFloat (chh * 1.46667 * pointSize);
+	f.setPointSizeF (chh * 1.46667 * pointSize);
 	
 	QFontMetrics fm (f);
 	QRect rec = fm.boundingRect (text); /* text size in pixel */
@@ -128,8 +138,8 @@ void gui_add_button_user (int x, int y, int w, int h, guialldata *data)
 	gsgl_guiitem_append_item (TK_QT, data, button, NULL);
 }
 
-UserButton::UserButton (guialldata *data, const QString &text, QWidget *parent, const char *name)
-	: QPushButton (text, parent, name)
+UserButton::UserButton (guialldata *data, const QString &text, QWidget *parent)
+	: QPushButton (text, parent)
 {
 	alldata = data;
 	setfontsize (this, data->common->chh, data->common->p);
@@ -154,9 +164,9 @@ void gui_add_combobox_user (int x, int y, int w, int h, guialldata *data)
 	comboboxdata *s = (comboboxdata *) data->specific;
 
 	for (i=0; i<s->items; i++) 
-		box->insertItem (s->text[i]);
+		box->addItem (s->text[i]);
 
-	box->setCurrentItem (s->current);
+	box->setCurrentIndex (s->current);
 
 	box->setGeometry (QRect(x, y, w, h));
 	box->connect_callback ();
@@ -165,11 +175,11 @@ void gui_add_combobox_user (int x, int y, int w, int h, guialldata *data)
 	gsgl_guiitem_append_item (TK_QT, data, box, NULL);
 }
 
-UserComboBox::UserComboBox (guialldata *data, QWidget *parent, const char *name)
-	: QComboBox (parent, name)
+UserComboBox::UserComboBox (guialldata *data, QWidget *parent)
+	: QComboBox (parent)
 {
 	alldata = data;
-	setEditable (FALSE);
+	setEditable (false);
 	setfontsize (this, data->common->chh, data->common->p);
 }
 
@@ -195,19 +205,17 @@ void gui_add_spinbuttonf_user (int x, int y, int w, int h, guialldata *data)
 	spinbuttondataf *s = (spinbuttondataf *) data->specific;
 
 	if (s->digits == 0) {
-		spin->setMinValue ((int) s->lower);
-		spin->setMaxValue ((int) s->upper);
+		spin->setMinimum ((int) s->lower);
+		spin->setMaximum ((int) s->upper);
 		spin->setValue ((int) s->init);
 	} else {
 		double factor = pow(10.0, s->digits);
-		spin->setMinValue ((int) (s->lower * factor + 0.5));
-		spin->setMaxValue ((int) (s->upper * factor + 0.5));
+		spin->setMinimum ((int) (s->lower * factor + 0.5));
+		spin->setMaximum ((int) (s->upper * factor + 0.5));
 		spin->setValue ((int) (s->init * factor + 0.5));
 		
 		QDoubleValidator *val = new QDoubleValidator (s->lower, s->upper, s->digits, spin);
-#ifdef USE_QT3
-                spin->setValidator (val);
-#endif
+		(void)val;
 	}
 	spin->connect_callback ();
 	spin->show ();	
@@ -215,8 +223,8 @@ void gui_add_spinbuttonf_user (int x, int y, int w, int h, guialldata *data)
 	gsgl_guiitem_append_item (TK_QT, data, spin, NULL);
 }
 
-UserSpinButtonf::UserSpinButtonf (guialldata *data, QWidget * parent, const char * name)
-	: QSpinBox (parent, name)
+UserSpinButtonf::UserSpinButtonf (guialldata *data, QWidget * parent)
+	: QSpinBox (parent)
 {
 	alldata = data;
 	setfontsize (this, data->common->chh, data->common->p);
@@ -243,7 +251,7 @@ void UserSpinButtonf::uservalueChanged (int i)
 	gsgl_guiitems_spinbuttonf_changed (alldata, this);
 }
 
-QString UserSpinButtonf::mapValueToText (int value) 
+QString UserSpinButtonf::textFromValue (int value) const
 {
 	spinbuttondataf *s = (spinbuttondataf *) alldata->specific;
 	
@@ -255,15 +263,15 @@ QString UserSpinButtonf::mapValueToText (int value)
 	}
 }
 
-int UserSpinButtonf::mapTextToValue (bool *ok) 
+int UserSpinButtonf::valueFromText (const QString &text) const
 {
 	spinbuttondataf *s = (spinbuttondataf *) alldata->specific;
 
 	if (s->digits == 0)
-		return text().toInt ();
+		return text.toInt ();
 	else {
 		int factor = (int) pow (10.0, s->digits);
-		return (int) ( factor * text().toFloat() + 0.5);
+		return (int) ( factor * text.toFloat() + 0.5);
 	}
 }
 
@@ -276,8 +284,8 @@ void gui_add_spinbuttoni_user (int x, int y, int w, int h, guialldata *data)
 
 	spinbuttondatai *s = (spinbuttondatai *) data->specific;
 
-	spin->setMinValue (s->lower);
-	spin->setMaxValue (s->upper);
+	spin->setMinimum (s->lower);
+	spin->setMaximum (s->upper);
 	spin->setValue (s->init);
 	spin->connect_callback ();
 	spin->show ();	
@@ -285,8 +293,8 @@ void gui_add_spinbuttoni_user (int x, int y, int w, int h, guialldata *data)
 	gsgl_guiitem_append_item (TK_QT, data, spin, NULL);
 }
 
-UserSpinButtoni::UserSpinButtoni (guialldata *data, QWidget * parent, const char * name)
-	: QSpinBox (parent, name)
+UserSpinButtoni::UserSpinButtoni (guialldata *data, QWidget * parent)
+	: QSpinBox (parent)
 {
 	alldata = data;
 	setfontsize (this, data->common->chh, data->common->p);
@@ -312,16 +320,15 @@ void gui_add_checkbutton_user (int x, int y, int w, int h, guialldata *data)
 
 	UserCheckButton *button = new UserCheckButton (data, s->text, gsgl_inq_mainwin()->gl);
 	if (s->init)
-		button->setChecked (TRUE);
+		button->setChecked (true);
 	else
-		button->setChecked (FALSE);
+		button->setChecked (false);
 	button->setGeometry (QRect(x, y, w, h));
 
 	if (gsgl_inq_bg_color (data->common->p->library) == GSGL_BACK_COLOR_BLACK) {
-		button->setEraseColor (QColor(0,0,0));
-		button->setPaletteForegroundColor (QColor(255,255,255));
+		apply_widget_colors (button, true);
         } else {
-		button->setEraseColor (QColor(255,255,255));
+		apply_widget_colors (button, false);
         }
 
 	button->connect_callback ();
@@ -330,8 +337,8 @@ void gui_add_checkbutton_user (int x, int y, int w, int h, guialldata *data)
 	gsgl_guiitem_append_item (TK_QT, data, button, NULL);
 }
 
-UserCheckButton::UserCheckButton (guialldata *data, const QString & text, QWidget * parent, const char * name)
-	: QCheckBox (text, parent, name)
+UserCheckButton::UserCheckButton (guialldata *data, const QString & text, QWidget * parent)
+	: QCheckBox (text, parent)
 {
 	alldata = data;
 	setfontsize (this, data->common->chh, data->common->p);
@@ -372,8 +379,8 @@ void gui_add_lineedit_user (int x, int y, int w, int h, guialldata *data)
 	gsgl_guiitem_append_item (TK_QT, data, edit, NULL);
 }
 
-UserLineEdit::UserLineEdit (guialldata *data, const QString & contents, QWidget * parent, const char * name)
-	: QLineEdit (contents, parent, name)
+UserLineEdit::UserLineEdit (guialldata *data, const QString & contents, QWidget * parent)
+	: QLineEdit (contents, parent)
 {
 	alldata = data;
 	setfontsize (this, data->common->chh, data->common->p);
@@ -386,7 +393,7 @@ void UserLineEdit::connect_callback()
 
 void UserLineEdit::usertextChanged (const QString &str)
 {
-	const char *s =  str.latin1 ();
+	const char *s =  str.toUtf8().constData();
 	lineeditdata *e = (lineeditdata *) alldata->specific;
 	e->text = gsgl_strdup (s);
 

@@ -1,8 +1,47 @@
-# required packages from macports.org
-#    libpng
-#    jpeg
-#    libiconv
-#    gtk2
-# required Xquartz
+#!/bin/sh
+set -e
 
-F77=gfortran-mp-devel CC=gcc-mp-devel CXX=g++-mp-devel CPP=cpp-mp-devel CXXCPP=cpp-mp-devel CFLAGS="-g -O2 -D_XOPEN_SOURCE" AR="libtool" AR_FLAGS="-static -o " CPPFLAGS="-fpermissive -Wwrite-strings" ./configure --enable-gtk2 --with-jpeg-prefix=/opt/local --with-png-prefix=/opt/local --with-iconv-prefix=/opt/local --with-GL-prefix=/opt/X11
+# macOS build script (Qt6 + XQuartz)
+# Requirements (Homebrew): qt (or qt@6), freetype, libpng, jpeg, libiconv, gcc
+# Requirements (system): XQuartz
+
+QT_LIBEXEC=""
+for p in \
+  /opt/homebrew/opt/qt/libexec \
+  /opt/homebrew/opt/qt@6/libexec \
+  /opt/homebrew/Cellar/qtbase/*/share/qt/libexec \
+  /opt/homebrew/Cellar/qt/*/libexec
+do
+  if [ -d "$p" ]; then
+    QT_LIBEXEC="$p"
+    break
+  fi
+done
+
+if [ -z "$QT_LIBEXEC" ]; then
+  echo "ERROR: Qt6 libexec not found. Install Homebrew qt (or qt@6)." >&2
+  exit 1
+fi
+
+export PATH="$QT_LIBEXEC:$PATH"
+
+export F77=gfortran
+export FC=gfortran
+
+export CPPFLAGS="-I/opt/X11/include -I/opt/homebrew/include -I/opt/homebrew/opt/libiconv/include -I/opt/X11/include/freetype2"
+export LDFLAGS="-L/opt/X11/lib -L/opt/homebrew/lib -L/opt/homebrew/opt/libiconv/lib"
+
+./configure \
+  --prefix="$HOME" \
+  --libdir="$HOME/lib" \
+  --bindir="$HOME/bin" \
+  --with-qt \
+  --enable-qt6 \
+  --with-x \
+  --with-freetype
+
+make
+make install
+
+# Build Fortran demos
+make -C src/demo/f77

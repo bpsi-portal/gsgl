@@ -1,4 +1,4 @@
-#include <qapplication.h>
+#include <QApplication>
 #include "qt_gsglwindow.h"
 #include "qt_gsgltcp.h"
 #include "qt_tcp.h"
@@ -20,8 +20,8 @@
 
 #define GSGL_DEBUG(x)
 
-gsgltcp_base::gsgltcp_base (int socket, gsglPage *p, QObject * parent, const char * name)
-	: QObject (parent, name)
+gsgltcp_base::gsgltcp_base (int socket, gsglPage *p, QObject * parent)
+	: QObject (parent)
 {
 	Page = p;
         notify = new QSocketNotifier (socket, QSocketNotifier::Read, this);	
@@ -29,19 +29,19 @@ gsgltcp_base::gsgltcp_base (int socket, gsglPage *p, QObject * parent, const cha
                           this, SLOT(callback()));
 }
 
-gsgltcp_client::gsgltcp_client (int socket, gsglPage *p, QObject * parent, const char * name)
-	: gsgltcp_base (socket, p, parent, name)
+gsgltcp_client::gsgltcp_client (int socket, gsglPage *p, QObject * parent)
+	: gsgltcp_base (socket, p, parent)
 {
 }
 
-gsgltcp_server::gsgltcp_server (int socket, gsglPage *p, QObject * parent, const char * name)
-	: gsgltcp_base (socket, p, parent, name)
+gsgltcp_server::gsgltcp_server (int socket, gsglPage *p, QObject * parent)
+	: gsgltcp_base (socket, p, parent)
 {
 }
 
 static void func_exit_from_pagee (void)
 {
-	qApp->exit_loop ();
+	qApp->quit ();
 }
 
 static void func_save_and_close (void)

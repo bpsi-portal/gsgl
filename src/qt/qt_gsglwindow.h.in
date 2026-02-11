@@ -4,55 +4,36 @@
 #include "qt_compat.h"
 #include "qt_drawarea.h"
 #include "gsgltype.h"
-class QMenuBar;
-#ifdef USE_QT4
-#    include <QMenu>
-#    include <Q3PopupMenu>
-#    include <q3mainwindow.h>
-class Q3VBox;
-#else
-#    include <qmainwindow.h>
-class QVBox;
-#endif
+#include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
+#include <QAction>
+#include <QTimer>
+#include <QContextMenuEvent>
+#include <QVBoxLayout>
 
 class gsglMainWindow : public @QMAINWINDOW@
 {
 	Q_OBJECT
 
 public:
-	gsglMainWindow (gsglWindow *, QWidget* parent = 0, const char* name = 0, WFLAGS fl = TOPWINDOW);
+	gsglMainWindow (gsglWindow *, QWidget* parent = 0, WFLAGS fl = TOPWINDOW);
 	~gsglMainWindow ();
 	void set_up_gui (gsglboolean b);
 	void set_page (gsglPage *);
 
 	GLDrawArea *gl;
-#ifdef USE_QT3
-	QVBox *vbox;
-#else
-	Q3VBox *vbox;
-#endif
+	QWidget *vbox;
 	QMenuBar *menubar;
-#ifdef USE_QT3
-	QPopupMenu *fileMenu;
-	QPopupMenu *exportMenu;
-	QPopupMenu *editMenu;
-	QPopupMenu *objectsMenu;
-	QPopupMenu *projectionMenu;
-	QPopupMenu *animeMenu;
-	QPopupMenu *configMenu;
-	QPopupMenu *helpMenu;
-	QPopupMenu *contextMenu;
-#else
-	Q3PopupMenu *fileMenu;
-	Q3PopupMenu *exportMenu;
-	Q3PopupMenu *editMenu;
-	Q3PopupMenu *objectsMenu;
-	Q3PopupMenu *projectionMenu;
-	Q3PopupMenu *animeMenu;
-	Q3PopupMenu *configMenu;
-	Q3PopupMenu *helpMenu;
-	Q3PopupMenu *contextMenu;
-#endif
+	QMenu *fileMenu;
+	QMenu *exportMenu;
+	QMenu *editMenu;
+	QMenu *objectsMenu;
+	QMenu *projectionMenu;
+	QMenu *animeMenu;
+	QMenu *configMenu;
+	QMenu *helpMenu;
+	QMenu *contextMenu;
 	static int save_this_frame;
 	gsglLibrary *Library;
 	gsglWindow *Win;
@@ -128,6 +109,8 @@ public slots:
 	//
         void add_lines (void);
         void add_texts (void);
+protected:
+	void closeEvent (QCloseEvent *event) override;
 private:
 	void contextMenuEvent (QContextMenuEvent *);
 	void obj_scale_common (bool);
@@ -136,15 +119,15 @@ private:
 	enum export_type {EPS_VEC,EPS_RAS,PNG,JPEG};
 	void export_common (enum export_type type);
 	void export_command (enum export_type type, QString fileName);
-	int id_menu[3];
-	int id_file[9];
-	int id_edit[5];
-	int id_pop_edit[3];
-	int id_obj[7];
-	int id_pop_obj[7];
-	int id_pro[4]; 
-	int id_pop_pro[4]; 
-	int id_anime[9]; 
+	QAction *id_menu[3];
+	QAction *id_file[9];
+	QAction *id_edit[5];
+	QAction *id_pop_edit[3];
+	QAction *id_obj[7];
+	QAction *id_pop_obj[7];
+	QAction *id_pro[4]; 
+	QAction *id_pop_pro[4]; 
+	QAction *id_anime[9]; 
 	//
 	void qt_2d_restore_enabled (bool);
 	void gui_2d_init_every_page ();

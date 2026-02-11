@@ -1,6 +1,9 @@
 #include "gsaf.h"
 #include "displaylist.h"
 #include "xwin.h"
+#ifdef USE_QT6
+#include "qt_xwin.h"
+#endif
 #include "base.h"
 #include "mem_list.h"
 #include "ogl.h"
@@ -195,8 +198,20 @@ void gsgl_device_open (int4 *ich, gsglLibrary *lib)
 	} else if (gsgl_inq_mode (lib) == GSGL_MODE_WINDOW) { /* write to window */
 		gsgl_init_gc_window_mode (lib);
 		if (gsgl_inq_fullscreen (lib)) {
+#ifdef USE_QT6
+			int sw = 0, sh = 0;
+			gsgl_qt_get_screen_size (&sw, &sh);
+			if (sw > 0 && sh > 0) {
+				lib->winwidth0 = sw;
+				lib->winheight0 = sh;
+			} else if (gsgl_display (lib)) {
+				lib->winwidth0 = DisplayWidth (gsgl_display (lib), 0);
+				lib->winheight0 = DisplayHeight (gsgl_display (lib), 0);
+			}
+#else
 			lib->winwidth0 = DisplayWidth (gsgl_display (lib), 0);
 			lib->winheight0 = DisplayHeight (gsgl_display (lib), 0);
+#endif
 		}
 	}
 

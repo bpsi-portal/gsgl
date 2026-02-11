@@ -1,6 +1,7 @@
 #include "gsaf.h"
 #include "gsgl.h"
 #include "base.h"
+#include "utils.h"
 #include "bsc1.h"
 #include "bsc2.h"
 #include "text.h"

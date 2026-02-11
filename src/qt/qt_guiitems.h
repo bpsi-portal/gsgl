@@ -4,20 +4,23 @@
 
 #ifdef __cplusplus
 
-#include <qpushbutton.h>
-#include <qcombobox.h>
-#include <qlineedit.h>
-#include <qspinbox.h>
-#include <qcheckbox.h>
-#include <qlabel.h>
+#include <QPushButton>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QSpinBox>
+#include <QCheckBox>
+#include <QLabel>
 #include "gsaf.h"
 #include "guiitems.h"
+#ifdef Bool
+#undef Bool
+#endif
 
 class UserLabel : public QLabel
 {
 	Q_OBJECT
 public:
-	UserLabel (guialldata *, const QString &text, QWidget *parent, const char *name = 0);
+	UserLabel (guialldata *, const QString &text, QWidget *parent);
         ~UserLabel () {};
 	guialldata *alldata;
 };
@@ -27,7 +30,7 @@ class UserButton : public QPushButton
 {
 	Q_OBJECT
 public:
-	UserButton (guialldata *, const QString &text, QWidget *parent, const char *name = 0);
+	UserButton (guialldata *, const QString &text, QWidget *parent);
         ~UserButton () {};
         void connect_callback ();
 	guialldata *alldata;
@@ -41,7 +44,7 @@ class UserComboBox : public QComboBox
 {
 	Q_OBJECT
 public:
-	UserComboBox (guialldata *, QWidget *parent = 0, const char *name = 0);
+	UserComboBox (guialldata *, QWidget *parent = 0);
 	~UserComboBox () {};
         void connect_callback ();
 	guialldata *alldata;
@@ -54,11 +57,11 @@ class UserSpinButtonf : public QSpinBox
 {
 	Q_OBJECT
 public:
-	UserSpinButtonf (guialldata *, QWidget * parent = 0, const char * name = 0);
+	UserSpinButtonf (guialldata *, QWidget * parent = 0);
 	~UserSpinButtonf () {};
         void connect_callback ();
-	QString mapValueToText (int value);
-	int mapTextToValue (bool *ok);
+	QString textFromValue (int value) const override;
+	int valueFromText (const QString &text) const override;
 	guialldata *alldata;
 
 public slots:
@@ -69,7 +72,7 @@ class UserSpinButtoni : public QSpinBox
 {
 	Q_OBJECT
 public:
-	UserSpinButtoni (guialldata *, QWidget * parent = 0, const char * name = 0);
+	UserSpinButtoni (guialldata *, QWidget * parent = 0);
 	~UserSpinButtoni () {};
         void connect_callback ();
 	guialldata *alldata;
@@ -82,7 +85,7 @@ class UserCheckButton : public QCheckBox
 {
 	Q_OBJECT
 public:
-	UserCheckButton (guialldata *, const QString & text, QWidget * parent, const char * name = 0);
+	UserCheckButton (guialldata *, const QString & text, QWidget * parent);
 	~UserCheckButton () {};
         void connect_callback ();
 	guialldata *alldata;
@@ -95,7 +98,7 @@ class UserLineEdit : public QLineEdit
 {
 	Q_OBJECT
 public:
-	UserLineEdit (guialldata *, const QString & contents, QWidget * parent, const char * name = 0);
+	UserLineEdit (guialldata *, const QString & contents, QWidget * parent);
 	~UserLineEdit () {};
         void connect_callback ();
 	guialldata *alldata;

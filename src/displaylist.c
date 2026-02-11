@@ -16,6 +16,9 @@
 #include "callback.h"
 #include "clientstate.h"
 #include "anime.h"
+#ifdef USE_QT6
+#include "qt_xwin.h"
+#endif
 
 /*******************************************************************/
 /*   GSAF/OpenGL で実行された命令は display list という形で        */
@@ -258,6 +261,9 @@ static gsglDisplaylist * gsgl_displaylist_begin_ (int type, gsglboolean execute,
 	if (type == GSGL_LIST_NULL)
 		return NULL;
 
+#ifdef USE_QT6
+	gsgl_qt_ensure_current ();
+#endif
 	GSGL_DEBUG(fprintf (stderr, "begin (type = %d)\n", type));
 	d = gsgl_displaylist_new (p);
 	if (!d)

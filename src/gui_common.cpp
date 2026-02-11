@@ -5,7 +5,10 @@
 #if defined USE_QT
 #    include "qt_gsglwindow.h"
 #endif
-#ifdef USE_QT3
+#if defined USE_QT6
+#    include <QTimer>
+#    include <QCursor>
+#elif defined USE_QT3
 #    include <qtimer.h>
 #elif defined USE_QT4
 #    include <QtCore/QTimer>
@@ -259,7 +262,11 @@ void gsgl_gui_window_configure (unsigned int width, unsigned int height, gsglPag
 	if (width != gsgl_inq_window_width (page->win) ||
 	    height != gsgl_inq_window_height (page->win)) {
 
+		#if defined(USE_QT6) && defined(__APPLE__)
+		glFlush();
+		#else
 		glXWaitX ();
+		#endif
 		gsgl_set_window_width (width, page->win);
 		gsgl_set_window_height (height, page->win);
 		glViewport(0, 0, (GLsizei) gsgl_inq_window_width (page->win), (GLsizei) gsgl_inq_window_height (page->win));
@@ -411,8 +418,8 @@ void gsgl_gui_button_release (int x, int y, int left, int right, int mid,
 			for (j=0; j < (int) names; j++) {
 				gsgl_select_by_name (*ptr, page);
 				if (gsgl_3d_is_selected (page)) {
-					MAINWIN gui_2d_sensitive (FALSE);
-						MAINWIN gui_3d_sensitive (TRUE);
+					MAINWIN gui_2d_sensitive (false);
+						MAINWIN gui_3d_sensitive (true);
 				} else if (gsgl_2d_is_selected (page)) {
 					MAINWIN gui_2d_sensitive (GSGL_TRUE);
 					MAINWIN gui_3d_sensitive (GSGL_FALSE);
@@ -455,7 +462,7 @@ void gui_replay_frame (gsglMainWindow *w)
 #endif
 #ifdef USE_QT
 		gsgl_yes_select_objects (w->Page);
-		w->qt_selection_sensitive (TRUE);
+		w->qt_selection_sensitive (true);
 
 		delete w->timer;
 #endif
@@ -490,7 +497,7 @@ void gui_reverse_replay_frame (gsglMainWindow *w)
 #endif
 #ifdef USE_QT
 		gsgl_yes_select_objects (w->Page);
-		w->qt_selection_sensitive (TRUE);
+		w->qt_selection_sensitive (true);
 
 		delete w->timer;
 #endif
@@ -535,6 +542,40 @@ void gui_anime_backward (gsglMainWindow *w)
 
 static void set_cursor (int cursor_type, gsglMainWindow *w)
 {
+#ifdef USE_QT6
+	if (!w || !w->gl)
+		return;
+	if (cursor_type < 0) {
+		w->gl->unsetCursor();
+	} else {
+		#ifdef CursorShape
+		#undef CursorShape
+		#endif
+		Qt::CursorShape shape = Qt::ArrowCursor;
+		switch (cursor_type) {
+		case XC_exchange:
+			shape = Qt::SizeAllCursor;
+			break;
+		case XC_fleur:
+			shape = Qt::SizeAllCursor;
+			break;
+		case XC_double_arrow:
+			shape = Qt::SizeVerCursor;
+			break;
+		case XC_sizing:
+			shape = Qt::SizeAllCursor;
+			break;
+		case XC_pencil:
+			shape = Qt::CrossCursor;
+			break;
+		default:
+			shape = Qt::ArrowCursor;
+			break;
+		}
+		w->gl->setCursor (QCursor(shape));
+	}
+	return;
+#endif
 	if (cursor_type < 0) {
 		XUndefineCursor (w->Library->Mydisplay,
 #ifdef USE_GTK

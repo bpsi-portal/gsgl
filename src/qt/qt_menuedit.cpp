@@ -1,5 +1,5 @@
-#include <qmenubar.h>
-#include <qinputdialog.h>
+#include <QMenuBar>
+#include <QInputDialog>
 #include "qt_gsglwindow.h"
 #include "qt_dialog.h"
 #include "gsaf.h"
@@ -75,7 +75,8 @@ void gsglMainWindow::add_texts (void)
 	gui_cursor_pencil (this);
 	Add_text = GSGL_TRUE;
 
-	gsglAddTexts *a = new gsglAddTexts(Page, fonts, 33, just, 4, this, NULL, FALSE, Qt::WDestructiveClose);
+	gsglAddTexts *a = new gsglAddTexts(Page, fonts, 33, just, 4, this, false);
+	a->setAttribute(Qt::WA_DeleteOnClose, true);
 	this->Add_text_dialog = gsgl_list_append (this->Add_text_dialog, a);
 
 	int x = (int) (pos().x() + size().width() * 0.85);
@@ -86,9 +87,9 @@ void gsglMainWindow::add_texts (void)
 
 void gsgl_add_text_dialog (float x, float y, gsglPage *p)
 {
-	bool ok = FALSE;
-        QString text = QInputDialog::getText(TR("Text"), NULL, QLineEdit::Normal, 
-					     NULL, &ok, gsgl_inq_mainwin());
+	bool ok = false;
+        QString text = QInputDialog::getText(gsgl_inq_mainwin(), TR("Text"), QString(), QLineEdit::Normal,
+					     QString(), &ok);
 
 	if (ok && !text.isEmpty()) {
 		gsgllist *l = gsgl_inq_mainwin()->Add_text_dialog;
@@ -99,13 +100,13 @@ void gsgl_add_text_dialog (float x, float y, gsglPage *p)
 		} else
 			return;
 		
-		char *str = gsgl_strdup(text.latin1());
-		int fnt = a->combo_font->currentItem ();
+		char *str = gsgl_strdup(text.toUtf8().constData());
+		int fnt = a->combo_font->currentIndex ();
 		if (fnt >= 20)
 			fnt += 12;
 		float size = a->spin_size->value()*0.01;
 		float angle = a->spin_angle->value();
-		int ijust = a->combo_just->currentItem ();
+		int ijust = a->combo_just->currentIndex ();
 
 		if (gsgl_inq_i_am_a_server (p->library)) {
 			gsgl_tcp_gui_add_text (str, x, y, fnt, size, angle, ijust, p);

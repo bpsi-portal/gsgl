@@ -1,6 +1,7 @@
 C     $Id: apltest.f,v 1.3 2004/08/19 04:39:51 akutsu Exp $
 C
       DIMENSION X(51),Y(51),Y1(51),Y2(51)
+      INTEGER IOS
 C
       CALL GSOPEN
 C
@@ -23,14 +24,24 @@ C
       SCL=0.3
 C
     1 WRITE(6,*) '## INPUT TYPE (0..7,8,9,10) ?'
-      READ(5,*,ERR=1,END=9999) MODE
+      READ(5,*,IOSTAT=IOS) MODE
+      IF (IOS .LT. 0) GOTO 9999
+      IF (IOS .GT. 0) GOTO 1
 C
       IF(MODE.LE.3) THEN
 C
  1000    WRITE(6,*) '# INPUT : Y0,YA,GXORG,GYORG'
-         READ(5,*,END=1) Y0,YA,GXORG,GYORG
+         READ(5,*,IOSTAT=IOS) Y0,YA,GXORG,GYORG
+         IF (IOS .NE. 0) THEN
+            CALL GS_RESET_STDIN
+            GOTO 1
+         ENDIF
          WRITE(6,*) '# INPUT : NXS,NYS,NXV,NYV,NM,NP,SCL'
-         READ(5,*,END=1000) NXS,NYS,NXV,NYV,NM,NP,SCl
+         READ(5,*,IOSTAT=IOS) NXS,NYS,NXV,NYV,NM,NP,SCl
+         IF (IOS .NE. 0) THEN
+            CALL GS_RESET_STDIN
+            GOTO 1
+         ENDIF
 C
          DO 1100 N=1,51
            X(N)=FLOAT(N-1)*DX
@@ -64,11 +75,23 @@ C
       ELSEIF(MODE.LE.7) THEN
 C
  2000    WRITE(6,*) '# INPUT : Y0,YA,GXORG,GYORG'
-         READ(5,*,END=1) Y0,YA,GXORG,GYORG
+         READ(5,*,IOSTAT=IOS) Y0,YA,GXORG,GYORG
+         IF (IOS .NE. 0) THEN
+            CALL GS_RESET_STDIN
+            GOTO 1
+         ENDIF
  2010    WRITE(6,*) '# INPUT : NXS,NYS,NXV,NYV,NM,NP,SCL'
-         READ(5,*,END=2000) NXS,NYS,NXV,NYV,NM,NP,SCL
+         READ(5,*,IOSTAT=IOS) NXS,NYS,NXV,NYV,NM,NP,SCL
+         IF (IOS .NE. 0) THEN
+            CALL GS_RESET_STDIN
+            GOTO 1
+         ENDIF
          WRITE(6,*) '# INPUT : NXSL,NYSL,NXVL,NYVL'
-         READ(5,*,END=2010) NXSL,NYSL,NXVL,NYVL
+         READ(5,*,IOSTAT=IOS) NXSL,NYSL,NXVL,NYVL
+         IF (IOS .NE. 0) THEN
+            CALL GS_RESET_STDIN
+            GOTO 1
+         ENDIF
 C
          DO 2100 N=1,51
            X(N)=FLOAT(N-1)*DX
@@ -161,9 +184,17 @@ C
       ELSEIF(MODE.EQ.10) THEN
 C
  3000    WRITE(6,*) '# INPUT : Y0,YA,GXORG,GYORG'
-         READ(5,*,END=1) Y0,YA,GXORG,GYORG
+         READ(5,*,IOSTAT=IOS) Y0,YA,GXORG,GYORG
+         IF (IOS .NE. 0) THEN
+            CALL GS_RESET_STDIN
+            GOTO 1
+         ENDIF
          WRITE(6,*) '# INPUT : NXS,NYS,NXV,NYV,NM,NP,SCL'
-         READ(5,*,END=3000) NXS,NYS,NXV,NYV,NM,NP,SCl
+         READ(5,*,IOSTAT=IOS) NXS,NYS,NXV,NYV,NM,NP,SCl
+         IF (IOS .NE. 0) THEN
+            CALL GS_RESET_STDIN
+            GOTO 1
+         ENDIF
 C
          DO N=1,51
             X(N)=FLOAT(N-1)*DX
@@ -192,4 +223,9 @@ C
  9999 CALL GSCLOS
       STOP
       END
-
+      SUBROUTINE GS_RESET_STDIN
+      INTEGER IOS
+      CLOSE(5)
+      OPEN(UNIT=5,FILE='/dev/tty',STATUS='OLD',IOSTAT=IOS)
+      RETURN
+      END

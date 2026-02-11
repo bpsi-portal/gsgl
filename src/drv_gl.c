@@ -9,6 +9,9 @@
 #include "utils.h"
 #include "drv_wrapper.h"
 #include "device.h"
+#ifdef USE_QT6
+#include "qt_xwin.h"
+#endif
 
 const static GLfloat IndexColor[2][8][3] = {{{0.0, 0.0, 0.0},
 					     {78.0/255.0, 78.0/255.0, 1.0},
@@ -473,6 +476,9 @@ void gsgl_gl_ps_depth_by_point (float x, float y, float z)
 
 void gsgl_gl_beginanime (gsglPage *p)
 {
+#ifdef USE_QT6
+	gsgl_qt_ensure_current ();
+#endif
 	if (!gsgl_doublebuffer_is_enabled (p->win)) gsgl_doublebuffer_enable (p->win);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -504,7 +510,14 @@ void gsgl_gl_beginanime (gsglPage *p)
 
 void gsgl_gl_endanime (gsglPage *p)
 {
+#ifdef USE_QT6
+	gsgl_qt_ensure_current ();
+#endif
 	gsgl_flush (p->win);
+#ifdef USE_QT6
+	/* Pump events so animation frames are presented while the app is busy. */
+	gsgl_qt_process_events (1);
+#endif
 }
 
 void gsgl_gl_pstext (int ifnts, int ifntr,

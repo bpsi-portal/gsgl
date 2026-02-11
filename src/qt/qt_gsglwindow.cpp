@@ -1,23 +1,21 @@
 #include "qt_compat.h"
-#include <qgl.h>
-#include <qfile.h>
-#ifdef USE_QT3
-#    include <qfiledialog.h>
-#    include <qmainwindow.h>
-#    include <qvbox.h>
-#else
-#    include <q3filedialog.h>
-#    include <q3mainwindow.h>
-#    include <q3vbox.h>
-#    include <QLabel>
-#    include <QContextMenuEvent>
-#endif
-#include <qmenubar.h>
-#include <qapplication.h>
-#include <qmessagebox.h>
-#include <qcursor.h>
-#include <qinputdialog.h>
-#include <qpaintdevice.h>
+#include <QFile>
+#include <QFileDialog>
+#include <QMenuBar>
+#include <QMenu>
+#include <QAction>
+#include <QApplication>
+#include <QGuiApplication>
+#include <QKeySequence>
+#include <QMessageBox>
+#include <QCursor>
+#include <QInputDialog>
+#include <QLabel>
+#include <QContextMenuEvent>
+#include <QCloseEvent>
+#include <QScreen>
+#include <QElapsedTimer>
+#include <QVBoxLayout>
 #include "qt_gsglwindow.h"
 #include "qt_drawarea.h"
 #include "qt_dialog.h"
@@ -36,17 +34,13 @@
 #include "tcpip.h"
 #include "utils.h"
 #include "gui_common.h"
+#include "qt_xwin.h"
 #include <iostream>
 
 #define TR(x) QString::fromUtf8(_(x))
 
-#ifdef USE_QT3
-gsglMainWindow::gsglMainWindow (gsglWindow *window, QWidget* parent, const char* name, WFLAGS fl)
-	: QMainWindow (parent, name, fl)
-#elif defined USE_QT4
-gsglMainWindow::gsglMainWindow (gsglWindow *window, QWidget* parent, const char* name, WFLAGS fl)
-	: Q3MainWindow (parent, name, fl)
-#endif
+gsglMainWindow::gsglMainWindow (gsglWindow *window, QWidget* parent, WFLAGS fl)
+	: QMainWindow (parent, fl)
 {
 	save_this_frame = 0;
 	Win = window;
@@ -54,183 +48,176 @@ gsglMainWindow::gsglMainWindow (gsglWindow *window, QWidget* parent, const char*
 	Add_text = GSGL_FALSE;
         Add_text_dialog = NULL;
 
-	setCaption (gsgl_window_title());
+	setWindowTitle (gsgl_window_title());
 
 	if (gsgl_inq_userdefined_window (Library)) {
 		setGeometry (gsgl_inq_userdefined_corner_x (Library), 
 			     gsgl_inq_userdefined_corner_y (Library), 0, 0);
 	} else {
-		int width =DisplayWidth(QPaintDevice::x11Display(),QPaintDevice::x11Screen());
-		int height=DisplayHeight(QPaintDevice::x11Display(),QPaintDevice::x11Screen());
-		width -= Library->winwidth0;
-		height -= Library->winheight0;
-		setGeometry (width/2, height/2, 0, 0);
+		QScreen *screen = QGuiApplication::primaryScreen();
+		QRect screenRect = screen ? screen->availableGeometry() : QRect(0, 0, Library->winwidth0, Library->winheight0);
+		int width = screenRect.width() - Library->winwidth0;
+		int height = screenRect.height() - Library->winheight0;
+		setGeometry (screenRect.x() + width/2, screenRect.y() + height/2, 0, 0);
 	}
 
-#ifdef USE_QT3	
-	vbox = new QVBox (this);
-#elif defined USE_QT4
-	vbox = new Q3VBox (this);
-#endif
+	vbox = new QWidget (this);
+	QVBoxLayout *vboxLayout = new QVBoxLayout (vbox);
+	vboxLayout->setContentsMargins (0, 0, 0, 0);
 	setCentralWidget (vbox);
 
-	QGLFormat f;
-	f.setRgba (TRUE); 
-	f.setDepth (TRUE);
-	f.setDoubleBuffer (TRUE);
-	f.setDirectRendering (TRUE);
-	gl = new GLDrawArea (Win, f, vbox);
+	gl = new GLDrawArea (Win, vbox);
+	vboxLayout->addWidget (gl);
 
 	menubar = new QMenuBar (this);
+	setMenuBar (menubar);
 
-#define ins0(x,t,s) x->insertItem (t, this, SLOT(s))
-#define ins1(x,t,s,k) x->insertItem (t, this, SLOT(s), k)
-#ifdef USE_QT3
-	exportMenu = new QPopupMenu (this);
-#else
-	exportMenu = new Q3PopupMenu (this);
-#endif
-	exportMenu->insertTearOffHandle();
-	ins0(exportMenu, TR("EPS (Vector)"), export_eps_vec());
-	ins0(exportMenu, TR("EPS (Raster)"), export_eps_ras());
-	ins0(exportMenu, TR("PNG"), export_png());
-	ins0(exportMenu, TR("JPEG"), export_jpeg());
+	exportMenu = new QMenu (this);
+	exportMenu->setTearOffEnabled (true);
+	exportMenu->addAction (TR("EPS (Vector)"), this, SLOT(export_eps_vec()));
+	exportMenu->addAction (TR("EPS (Raster)"), this, SLOT(export_eps_ras()));
+	exportMenu->addAction (TR("PNG"), this, SLOT(export_png()));
+	exportMenu->addAction (TR("JPEG"), this, SLOT(export_jpeg()));
 
-#ifdef USE_QT3
-	fileMenu = new QPopupMenu (this);
-#else
-	fileMenu = new Q3PopupMenu (this);
-#endif
-	fileMenu->insertTearOffHandle();
-	id_file[0] = ins1(fileMenu, TR("Save As ..."), save_as(), Qt::Key_A);
-	id_file[1] = ins1(fileMenu, TR("Save"), save(), Qt::Key_S);
-	id_file[2] = ins1(fileMenu, TR("Save and Close"), save_close(), Qt::Key_Y);
-	id_file[3] = ins0(fileMenu, TR("Save This Frame"), save_frame());
-	id_file[4] = fileMenu->insertItem (TR("Export"), exportMenu);
-	fileMenu->insertSeparator ();
-	id_file[5] = ins1(fileMenu, TR("Print ..."), print(), Qt::Key_P);
-	fileMenu->insertSeparator ();
-	id_file[6] = ins1(fileMenu, TR("Dump Dot Image"), dump(), Qt::Key_D);
-	fileMenu->insertSeparator ();
-	id_file[7] = fileMenu->insertItem (TR("Close"), qApp, SLOT(quit()), Qt::Key_C);
-	id_file[8] = ins1(fileMenu, TR("Quit"), quit_app(), Qt::Key_Q);
+	fileMenu = new QMenu (TR("&File"), this);
+	fileMenu->setTearOffEnabled (true);
+	id_file[0] = fileMenu->addAction (TR("Save As ..."), this, SLOT(save_as()));
+	id_file[0]->setShortcut (QKeySequence(Qt::Key_A));
+	id_file[1] = fileMenu->addAction (TR("Save"), this, SLOT(save()));
+	id_file[1]->setShortcut (QKeySequence(Qt::Key_S));
+	id_file[2] = fileMenu->addAction (TR("Save and Close"), this, SLOT(save_close()));
+	id_file[2]->setShortcut (QKeySequence(Qt::Key_Y));
+	id_file[3] = fileMenu->addAction (TR("Save This Frame"), this, SLOT(save_frame()));
+	id_file[4] = fileMenu->addMenu (exportMenu);
+	fileMenu->addSeparator ();
+	id_file[5] = fileMenu->addAction (TR("Print ..."), this, SLOT(print()));
+	id_file[5]->setShortcut (QKeySequence(Qt::Key_P));
+	fileMenu->addSeparator ();
+	id_file[6] = fileMenu->addAction (TR("Dump Dot Image"), this, SLOT(dump()));
+	id_file[6]->setShortcut (QKeySequence(Qt::Key_D));
+	fileMenu->addSeparator ();
+	id_file[7] = fileMenu->addAction (TR("Close"), qApp, SLOT(quit()));
+	id_file[7]->setShortcut (QKeySequence(Qt::Key_C));
+	id_file[8] = fileMenu->addAction (TR("Quit"), this, SLOT(quit_app()));
+	id_file[8]->setShortcut (QKeySequence(Qt::Key_Q));
 
-#ifdef USE_QT3
-	editMenu = new QPopupMenu (this);
-#else
-	editMenu = new Q3PopupMenu (this);
-#endif
-	editMenu->insertTearOffHandle();
-	id_edit[0] = ins1(editMenu, TR("Pointer"), select_obj(), Qt::Key_Escape);	
-	id_edit[1] = ins1(editMenu, TR("Select All 2D Objects"), select_all_2d_obj(), Qt::Key_2);	
-	id_edit[2] = ins1(editMenu, TR("Select All 3D Objects"), select_all_3d_obj(), Qt::Key_3);	
-	id_edit[3] = ins0(editMenu, TR("Add Lines"), add_lines());
-	id_edit[4] = ins0(editMenu, TR("Add Texts"), add_texts());
+	editMenu = new QMenu (TR("&Edit"), this);
+	editMenu->setTearOffEnabled (true);
+	id_edit[0] = editMenu->addAction (TR("Pointer"), this, SLOT(select_obj()));
+	id_edit[0]->setShortcut (QKeySequence(Qt::Key_Escape));
+	id_edit[1] = editMenu->addAction (TR("Select All 2D Objects"), this, SLOT(select_all_2d_obj()));
+	id_edit[1]->setShortcut (QKeySequence(Qt::Key_2));
+	id_edit[2] = editMenu->addAction (TR("Select All 3D Objects"), this, SLOT(select_all_3d_obj()));
+	id_edit[2]->setShortcut (QKeySequence(Qt::Key_3));
+	id_edit[3] = editMenu->addAction (TR("Add Lines"), this, SLOT(add_lines()));
+	id_edit[4] = editMenu->addAction (TR("Add Texts"), this, SLOT(add_texts()));
 
-#ifdef USE_QT3
-	objectsMenu = new QPopupMenu (this);
-#else
-	objectsMenu = new Q3PopupMenu (this);
-#endif
-	objectsMenu->insertTearOffHandle();
-	id_obj[0] = ins1(objectsMenu, TR("Rotate"), obj_rotate(), Qt::Key_R);
-	id_obj[1] = ins0(objectsMenu, TR("Scale"), obj_scale_question());
-	id_obj[2] = ins1(objectsMenu, TR("Translate (x,y)"), obj_translate_xy(), Qt::Key_T);
-	id_obj[3] = ins0(objectsMenu, TR("Translate (z)"), obj_translate_z());
-	objectsMenu->insertSeparator ();
-	id_obj[4] = ins1(objectsMenu, TR("Toggle Lighting"), lighting(), Qt::Key_L);
-	objectsMenu->insertSeparator ();
-	id_obj[5] = ins1(objectsMenu, TR("Restore 2D"), qt_2d_restore(), Qt::CTRL+Qt::Key_2);
-	id_obj[6] = ins1(objectsMenu, TR("Restore 3D"), qt_3d_restore(), Qt::CTRL+Qt::Key_3);
+	objectsMenu = new QMenu (TR("&Objects"), this);
+	objectsMenu->setTearOffEnabled (true);
+	id_obj[0] = objectsMenu->addAction (TR("Rotate"), this, SLOT(obj_rotate()));
+	id_obj[0]->setShortcut (QKeySequence(Qt::Key_R));
+	id_obj[1] = objectsMenu->addAction (TR("Scale"), this, SLOT(obj_scale_question()));
+	id_obj[2] = objectsMenu->addAction (TR("Translate (x,y)"), this, SLOT(obj_translate_xy()));
+	id_obj[2]->setShortcut (QKeySequence(Qt::Key_T));
+	id_obj[3] = objectsMenu->addAction (TR("Translate (z)"), this, SLOT(obj_translate_z()));
+	objectsMenu->addSeparator ();
+	id_obj[4] = objectsMenu->addAction (TR("Toggle Lighting"), this, SLOT(lighting()));
+	id_obj[4]->setShortcut (QKeySequence(Qt::Key_L));
+	objectsMenu->addSeparator ();
+	id_obj[5] = objectsMenu->addAction (TR("Restore 2D"), this, SLOT(qt_2d_restore()));
+	id_obj[5]->setShortcut (QKeySequence(Qt::CTRL | Qt::Key_2));
+	id_obj[6] = objectsMenu->addAction (TR("Restore 3D"), this, SLOT(qt_3d_restore()));
+	id_obj[6]->setShortcut (QKeySequence(Qt::CTRL | Qt::Key_3));
 
-#ifdef USE_QT3
-	projectionMenu = new QPopupMenu (this);
-#else
-	projectionMenu = new Q3PopupMenu (this);
-#endif
-	projectionMenu->insertTearOffHandle();
-	id_pro[0] = ins1(projectionMenu, TR("Rotate"), proj_rotate(), Qt::CTRL+Qt::Key_R);
-	id_pro[1] = ins0(projectionMenu, TR("Scale"), proj_scale_question());
-	id_pro[2] = ins1(projectionMenu, TR("Translate"), proj_translate(), Qt::CTRL+Qt::Key_T);
-	projectionMenu->insertSeparator ();
-	id_pro[3] = ins1(projectionMenu, TR("Restore"), qt_proj_restore(), Qt::CTRL+Qt::Key_P);
+	projectionMenu = new QMenu (TR("&Projectied Image"), this);
+	projectionMenu->setTearOffEnabled (true);
+	id_pro[0] = projectionMenu->addAction (TR("Rotate"), this, SLOT(proj_rotate()));
+	id_pro[0]->setShortcut (QKeySequence(Qt::CTRL | Qt::Key_R));
+	id_pro[1] = projectionMenu->addAction (TR("Scale"), this, SLOT(proj_scale_question()));
+	id_pro[2] = projectionMenu->addAction (TR("Translate"), this, SLOT(proj_translate()));
+	id_pro[2]->setShortcut (QKeySequence(Qt::CTRL | Qt::Key_T));
+	projectionMenu->addSeparator ();
+	id_pro[3] = projectionMenu->addAction (TR("Restore"), this, SLOT(qt_proj_restore()));
+	id_pro[3]->setShortcut (QKeySequence(Qt::CTRL | Qt::Key_P));
 
-#ifdef USE_QT3
-	animeMenu = new QPopupMenu (this);
-#else
-	animeMenu = new Q3PopupMenu (this);
-#endif
-	animeMenu->insertTearOffHandle();
-	id_anime[0] = ins0(animeMenu, TR("Replay"), replay1());
-	id_anime[1] = ins0(animeMenu, TR("Replay (Slow)"), replay2());
-	id_anime[2] = ins0(animeMenu, TR("Replay (Very Slow)"), replay3());
-	id_anime[3] = ins0(animeMenu, TR("Single Frame Forward"), anime_forward());
-	id_anime[4] = ins0(animeMenu, TR("Reverse Play"), reverse_replay1());
-	id_anime[5] = ins0(animeMenu, TR("Reverse Play (Slow)"), reverse_replay2());
-	id_anime[6] = ins0(animeMenu, TR("Reverse Play (Very Slow)"), reverse_replay3());
-	id_anime[7] = ins0(animeMenu, TR("Single Frame Reverse"), anime_backward());
-	id_anime[8] = ins0(animeMenu, TR("Pause"), anime_pause());
+	animeMenu = new QMenu (TR("&Animation"), this);
+	animeMenu->setTearOffEnabled (true);
+	id_anime[0] = animeMenu->addAction (TR("Replay"), this, SLOT(replay1()));
+	id_anime[1] = animeMenu->addAction (TR("Replay (Slow)"), this, SLOT(replay2()));
+	id_anime[2] = animeMenu->addAction (TR("Replay (Very Slow)"), this, SLOT(replay3()));
+	id_anime[3] = animeMenu->addAction (TR("Single Frame Forward"), this, SLOT(anime_forward()));
+	id_anime[4] = animeMenu->addAction (TR("Reverse Play"), this, SLOT(reverse_replay1()));
+	id_anime[5] = animeMenu->addAction (TR("Reverse Play (Slow)"), this, SLOT(reverse_replay2()));
+	id_anime[6] = animeMenu->addAction (TR("Reverse Play (Very Slow)"), this, SLOT(reverse_replay3()));
+	id_anime[7] = animeMenu->addAction (TR("Single Frame Reverse"), this, SLOT(anime_backward()));
+	id_anime[8] = animeMenu->addAction (TR("Pause"), this, SLOT(anime_pause()));
 
-#ifdef USE_QT3
-	configMenu = new QPopupMenu (this);
-#else
-	configMenu = new Q3PopupMenu (this);
-#endif
-	configMenu->insertTearOffHandle();
-	ins0(configMenu, TR("Color"), color());
-	ins0(configMenu, TR("Command Line"), command());
-	ins0(configMenu, TR("TrueType Font"), font());
-	ins0(configMenu, TR("Window Size"), windowsize());
+	configMenu = new QMenu (TR("&Config"), this);
+	configMenu->setTearOffEnabled (true);
+	configMenu->addAction (TR("Color"), this, SLOT(color()));
+	configMenu->addAction (TR("Command Line"), this, SLOT(command()));
+	configMenu->addAction (TR("TrueType Font"), this, SLOT(font()));
+	configMenu->addAction (TR("Window Size"), this, SLOT(windowsize()));
 
-#ifdef USE_QT3
-	helpMenu = new QPopupMenu (this);
-#else
-	helpMenu = new Q3PopupMenu (this);
-#endif
-	helpMenu->insertTearOffHandle();
-	ins1(helpMenu, TR("Key Bindings"), keybindings(), Qt::Key_H);
-	ins1(helpMenu, TR("Manual"), manual(), Qt::Key_M);
-	helpMenu->insertSeparator ();
-	ins0(helpMenu, TR("About"), about());
+	helpMenu = new QMenu (TR("&Help"), this);
+	helpMenu->setTearOffEnabled (true);
+	QAction *actKey = helpMenu->addAction (TR("Key Bindings"), this, SLOT(keybindings()));
+	actKey->setShortcut (QKeySequence(Qt::Key_H));
+	QAction *actManual = helpMenu->addAction (TR("Manual"), this, SLOT(manual()));
+	actManual->setShortcut (QKeySequence(Qt::Key_M));
+	helpMenu->addSeparator ();
+	helpMenu->addAction (TR("About"), this, SLOT(about()));
 
 	// menu bar //
-	menubar->insertItem (TR("&File"), fileMenu);
-	id_menu[0] = menubar->insertItem (TR("&Edit"), editMenu);
-	id_menu[1] = menubar->insertItem (TR("&Objects"), objectsMenu);
-	id_menu[2] = menubar->insertItem (TR("&Projectied Image"), projectionMenu);
-	menubar->insertItem (TR("&Animation"), animeMenu);
-	menubar->insertItem (TR("&Config"), configMenu);
-	menubar->insertSeparator ();
-	menubar->insertItem (TR("&Help"), helpMenu);
+	menubar->addMenu (fileMenu);
+	menubar->addMenu (editMenu);
+	menubar->addMenu (objectsMenu);
+	menubar->addMenu (projectionMenu);
+	menubar->addMenu (animeMenu);
+	menubar->addMenu (configMenu);
+	menubar->addSeparator ();
+	menubar->addMenu (helpMenu);
+	id_menu[0] = editMenu->menuAction();
+	id_menu[1] = objectsMenu->menuAction();
+	id_menu[2] = projectionMenu->menuAction();
 
 	// pop up menu //
-#ifdef USE_QT3
-	contextMenu = new QPopupMenu (this);
-#else
-	contextMenu = new Q3PopupMenu (this);
-#endif
+	contextMenu = new QMenu (this);
 	Q_CHECK_PTR (contextMenu);
 
-	id_pop_edit[0] = ins1(contextMenu, TR("Pointer"), select_obj(), Qt::Key_Escape);	
-	id_pop_edit[1] = ins1(contextMenu, TR("Select All 2D Objects"), select_all_2d_obj(), Qt::Key_2);
-	id_pop_edit[2] = ins1(contextMenu, TR("Select All 3D Objects"), select_all_3d_obj(), Qt::Key_3);	
-	contextMenu->insertSeparator ();
-	id_pop_obj[0] = ins1(contextMenu, TR("Rotate"), obj_rotate(), Qt::Key_R);
-	id_pop_obj[1] = ins1(contextMenu, TR("Scale"), obj_scale(), Qt::Key_E);
-	id_pop_obj[2] = ins1(contextMenu, TR("Translate (x,y)"), obj_translate_xy(), Qt::Key_T);
-	id_pop_obj[3] = ins0(contextMenu, TR("Translate (z)"), obj_translate_z());
-	id_pop_obj[4] = ins1(contextMenu, TR("Toggle Lighting"), lighting(), Qt::Key_L);
-	id_pop_obj[5] = ins1(contextMenu, TR("Restore 2D"), qt_2d_restore(), Qt::CTRL+Qt::Key_2);
-	id_pop_obj[6] = ins1(contextMenu, TR("Restore 3D"), qt_3d_restore(), Qt::CTRL+Qt::Key_3);
-	contextMenu->insertSeparator ();
-	id_pop_pro[0] = ins1(contextMenu, TR("Rotate Projected Image"), proj_rotate(), Qt::CTRL+Qt::Key_R);
-	id_pop_pro[1] = ins1(contextMenu, TR("Scale Projected Image"), proj_scale(), Qt::CTRL+Qt::Key_E);
-	id_pop_pro[2] = ins1(contextMenu, TR("Translate Projected Image"), proj_translate(), Qt::CTRL+Qt::Key_T);
-	id_pop_pro[3] = ins1(contextMenu, TR("Restore Projected Image"), qt_proj_restore(), Qt::CTRL+Qt::Key_P);
+	id_pop_edit[0] = contextMenu->addAction (TR("Pointer"), this, SLOT(select_obj()));
+	id_pop_edit[0]->setShortcut (QKeySequence(Qt::Key_Escape));
+	id_pop_edit[1] = contextMenu->addAction (TR("Select All 2D Objects"), this, SLOT(select_all_2d_obj()));
+	id_pop_edit[1]->setShortcut (QKeySequence(Qt::Key_2));
+	id_pop_edit[2] = contextMenu->addAction (TR("Select All 3D Objects"), this, SLOT(select_all_3d_obj()));
+	id_pop_edit[2]->setShortcut (QKeySequence(Qt::Key_3));
+	contextMenu->addSeparator ();
+	id_pop_obj[0] = contextMenu->addAction (TR("Rotate"), this, SLOT(obj_rotate()));
+	id_pop_obj[0]->setShortcut (QKeySequence(Qt::Key_R));
+	id_pop_obj[1] = contextMenu->addAction (TR("Scale"), this, SLOT(obj_scale()));
+	id_pop_obj[1]->setShortcut (QKeySequence(Qt::Key_E));
+	id_pop_obj[2] = contextMenu->addAction (TR("Translate (x,y)"), this, SLOT(obj_translate_xy()));
+	id_pop_obj[2]->setShortcut (QKeySequence(Qt::Key_T));
+	id_pop_obj[3] = contextMenu->addAction (TR("Translate (z)"), this, SLOT(obj_translate_z()));
+	id_pop_obj[4] = contextMenu->addAction (TR("Toggle Lighting"), this, SLOT(lighting()));
+	id_pop_obj[4]->setShortcut (QKeySequence(Qt::Key_L));
+	id_pop_obj[5] = contextMenu->addAction (TR("Restore 2D"), this, SLOT(qt_2d_restore()));
+	id_pop_obj[5]->setShortcut (QKeySequence(Qt::CTRL | Qt::Key_2));
+	id_pop_obj[6] = contextMenu->addAction (TR("Restore 3D"), this, SLOT(qt_3d_restore()));
+	id_pop_obj[6]->setShortcut (QKeySequence(Qt::CTRL | Qt::Key_3));
+	contextMenu->addSeparator ();
+	id_pop_pro[0] = contextMenu->addAction (TR("Rotate Projected Image"), this, SLOT(proj_rotate()));
+	id_pop_pro[0]->setShortcut (QKeySequence(Qt::CTRL | Qt::Key_R));
+	id_pop_pro[1] = contextMenu->addAction (TR("Scale Projected Image"), this, SLOT(proj_scale()));
+	id_pop_pro[1]->setShortcut (QKeySequence(Qt::CTRL | Qt::Key_E));
+	id_pop_pro[2] = contextMenu->addAction (TR("Translate Projected Image"), this, SLOT(proj_translate()));
+	id_pop_pro[2]->setShortcut (QKeySequence(Qt::CTRL | Qt::Key_T));
+	id_pop_pro[3] = contextMenu->addAction (TR("Restore Projected Image"), this, SLOT(qt_proj_restore()));
+	id_pop_pro[3]->setShortcut (QKeySequence(Qt::CTRL | Qt::Key_P));
 
-	gui_2d_sensitive (FALSE);
-	gui_3d_sensitive (FALSE);
-	gui_sensitive_have_3d (FALSE);
+	gui_2d_sensitive (false);
+	gui_3d_sensitive (false);
+	gui_sensitive_have_3d (false);
 }
 
 gsglMainWindow::~gsglMainWindow ()
@@ -246,27 +233,34 @@ gsglMainWindow::~gsglMainWindow ()
         delete contextMenu;
         delete menubar;
 	delete gl;
-        delete vbox;
+	delete vbox;
+}
+
+void gsglMainWindow::closeEvent (QCloseEvent *event)
+{
+	gui_exit_loop ();
+	event->accept();
 }
 
 void gsglMainWindow::contextMenuEvent (QContextMenuEvent *e)
 {
 	if (Add_text) return;
-	contextMenu->exec (QCursor::pos());
+	contextMenu->exec (e->globalPos());
 }
 
 void gsglMainWindow::saving_message ()
 {
 	// message window
 	int el;
-	QDialog * window = new QDialog (NULL, NULL, TRUE);
+	QDialog * window = new QDialog (this);
+	window->setModal (true);
 	QLabel *label = new QLabel (window);
 	label->setText (TR("Saving now ..."));
 
 	window->show ();
 	qApp->processEvents ();
-	QTime *t = new QTime ();
-	t->start ();
+	QElapsedTimer timer;
+	timer.start();
 	//
 
 	if (gsgl_inq_open_tmp_file_for_anime (Page) && !save_this_frame) {
@@ -282,7 +276,7 @@ void gsglMainWindow::saving_message ()
 		save_this_frame = 0;
 
 	// message window
-	el = t->elapsed ();
+	el = static_cast<int>(timer.elapsed());
 	if (el < 100 /* 0.1sec */) {
 		usleep (100000 - el * 1000);
 	}
@@ -290,7 +284,7 @@ void gsglMainWindow::saving_message ()
 	window->hide ();
 	delete label;
 	delete window;
-	delete t;
+	// timer is stack-allocated
 	//
 }
 
@@ -314,11 +308,11 @@ void gsglMainWindow::open_and_save (const QString & fileName)
 
 	if (gsgl_inq_savefile_opened ()) 
 		gsgl_file_write_close (Library);
-	open = gsgl_file_write_open (fileName.latin1(), Library);
+	open = gsgl_file_write_open (fileName.toUtf8().constData(), Library);
 	if (open != 0) {
-		s.sprintf ("Can not open file %s", fileName.latin1());
+		s = QString("Can not open file %1").arg(fileName);
 		QMessageBox::warning (this, TR("Can not open a file"), s, 
-				      QMessageBox::Ok,  QMessageBox::NoButton);
+				      QMessageBox::Ok);
 	} else {
 		saving_message ();
 	}
@@ -329,36 +323,27 @@ void gsglMainWindow::save_as ()
 	if (gsgl_inq_i_am_a_server (Page->library)) {
 		gsgl_tcp_server_send_command (GSGL_TCP_GUI_SAVE_AS, Page->library);
 	} else {
-#ifdef USE_QT3
-		QFileDialog * fd = new QFileDialog( this, TR("Save As ..."), TRUE );
-		fd->setMode (QFileDialog::AnyFile);
-		fd->addFilter ("Gsgl Files (*.gsgl)");
-		fd->setViewMode (QFileDialog::List);
-#else
-		Q3FileDialog * fd = new Q3FileDialog( this, TR("Save As ..."), TRUE );
-		fd->setMode (Q3FileDialog::AnyFile);
-		fd->addFilter ("Gsgl Files (*.gsgl)");
-		fd->setViewMode (Q3FileDialog::List);
-#endif
-
-		QString fileName;
-		if ( fd->exec() == QDialog::Accepted ) {
-			fileName = fd->selectedFile();
-			if (!fileName.endsWith ( ".gsgl" )) {
-				fileName += ".gsgl";
-			}
-			if (QFile::exists(fileName)) {
-				if (!QMessageBox::question (this, TR("Overwrite?"),
-				        TR("Old file is going to be overwritten.\n"
-					  "Are you sure ?"), 
-				        TR("OK"), TR("Cancel"), QString::null, 0, 1)) {
-					open_and_save (fileName);
-				}
-			} else {
-				open_and_save (fileName);
-			}
+		QString fileName = QFileDialog::getSaveFileName(
+			this,
+			TR("Save As ..."),
+			QString(),
+			TR("Gsgl Files (*.gsgl)")
+		);
+		if (fileName.isEmpty())
+			return;
+		if (!fileName.endsWith(".gsgl")) {
+			fileName += ".gsgl";
 		}
-		delete fd;
+		if (QFile::exists(fileName)) {
+			QMessageBox::StandardButton ret =
+				QMessageBox::question (this, TR("Overwrite?"),
+					TR("Old file is going to be overwritten.\nAre you sure ?"),
+					QMessageBox::Ok | QMessageBox::Cancel,
+					QMessageBox::Cancel);
+			if (ret != QMessageBox::Ok)
+				return;
+		}
+		open_and_save (fileName);
 	}
 }
 
@@ -370,7 +355,7 @@ void gsglMainWindow::save_close ()
 		save();
 		if (gsgl_inq_mode (Library) == GSGL_MODE_WINDOW) {
 			//qApp->processEvents ();
-			qApp->exit_loop ();
+			qApp->quit ();
 		} else if (gsgl_inq_mode (Library) == GSGL_MODE_TCPIP) {
 			gsgl_tcp_push (GSGL_TCP_GUI_SAVE_AND_CLOSE, Page);
 		}
@@ -389,7 +374,7 @@ void gsglMainWindow::save_frame ()
 
 void gsglMainWindow::export_command (enum export_type type, QString fileName)
 {
-	bool ok = FALSE;
+	bool ok = false;
 	QString cap;
 	QString lab;
 	QString com;
@@ -415,8 +400,8 @@ void gsglMainWindow::export_command (enum export_type type, QString fileName)
 			"('%s' will be replaced by a file name)");
 		com = gsgl_inq_jpg_command (Library);
 	}
-	QString text = QInputDialog::getText(cap, lab,
-		QLineEdit::Normal, com, &ok, this);
+	QString text = QInputDialog::getText(this, cap, lab,
+		QLineEdit::Normal, com, &ok);
 	
 	if ( ok && !text.isEmpty() ) {
 		// message window
@@ -427,8 +412,8 @@ void gsglMainWindow::export_command (enum export_type type, QString fileName)
  
 		window->show ();
 		qApp->processEvents ();
-		QTime *t = new QTime ();
-		t->start ();
+		QElapsedTimer timer;
+		timer.start();
 		//
 		QString   com2;
 		FILE      *fp;
@@ -445,14 +430,14 @@ void gsglMainWindow::export_command (enum export_type type, QString fileName)
 		if (fclose (fp))
 		      gsgl_warning ("gsglMainWindow::export_command", "failed to close tmp file");
 		
-		com2.sprintf (text.latin1(), fileName.latin1(), tmp);
-		system (com2.latin1());
+		com2 = QString::asprintf (text.toUtf8().constData(), fileName.toUtf8().constData(), tmp);
+		system (com2.toUtf8().constData());
 
 		if (remove (tmp))
 		      gsgl_warning ("gsglMainWindow::export_command", "failed to remove tmp file");	
 
 		// message window
-		el = t->elapsed ();
+		el = static_cast<int>(timer.elapsed());
 		if (el < 100 /* 0.1sec */) {
 			usleep (100000 - el * 1000);
 		}
@@ -460,7 +445,7 @@ void gsglMainWindow::export_command (enum export_type type, QString fileName)
 		qApp->processEvents ();
 		delete label;
 		delete window;
-		delete t;
+		// timer is stack-allocated
 		//
 	}
 }
@@ -478,56 +463,47 @@ void gsglMainWindow::export_common (enum export_type type)
 			gsgl_tcp_server_send_command (GSGL_TCP_GUI_EXPORT_JPEG, Page->library);
 		}
 	} else {
-
-#ifdef USE_QT3
-		QFileDialog * fd = new QFileDialog( this, TR("Export as ..."), TRUE );
-		fd->setMode (QFileDialog::AnyFile);
-#else
-		Q3FileDialog * fd = new Q3FileDialog( this, TR("Export as ..."), TRUE );
-		fd->setMode (Q3FileDialog::AnyFile);
-#endif
-		
+		QString filter;
 		if (type == EPS_VEC || type == EPS_RAS) {
-			fd->addFilter ("EPS (Encapslated PostScript) Files (*.eps)");
+			filter = TR("EPS (Encapslated PostScript) Files (*.eps)");
 		} else if (type == PNG) {
-			fd->addFilter ("PNG (Portable Network Graphics) Files (*.png)");
+			filter = TR("PNG (Portable Network Graphics) Files (*.png)");
 		} else if (type == JPEG) {
-			fd->addFilter ("JPEG (Joint Photographic Experts Group) Files (*.jpg)");
+			filter = TR("JPEG (Joint Photographic Experts Group) Files (*.jpg)");
 		}
-#ifdef USE_QT3
-		fd->setViewMode (QFileDialog::List);
-#else
-		fd->setViewMode (Q3FileDialog::List);
-#endif
 
-		QString fileName;
-		if ( fd->exec() == QDialog::Accepted ) {
-			fileName = fd->selectedFile();
-			if (type == EPS_VEC || type == EPS_RAS) {
-				if (!fileName.endsWith ( ".eps" )) {
-					fileName += ".eps";
-				}
-			} else if (type == PNG) {
-				if (!fileName.endsWith ( ".png" )) {
-					fileName += ".png";
-				}
-			} else if (type == JPEG) {
-				if (!fileName.endsWith ( ".jpg" )) {
-					fileName += ".jpg";
-				}
+		QString fileName = QFileDialog::getSaveFileName(
+			this,
+			TR("Export as ..."),
+			QString(),
+			filter
+		);
+		if (fileName.isEmpty())
+			return;
+
+		if (type == EPS_VEC || type == EPS_RAS) {
+			if (!fileName.endsWith ( ".eps" )) {
+				fileName += ".eps";
 			}
-			if (QFile::exists(fileName)) {
-				if (!QMessageBox::question (this, TR("Overwrite?"),
-				    TR("Old file is going to be overwritten.\n"
-				    "Are you sure ?"), 
-				    TR("OK"), TR("Cancel"), QString::null, 0, 1)) {
-					export_command (type, fileName);
-				}
-			} else {
-				export_command (type, fileName);
+		} else if (type == PNG) {
+			if (!fileName.endsWith ( ".png" )) {
+				fileName += ".png";
+			}
+		} else if (type == JPEG) {
+			if (!fileName.endsWith ( ".jpg" )) {
+				fileName += ".jpg";
 			}
 		}
-		delete fd;
+		if (QFile::exists(fileName)) {
+			QMessageBox::StandardButton ret =
+				QMessageBox::question (this, TR("Overwrite?"),
+					TR("Old file is going to be overwritten.\nAre you sure ?"),
+					QMessageBox::Ok | QMessageBox::Cancel,
+					QMessageBox::Cancel);
+			if (ret != QMessageBox::Ok)
+				return;
+		}
+		export_command (type, fileName);
 	}
 }
 
@@ -558,7 +534,7 @@ void gsglMainWindow::print ()
 		return;
 	}
 
-	bool ok = FALSE;
+	bool ok = false;
 	QString cap;
 	QString lab;
 	QString com;
@@ -567,8 +543,8 @@ void gsglMainWindow::print ()
 	lab = TR("Enter the command line print a gsgl file.\n"
 		"('%s' will be replaced by a file name)");
 	com = gsgl_inq_print_command (Library);
-	QString text = QInputDialog::getText(cap, lab,
-		QLineEdit::Normal, com, &ok, this );
+	QString text = QInputDialog::getText(this, cap, lab,
+		QLineEdit::Normal, com, &ok );
 	
 	if ( ok && !text.isEmpty() ) {		
 		// user entered something and pressed OK
@@ -587,8 +563,8 @@ void gsglMainWindow::print ()
 		if (fclose (fp))
 			gsgl_warning ("gsglMainWindow::print", "failed to close tmp file");
 		
-		com2.sprintf (text.latin1(), tmp);
-		system (com2.latin1());
+		com2 = QString::asprintf (text.toUtf8().constData(), tmp);
+		system (com2.toUtf8().constData());
 
 		if (remove (tmp))
 			gsgl_warning ("gsglMainWindow::print", "failed to remove tmp file");	
@@ -612,8 +588,11 @@ void gsglMainWindow::quit_immediately ()
 
 void gsglMainWindow::quit_app ()
 {
-	if (!QMessageBox::question (this, TR("Quit?"), TR("Are you sure to quit?"), 
-				    TR("OK"), TR("Cancel"), QString::null, 0, 1)) {
+	QMessageBox::StandardButton ret =
+		QMessageBox::question (this, TR("Quit?"), TR("Are you sure to quit?"),
+				       QMessageBox::Ok | QMessageBox::Cancel,
+				       QMessageBox::Cancel);
+	if (ret == QMessageBox::Ok) {
 		quit_immediately ();
 	}
 }
@@ -627,8 +606,8 @@ void gsglMainWindow::select_obj()
 
 void gsglMainWindow::select_all_2d_obj()
 {
-	gui_2d_sensitive (TRUE);
-	gui_3d_sensitive (FALSE);
+	gui_2d_sensitive (true);
+	gui_3d_sensitive (false);
 
 	gsgl_yes_select_objects (Page);
 	gsgl_2d_select_objects (Page);
@@ -636,8 +615,8 @@ void gsglMainWindow::select_all_2d_obj()
 
 void gsglMainWindow::select_all_3d_obj()
 {
-	gui_3d_sensitive (TRUE);
-	gui_2d_sensitive (FALSE);
+	gui_3d_sensitive (true);
+	gui_2d_sensitive (false);
 
 	gsgl_yes_select_objects (Page);
 	gsgl_3d_select_objects (Page);
@@ -646,15 +625,15 @@ void gsglMainWindow::select_all_3d_obj()
 void gsglMainWindow::obj_rotate()
 {
 	if (gsgl_2d_is_selected (Page)) {
-		qt_2d_rotate (FALSE);
+		qt_2d_rotate (false);
 	} else if (gsgl_3d_is_selected (Page)) {
-		qt_3d_rotate (FALSE);
+		qt_3d_rotate (false);
 	} else if (gsgl_inq_3dobjects_exist (Page)) {
 		gsgl_3d_select_objects_without_color (Page);
-		qt_3d_rotate (FALSE);
+		qt_3d_rotate (false);
 	} else {
 		gsgl_2d_select_objects_without_color (Page);
-		qt_2d_rotate (FALSE);
+		qt_2d_rotate (false);
 	}
 }
 
@@ -675,12 +654,12 @@ void gsglMainWindow::obj_scale_common (bool b)
 
 void gsglMainWindow::obj_scale()
 {
-	obj_scale_common (FALSE);
+	obj_scale_common (false);
 }
 
 void gsglMainWindow::obj_scale_question()
 {
-	obj_scale_common (TRUE);
+	obj_scale_common (true);
 }
 	
 void gsglMainWindow::obj_translate_xy()
@@ -712,17 +691,17 @@ void gsglMainWindow::obj_translate_z()
 
 void gsglMainWindow::proj_rotate()
 {
-	qt_proj_rotate (FALSE);
+	qt_proj_rotate (false);
 }
 
 void gsglMainWindow::proj_scale()
 {
-	qt_proj_scale (FALSE);
+	qt_proj_scale (false);
 }
 
 void gsglMainWindow::proj_scale_question ()
 {
-	qt_proj_scale (TRUE);
+	qt_proj_scale (true);
 }
 
 void gsglMainWindow::proj_translate()
@@ -735,14 +714,14 @@ void gsglMainWindow::qt_selection_sensitive (bool b)
 	int i;
 
 	for (i=0; i<3; i++)
-		contextMenu->setItemEnabled (id_pop_edit[i], b);
+		if (id_pop_edit[i]) id_pop_edit[i]->setEnabled (b);
 	for (i=0; i<7; i++)
-		contextMenu->setItemEnabled (id_pop_obj[i], b);
+		if (id_pop_obj[i]) id_pop_obj[i]->setEnabled (b);
 	for (i=0; i<4; i++)
-		contextMenu->setItemEnabled (id_pop_pro[i], b);
+		if (id_pop_pro[i]) id_pop_pro[i]->setEnabled (b);
 
 	for (i=0; i<3; i++)
-		menubar->setItemEnabled (id_menu[i], b);
+		if (id_menu[i]) id_menu[i]->setEnabled (b);
 }
 
 void gsglMainWindow::replay1 ()

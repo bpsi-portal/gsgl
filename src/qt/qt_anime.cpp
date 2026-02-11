@@ -1,5 +1,5 @@
-#include <qmenubar.h>
-#include <qtimer.h>
+#include <QMenuBar>
+#include <QTimer>
 #include "qt_gsglwindow.h"
 #include "gsaf.h"
 #include "anime.h"
@@ -10,20 +10,20 @@
 
 void gsglMainWindow::gui_anime_sensitive_pause (bool b)
 {
-        animeMenu->setItemEnabled (id_anime[8], b);
+        if (id_anime[8]) id_anime[8]->setEnabled (b);
 }
 
 void gsglMainWindow::gui_anime_sensitive (bool b)
 {
 	gui_anime_sensitive_replay (b);
 	gui_anime_sensitive_pause (b);
-	fileMenu->setItemEnabled (id_file[3], b);
+	if (id_file[3]) id_file[3]->setEnabled (b);
 	if (b) {
-		editMenu->setItemEnabled (id_edit[3], GSGL_FALSE);
-		editMenu->setItemEnabled (id_edit[4], GSGL_FALSE);
+		if (id_edit[3]) id_edit[3]->setEnabled (GSGL_FALSE);
+		if (id_edit[4]) id_edit[4]->setEnabled (GSGL_FALSE);
 	} else {
-		editMenu->setItemEnabled (id_edit[3], GSGL_TRUE);
-		editMenu->setItemEnabled (id_edit[4], GSGL_TRUE);
+		if (id_edit[3]) id_edit[3]->setEnabled (GSGL_TRUE);
+		if (id_edit[4]) id_edit[4]->setEnabled (GSGL_TRUE);
 	}
 }
 
@@ -32,7 +32,7 @@ void gsglMainWindow::gui_anime_sensitive_replay (bool b)
 	int i;
 	
 	for (i=0; i<8; i++)
-		animeMenu->setItemEnabled (id_anime[i], b);
+		if (id_anime[i]) id_anime[i]->setEnabled (b);
 }
 
 void gsglMainWindow::replay_frame ()
@@ -50,10 +50,10 @@ void gsglMainWindow::anime_replay (int j)
 	int i;
 	if (!gsgl_anime_init_replay (Page)) return;
 
-	gui_anime_sensitive_pause (TRUE);
-	gui_anime_sensitive_replay (FALSE);
+	gui_anime_sensitive_pause (true);
+	gui_anime_sensitive_replay (false);
 	gsgl_no_select_objects (Page);
-	qt_selection_sensitive (FALSE);
+	qt_selection_sensitive (false);
 
 	i = gsgl_inq_current_frame_num (Page);
 	if (i >= (int) gsgl_anime_inq_frame_num (Page)) {
@@ -63,7 +63,8 @@ void gsglMainWindow::anime_replay (int j)
 
 	timer = new QTimer (this);
         connect( timer, SIGNAL(timeout()), this, SLOT(replay_frame()) );
-        timer->start( j, FALSE );
+	timer->setSingleShot(false);
+        timer->start( j );
 }
 
 void gsglMainWindow::anime_reverse_replay (int j)
@@ -71,10 +72,10 @@ void gsglMainWindow::anime_reverse_replay (int j)
 	int i;
 	if (!gsgl_anime_init_replay (Page)) return;
 
-	gui_anime_sensitive_pause (TRUE);
-	gui_anime_sensitive_replay (FALSE);
+	gui_anime_sensitive_pause (true);
+	gui_anime_sensitive_replay (false);
 	gsgl_no_select_objects (Page);
-	qt_selection_sensitive (FALSE);
+	qt_selection_sensitive (false);
 
 	i = gsgl_inq_current_frame_num (Page);
 	if (i <= 1) {
@@ -84,18 +85,19 @@ void gsglMainWindow::anime_reverse_replay (int j)
 
 	timer = new QTimer (this);
         connect( timer, SIGNAL(timeout()), this, SLOT(reverse_replay_frame()) );
-        timer->start( j, FALSE );
+	timer->setSingleShot(false);
+        timer->start( j );
 }
 
 void gsglMainWindow::anime_pause ()
 {
-	gui_anime_sensitive_pause (FALSE);
-	gui_anime_sensitive_replay (TRUE);
+	gui_anime_sensitive_pause (false);
+	gui_anime_sensitive_replay (true);
 
 	timer->stop();
 
 	gsgl_yes_select_objects (Page);
-	qt_selection_sensitive (TRUE);
+	qt_selection_sensitive (true);
 
 	delete timer;
 }

@@ -2,6 +2,7 @@
 #include "gsgl.h"
 #include "bsc1.h"
 #include "base.h"
+#include "utils.h"
 #include "bsc2.h"
 
 void gsgl_set_rs (float rs, gsglPage *page)

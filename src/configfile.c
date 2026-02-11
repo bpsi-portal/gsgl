@@ -271,6 +271,78 @@ static char * config_read_string (char *str, char *regex, char *out)
 	return out;
 }
 
+static void gsgl_config_fix_missing_type1 (char **ttf_names)
+{
+	static const char *defaults[] = {
+		TYPE1_Times_Roman,
+		TYPE1_Times_Italic,
+		TYPE1_Times_Bold,
+		TYPE1_Times_BoldItalic,
+		TYPE1_Helvetica,
+		TYPE1_Helvetica_Oblique,
+		TYPE1_Helvetica_Bold,
+		TYPE1_Helvetica_BoldOblique,
+		TYPE1_Courier,
+		TYPE1_Courier_Oblique,
+		TYPE1_Courier_Bold,
+		TYPE1_Courier_BoldOblique,
+		TYPE1_Symbol
+	};
+	int i;
+
+	for (i = 0; i < 13; i++) {
+		int idx = 28 + i;
+		if (!ttf_names[idx] || access (ttf_names[idx], R_OK) != 0) {
+			if (ttf_names[idx])
+				gsgl_free (ttf_names[idx]);
+			ttf_names[idx] = gsgl_strdup (defaults[i]);
+		}
+	}
+}
+
+static void gsgl_config_fix_missing_ttf (char **ttf_names)
+{
+	static const char *defaults[] = {
+		TTF_ALPHABET,
+		TTF_MATH,
+		TTF_TIMESROMAN,
+		TTF_TIMESITALIC,
+		TTF_TIMESBOLD,
+		TTF_TIMESBOLDITALIC,
+		TTF_ARIALROMAN,
+		TTF_ARIALITALIC,
+		TTF_ARIALBOLD,
+		TTF_ARIALBOLDITALIC,
+		TTF_COURIERROMAN,
+		TTF_COURIERITALIC,
+		TTF_COURIERBOLD,
+		TTF_COURIERBOLDITALIC,
+		TTF_GREEK,
+		TTF_GREEKROMAN,
+		TTF_GREEKITALIC,
+		TTF_GREEKBOLD,
+		TTF_GREEKBOLDITALIC,
+		TTF_JAPANESE,
+		TTF_JAPANESEMINCHO,
+		TTF_JAPANESEGOTHIC,
+		TTF_CMR10,
+		TTF_CMTI10,
+		TTF_CMTT10,
+		TTF_CMMI10,
+		TTF_CMSY10,
+		TTF_CMEX10
+	};
+	int i;
+
+	for (i = 0; i < 28; i++) {
+		if (!ttf_names[i] || access (ttf_names[i], R_OK) != 0) {
+			if (ttf_names[i])
+				gsgl_free (ttf_names[i]);
+			ttf_names[i] = gsgl_strdup (defaults[i]);
+		}
+	}
+}
+
 void gsgl_config_read (gsglLibrary *lib)
 {
 	int i;
@@ -477,6 +549,8 @@ void gsgl_config_read (gsglLibrary *lib)
 		}
 		fclose (rc);
 	}
+	gsgl_config_fix_missing_ttf (lib->Ttf_name);
+	gsgl_config_fix_missing_type1 (lib->Ttf_name);
 }
 
 void gsgl_config_read_server_ttf (gsglLibrary *lib)
@@ -567,6 +641,8 @@ void gsgl_config_read_server_ttf (gsglLibrary *lib)
 		}
 		fclose (rc);
 	}
+	gsgl_config_fix_missing_ttf (lib->Ttf_name_server);
+	gsgl_config_fix_missing_type1 (lib->Ttf_name_server);
 }
 
 void gsgl_config_set_server (gsglLibrary *lib)
