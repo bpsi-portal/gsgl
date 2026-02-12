@@ -250,20 +250,32 @@ int inq_parent_window (gsglLibrary *lib)
 	int  revert_to;
 	char *id;
 	Window pre;
+	Window env_win = 0;
+	int have_focus = 0;
 
 	if ((id = getenv("GSGL_WINDOW_ID")) != NULL) {
 		return atoi(id);
-	} else if ((id = getenv("WINDOWID")) != NULL) {
-		return atoi(id);
-	} else {
-		if (lib->Mydisplay == NULL) {
-			if((lib->Mydisplay = XOpenDisplay (NULL)) == NULL) {
-				gsgl_error ("dvopen", "Can't open display");
-			}
-		}
-		XGetInputFocus (lib->Mydisplay, &pre, &revert_to);
-		return (int) pre;
 	}
+
+	if ((id = getenv("WINDOWID")) != NULL)
+		env_win = (Window) atoi(id);
+
+	if (lib->Mydisplay == NULL) {
+		if((lib->Mydisplay = XOpenDisplay (NULL)) == NULL) {
+			gsgl_error ("dvopen", "Can't open display");
+		}
+	}
+	XGetInputFocus (lib->Mydisplay, &pre, &revert_to);
+	if (pre != None && pre != PointerRoot)
+		have_focus = 1;
+
+	/* Prefer the focused window when WINDOWID looks stale. */
+	if (env_win != 0) {
+		if (have_focus && pre != env_win)
+			return (int) pre;
+		return (int) env_win;
+	}
+	return (int) pre;
 }
 
 #if defined USE_QT6
